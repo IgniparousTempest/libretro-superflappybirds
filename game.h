@@ -15,7 +15,7 @@
 class Game {
 public:
     const char* game_name = "Super Flappy Birds";
-    const char* game_version = "1.0.0";
+    const char* game_version = "0.1.0";
     const int game_fps = 50;
 
     Game(unsigned int screen_width, unsigned int screen_height);
