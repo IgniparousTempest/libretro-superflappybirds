@@ -37,8 +37,7 @@ private:
     unsigned int screen_width;
     unsigned int screen_height;
     std::deque<PipePair> pipes = {};
-    std::vector<Bird> birds;
-    Bird* bird;
+    std::vector<Bird*> birds;
 
     void DrawBackground(SDL_Renderer* renderer);
     void DrawGround(SDL_Renderer* renderer);
