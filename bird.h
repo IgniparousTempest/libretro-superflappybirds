@@ -9,15 +9,21 @@ class Bird {
 public:
     int x = 0;
     int y = 0;
-    explicit Bird(int x);
-    void Update();
-    void Render(SDL_Renderer* renderer, Textures* textures);
+    Bird(int x, SDL_Texture* texture, int frame_width, int frame_height);
+    void Update(double delta_time);
+    void Flap();
+    void Render(SDL_Renderer* renderer);
+    SDL_Rect GetRect();
 
 private:
+    SDL_Texture* texture;
+    int frame_width;
+    int frame_height;
     double speed_y = 0;
-    const double GRAVITY = 0.5;
-    const double TERMINAL_VELOCITY = 5.0;
-    int frames = 0;
+    const double FLAP_SPEED = -3.5;
+    const double GRAVITY = 0.25;
+    const double TERMINAL_VELOCITY = 5;
+    unsigned int frames = 0;
     const int frames_in_animation = 4;
     const int frames_per_animation_frame = 3;
 };

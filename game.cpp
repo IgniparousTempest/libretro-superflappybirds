@@ -1,6 +1,5 @@
 #include <SDL_surface.h>
 #include <iostream>
-#include <SDL_joystick.h>
 #include "game.h"
 #include "image_library.h"
 
@@ -14,14 +13,7 @@ Game::Game(unsigned int screen_width, unsigned int screen_height) {
     renderer = SDL_CreateSoftwareRenderer(surface);
     textures = new Textures(renderer);
 
-    bird = new Bird(screen_width / 2);
-    printf("%i joysticks were found.\n\n", SDL_NumJoysticks() );
-    printf("The names of the joysticks are:\n");
-
-    for(int i=0; i < SDL_NumJoysticks(); i++ )
-    {
-        printf("    %s\n", SDL_JoystickNameForIndex(i));
-    }
+    bird = new Bird(screen_width / 2, textures->bird, textures->bird_w / 4, textures->bird_h);
 }
 
 uint32_t *Game::surface_to_framebuffer(SDL_Surface* surface) {
@@ -42,8 +34,7 @@ uint32_t *Game::surface_to_framebuffer(SDL_Surface* surface) {
 void Game::generate_pipes(int number) {
     std::uniform_int_distribution<std::mt19937::result_type> dist6((unsigned long)(screen_height / 3), (unsigned long)(2 * screen_height / 3));
 
-    const int distance_between_pipes = (int)(textures->pipe_top_w * 2.8f);
-    const int gap_between_top_and_bottom = 50;
+    const int gap_between_top_and_bottom = 60;
     int last_x = 0;
     if (pipes.empty())
         last_x = screen_width;
@@ -51,7 +42,7 @@ void Game::generate_pipes(int number) {
         last_x = pipes.back().x;
 
     for (int i = 0; i < number; ++i) {
-        last_x += distance_between_pipes;
+        last_x += DISTANCE_BETWEEN_PIPES;
         pipes.emplace_back(last_x, dist6(rng), gap_between_top_and_bottom);
     }
 }
@@ -95,11 +86,21 @@ void Game::DrawGround(SDL_Renderer *renderer) {
     }
 }
 
-void Game::GameLoop() {
-    distance_travelled += scroll_speed;
+void Game::GameLoop(double delta_time, std::vector<Input> controller_inputs) {
+    distance_travelled += scroll_speed;// * delta_time;
+    bird->Update(delta_time);
 
+    // Collision detection
+    if (bird_crashed(bird))
+        std::cout << "Crashed" << std::endl;
+
+    if (controller_inputs[0].flap_pressed)
+        bird->Flap();
+
+    if (!pipes.empty() && pipes.front().x + textures->pipe_bottom_w < 0)
+        pipes.pop_front();
     if (pipes.size() < 5)
-        generate_pipes(100);
+        generate_pipes(20);
 }
 
 uint32_t* Game::GetFrameBuffer() {
@@ -107,6 +108,16 @@ uint32_t* Game::GetFrameBuffer() {
     for (PipePair p : pipes)
         p.Render(renderer, textures, (int)distance_travelled);
     DrawGround(renderer);
-    bird->Render(renderer, textures);
+    bird->Render(renderer);
     return surface_to_framebuffer(surface);
+}
+
+bool Game::bird_crashed(Bird *bird) {
+    SDL_Rect bird_rect = bird->GetRect();
+
+    SDL_Rect ground_rect = {0, (int)screen_height - textures->ground_h, (int)screen_width, textures->ground_h};
+    if (SDL_HasIntersection(&bird_rect, &ground_rect))
+        return true;
+
+    return false;
 }

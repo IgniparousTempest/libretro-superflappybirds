@@ -9,22 +9,27 @@
 #include "pipe_pair.h"
 #include "textures.h"
 #include "bird.h"
+#include "input.h"
 
 
 class Game {
 public:
-    const char* game_name = "SuperFlappyBird";
+    const char* game_name = "Super Flappy Birds";
     const char* game_version = "1.0.0";
+    const int game_fps = 50;
 
     Game(unsigned int screen_width, unsigned int screen_height);
-    void GameLoop();
+    void GameLoop(double delta_time, std::vector<Input> controller_inputs);
     uint32_t* GetFrameBuffer();
 
 private:
+    /// The speed in pixels per second that the screen scrolls at
+    double_t scroll_speed = 1;
+    /// How many pixels between each pipe
+    const int DISTANCE_BETWEEN_PIPES = 100;
+
     std::mt19937 rng;
     double_t distance_travelled = 0;
-    /// The speed in pixels that the screen scrolls at
-    double_t scroll_speed = 1.0;
     SDL_Renderer *renderer;
     SDL_Surface *surface;
     Textures* textures;
@@ -32,12 +37,14 @@ private:
     unsigned int screen_width;
     unsigned int screen_height;
     std::list<PipePair> pipes = {};
+    std::vector<Bird> birds;
     Bird* bird;
 
     void DrawBackground(SDL_Renderer* renderer);
     void DrawGround(SDL_Renderer* renderer);
     uint32_t* surface_to_framebuffer(SDL_Surface* surface);
     void generate_pipes(int number);
+    bool bird_crashed(Bird* bird);
 };
 
 

@@ -9,7 +9,10 @@ add_library(${PROJECT_NAME} SHARED
         libretro_interface.cpp
         image_library.h
         game.cpp game.h
-        pipe_pair.cpp pipe_pair.h textures.h bird.cpp bird.h)
+        pipe_pair.cpp pipe_pair.h
+        textures.h
+        bird.cpp bird.h
+        input.h)
 
 INCLUDE(FindPkgConfig)
 

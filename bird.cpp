@@ -1,35 +1,39 @@
+#include <iostream>
 #include "bird.h"
 
-Bird::Bird(int x) {
+Bird::Bird(int x, SDL_Texture* texture, int frame_width, int frame_height) {
     this->x = x;
+    this->texture = texture;
+    this->frame_width = frame_width;
+    this->frame_height = frame_height;
 }
 
-void Bird::Update() {
-    speed_y += GRAVITY;
+void Bird::Flap() {
+    speed_y = FLAP_SPEED;
+}
+
+void Bird::Update(double delta_time) {
+    speed_y += GRAVITY;// * delta_time;
     if (speed_y > TERMINAL_VELOCITY)
         speed_y = TERMINAL_VELOCITY;
     y += (int)speed_y;
 }
 
-void Bird::Render(SDL_Renderer *renderer, Textures *textures) {
-    Update();
+void Bird::Render(SDL_Renderer *renderer) {
     frames += 1;
-    int frame_offset = frames / frames_per_animation_frame;
-    if (frame_offset >= frames_in_animation) {
-        frames = 0;
-        frame_offset = 0;
-    }
+    int frame_offset = (frames / frames_per_animation_frame) % frames_in_animation;
     SDL_Rect dest_rect, src_rect;
 
-    dest_rect.x = x - textures->bird_w / frames_in_animation / 2;
-    dest_rect.y = y - textures->bird_h / 2;
-    dest_rect.w = textures->bird_w / frames_in_animation;
-    dest_rect.h = textures->bird_h;
+    dest_rect = GetRect();
 
-    src_rect.x = textures->bird_w / frames_in_animation * frame_offset;
+    src_rect.x = frame_width * (frame_offset + ((frame_offset == 0) ? 2 : 0)); //TODO: Remove the ternary. It is a solution on my dev machine to stop textures from glitching.
     src_rect.y = 0;
-    src_rect.w = textures->bird_w / frames_in_animation;
-    src_rect.h = textures->bird_h;
+    src_rect.w = dest_rect.w;
+    src_rect.h = dest_rect.h;
 
-    SDL_RenderCopy(renderer, textures->bird, &src_rect, &dest_rect);
+    SDL_RenderCopyEx(renderer, texture, &src_rect, &dest_rect, speed_y * 10.0, nullptr, SDL_FLIP_NONE);
+}
+
+SDL_Rect Bird::GetRect() {
+    return {x - frame_width / 2, y - frame_height / 2, frame_width, frame_height};
 }

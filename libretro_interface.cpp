@@ -1,5 +1,6 @@
 #include "libretro.h"
 #include "game.h"
+#include "input.h"
 #include <cstring>
 #include <memory>
 #include <iostream>
@@ -7,6 +8,7 @@
 static const unsigned FRAMEBUFFER_WIDTH = 640;
 static const unsigned FRAMEBUFFER_HEIGHT = 360;
 
+std::vector<Input> input = {{}, {}, {}, {}};
 std::unique_ptr<Game> game = std::make_unique<Game>(FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT);
 
 // Callbacks
@@ -17,6 +19,8 @@ static retro_input_state_t input_state_cb;
 static retro_environment_t environ_cb;
 static retro_audio_sample_t audio_cb;
 static retro_audio_sample_batch_t audio_batch_cb;
+
+static double delta_time;
 
 unsigned retro_api_version(void)
 {
@@ -90,8 +94,14 @@ void retro_deinit(void)
 void retro_set_environment(retro_environment_t cb)
 {
     environ_cb = cb;
+    // Start without rom
     bool no_rom = true;
     cb(RETRO_ENVIRONMENT_SET_SUPPORT_NO_GAME, &no_rom);
+    // Delta time setup
+    retro_usec_t time_reference = 1000000 / game->game_fps;
+    auto frame_time_cb = [](retro_usec_t usec) { delta_time = usec / 1000000.0; };
+    struct retro_frame_time_callback frame_cb = { frame_time_cb, time_reference };
+    cb(RETRO_ENVIRONMENT_SET_FRAME_TIME_CALLBACK, &frame_cb);
 }
 
 void retro_set_audio_sample_batch(retro_audio_sample_batch_t cb) { audio_batch_cb = cb; }
@@ -121,7 +131,7 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
     int pixel_format = RETRO_PIXEL_FORMAT_XRGB8888;
 
     memset(info, 0, sizeof(*info));
-    info->timing.fps            = 60.0f;
+    info->timing.fps            = game->game_fps;
     info->timing.sample_rate    = 44100;
     info->geometry.base_width   = FRAMEBUFFER_WIDTH;
     info->geometry.base_height  = FRAMEBUFFER_HEIGHT;
@@ -134,11 +144,50 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
 
 void retro_reset(void) { }
 
+std::vector<Input> retropad_map_input(unsigned int num_controllers, std::vector<Input> previous_input) {
+    // Poll input
+    input_poll_cb();
+
+    std::vector<Input> controller_states;
+    for (unsigned int player = 0; player < num_controllers; ++player) {
+        Input input = {};
+
+        input.flap = input_state_cb(player, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A) == 1;
+        input.back = input_state_cb(player, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B) == 1;
+        input.right = input_state_cb(player, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT) == 1;
+        input.down = input_state_cb(player, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN) == 1;
+        input.left = input_state_cb(player, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT) == 1;
+        input.up = input_state_cb(player, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP) == 1;
+        input.start = input_state_cb(player, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START) == 1;
+
+        input.flap_pressed = !previous_input[player].flap && input.flap;
+        input.back_pressed = !previous_input[player].back && input.back;
+        input.right_pressed = !previous_input[player].right && input.right;
+        input.down_pressed = !previous_input[player].down && input.down;
+        input.left_pressed = !previous_input[player].left && input.left;
+        input.up_pressed = !previous_input[player].up && input.up;
+        input.start_pressed = !previous_input[player].start && input.start;
+
+        input.flap_released = previous_input[player].flap && !input.flap;
+        input.back_released = previous_input[player].back && !input.back;
+        input.right_released = previous_input[player].right && !input.right;
+        input.down_released = previous_input[player].down && !input.down;
+        input.left_released = previous_input[player].left && !input.left;
+        input.up_released = previous_input[player].up && !input.up;
+        input.start_released = previous_input[player].start && !input.start;
+
+        controller_states.push_back(input);
+    }
+    return controller_states;
+}
 
 
 void retro_run(void)
 {
-    game->GameLoop();
+    // Input
+    input = retropad_map_input(input.size(), input);
+
+    game->GameLoop(delta_time, input);
 
     video_cb(game->GetFrameBuffer(), FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT, sizeof(uint32_t) * FRAMEBUFFER_WIDTH);
 }
