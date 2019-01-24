@@ -1,5 +1,6 @@
 #include <SDL_surface.h>
 #include <iostream>
+#include <algorithm>
 #include "game.h"
 #include "image_library.h"
 
@@ -97,7 +98,7 @@ void Game::GameLoop(double delta_time, std::vector<Input> controller_inputs) {
     if (controller_inputs[0].flap_pressed)
         bird->Flap();
 
-    if (!pipes.empty() && pipes.front().x + textures->pipe_bottom_w < 0)
+    if (!pipes.empty() && pipes.front().x + textures->pipe_bottom_w < distance_travelled)
         pipes.pop_front();
     if (pipes.size() < 5)
         generate_pipes(20);
@@ -105,8 +106,8 @@ void Game::GameLoop(double delta_time, std::vector<Input> controller_inputs) {
 
 uint32_t* Game::GetFrameBuffer() {
     DrawBackground(renderer);
-    for (PipePair p : pipes)
-        p.Render(renderer, textures, (int)distance_travelled);
+    for (int i = 0; i < std::min((int)screen_width / DISTANCE_BETWEEN_PIPES, (int)pipes.size()); i++)
+        pipes[i].Render(renderer, textures, (int)distance_travelled);
     DrawGround(renderer);
     bird->Render(renderer);
     return surface_to_framebuffer(surface);
@@ -118,6 +119,11 @@ bool Game::bird_crashed(Bird *bird) {
     SDL_Rect ground_rect = {0, (int)screen_height - textures->ground_h, (int)screen_width, textures->ground_h};
     if (SDL_HasIntersection(&bird_rect, &ground_rect))
         return true;
+    for (int i = 0; i < std::min((int)screen_width / DISTANCE_BETWEEN_PIPES, (int)pipes.size()); i++) {
+        auto rects = pipes[i].GetRect(textures, (int)distance_travelled);
+        if (SDL_HasIntersection(&bird_rect, &rects.first) || SDL_HasIntersection(&bird_rect, &rects.second))
+            return true;
+    }
 
     return false;
 }

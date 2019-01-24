@@ -3,9 +3,9 @@
 
 #include <stdint.h>
 #include <random>
-#include <list>
 #include <vector>
 #include <SDL_render.h>
+#include <deque>
 #include "pipe_pair.h"
 #include "textures.h"
 #include "bird.h"
@@ -36,7 +36,7 @@ private:
     std::vector<uint32_t> framebuffer;
     unsigned int screen_width;
     unsigned int screen_height;
-    std::list<PipePair> pipes = {};
+    std::deque<PipePair> pipes = {};
     std::vector<Bird> birds;
     Bird* bird;
 
