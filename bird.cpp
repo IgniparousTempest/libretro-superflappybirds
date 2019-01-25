@@ -6,22 +6,37 @@ Bird::Bird(int x, SDL_Texture* texture, int frame_width, int frame_height) {
     this->texture = texture;
     this->frame_width = frame_width;
     this->frame_height = frame_height;
+    state = Alive;
 }
 
 void Bird::Flap() {
-    speed_y = FLAP_SPEED;
+    if (state == Alive)
+        speed_y = FLAP_SPEED;
+}
+
+void Bird::Kill() {
+    state = Dead;
 }
 
 void Bird::Update(double delta_time) {
-    speed_y += GRAVITY;// * delta_time;
-    if (speed_y > TERMINAL_VELOCITY)
-        speed_y = TERMINAL_VELOCITY;
-    y += (int)speed_y;
+    switch (state) {
+        case Alive:
+            speed_y += GRAVITY;// * delta_time;
+            if (speed_y > TERMINAL_VELOCITY)
+                speed_y = TERMINAL_VELOCITY;
+            y += (int) speed_y;
+            break;
+        case Dead:
+            x -= 1;
+            break;
+    }
 }
 
 void Bird::Render(SDL_Renderer *renderer) {
     frames += 1;
     int frame_offset = (frames / frames_per_animation_frame) % frames_in_animation;
+    if (state == Dead)
+        frame_offset = 0;
     SDL_Rect dest_rect, src_rect;
 
     dest_rect = GetRect();

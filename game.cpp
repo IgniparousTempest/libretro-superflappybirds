@@ -5,6 +5,7 @@
 #include "image_library.h"
 
 Game::Game(unsigned int screen_width, unsigned int screen_height) {
+    state = InGame;
     this->screen_width = screen_width;
     this->screen_height = screen_height;
     framebuffer.resize(screen_width * screen_height);
@@ -88,24 +89,32 @@ void Game::DrawGround(SDL_Renderer *renderer) {
 }
 
 void Game::GameLoop(double delta_time, std::vector<Input> controller_inputs) {
-    distance_travelled += scroll_speed;// * delta_time;
-    for (auto bird : birds)
-        bird->Update(delta_time);
-
-    // Collision detection
-    for (auto bird : birds)
-        if (bird_crashed(bird))
-            std::cout << "Crashed" << std::endl;
-
-    for (int i = 0; i < birds.size(); ++i) {
-        if (controller_inputs[i].flap_pressed)
-            birds[i]->Flap();
+    if (state == InGame && all_birds_dead()) {
+        PostGameMenu();
     }
 
-    if (!pipes.empty() && pipes.front().x + textures->pipe_bottom_w < distance_travelled)
-        pipes.pop_front();
-    if (pipes.size() < 5)
-        generate_pipes(20);
+    if (state == InGame) {
+        distance_travelled += scroll_speed;// * delta_time;
+        for (auto bird : birds)
+            bird->Update(delta_time);
+
+        // Collision detection
+        for (auto bird : birds)
+            if (bird_crashed(bird)) {
+                std::cout << "Crashed" << std::endl;
+                bird->Kill();
+            }
+
+        for (int i = 0; i < birds.size(); ++i) {
+            if (controller_inputs[i].flap_pressed)
+                birds[i]->Flap();
+        }
+
+        if (!pipes.empty() && pipes.front().x + textures->pipe_bottom_w < distance_travelled)
+            pipes.pop_front();
+        if (pipes.size() < 5)
+            generate_pipes(20);
+    }
 }
 
 uint32_t* Game::GetFrameBuffer() {
@@ -119,6 +128,9 @@ uint32_t* Game::GetFrameBuffer() {
 }
 
 bool Game::bird_crashed(Bird *bird) {
+    if (bird->state != Alive)
+        return false;
+
     SDL_Rect bird_rect = bird->GetRect();
 
     SDL_Rect ground_rect = {0, (int)screen_height - textures->ground_h, (int)screen_width, textures->ground_h};
@@ -131,4 +143,15 @@ bool Game::bird_crashed(Bird *bird) {
     }
 
     return false;
+}
+
+bool Game::all_birds_dead() {
+    for (auto bird : birds)
+        if (bird->state == Alive)
+            return false;
+    return true;
+}
+
+void Game::PostGameMenu() {
+    state = InPostGameMenu;
 }

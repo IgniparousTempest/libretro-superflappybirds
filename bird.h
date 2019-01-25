@@ -5,13 +5,18 @@
 #include <SDL_render.h>
 #include "textures.h"
 
+enum BirdState { Alive, Dead, Menu };
+
 class Bird {
 public:
     int x = 0;
     int y = 0;
+    int score = 0;
+    BirdState state;
     Bird(int x, SDL_Texture* texture, int frame_width, int frame_height);
     void Update(double delta_time);
     void Flap();
+    void Kill();
     void Render(SDL_Renderer* renderer);
     SDL_Rect GetRect();
 

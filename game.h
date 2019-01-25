@@ -11,6 +11,7 @@
 #include "bird.h"
 #include "input.h"
 
+enum GameState { InGame, InPostGameMenu, InMenu };
 
 class Game {
 public:
@@ -29,6 +30,7 @@ private:
     const int DISTANCE_BETWEEN_PIPES = 100;
 
     std::mt19937 rng;
+    GameState state;
     double_t distance_travelled = 0;
     SDL_Renderer *renderer;
     SDL_Surface *surface;
@@ -44,6 +46,9 @@ private:
     uint32_t* surface_to_framebuffer(SDL_Surface* surface);
     void generate_pipes(int number);
     bool bird_crashed(Bird* bird);
+    bool all_birds_dead();
+    /// Transitions the game to the Post Game Menu
+    void PostGameMenu();
 };
 
 
