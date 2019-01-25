@@ -17,6 +17,11 @@ public:
     SDL_Texture* bird4;
     SDL_Texture* numbers;
     SDL_Texture* score_background;
+    SDL_Texture* start_1_player;
+    SDL_Texture* start_2_player;
+    SDL_Texture* start_3_player;
+    SDL_Texture* start_4_player;
+    SDL_Texture* hand;
 
     int sky_w;
     int buildings_w;
@@ -47,6 +52,11 @@ public:
         SDL_Surface *bird4 = SDL_LoadBMP("resources/bird4.bmp");
         SDL_Surface *numbers = SDL_LoadBMP("resources/numbers.bmp");
         SDL_Surface *score_background = SDL_LoadBMP("resources/score_background.bmp");
+        SDL_Surface *start_1_player = SDL_LoadBMP("resources/start_1_player.bmp");
+        SDL_Surface *start_2_player = SDL_LoadBMP("resources/start_2_player.bmp");
+        SDL_Surface *start_3_player = SDL_LoadBMP("resources/start_3_player.bmp");
+        SDL_Surface *start_4_player = SDL_LoadBMP("resources/start_4_player.bmp");
+        SDL_Surface *hand = SDL_LoadBMP("resources/hand.bmp");
 
         this->sky = SDL_CreateTextureFromSurface(renderer, sky);
         this->buildings = SDL_CreateTextureFromSurface(renderer, buildings);
@@ -59,6 +69,11 @@ public:
         this->bird4 = SDL_CreateTextureFromSurface(renderer, bird4);
         this->numbers = SDL_CreateTextureFromSurface(renderer, numbers);
         this->score_background = SDL_CreateTextureFromSurface(renderer, score_background);
+        this->start_1_player = SDL_CreateTextureFromSurface(renderer, start_1_player);
+        this->start_2_player = SDL_CreateTextureFromSurface(renderer, start_2_player);
+        this->start_3_player = SDL_CreateTextureFromSurface(renderer, start_3_player);
+        this->start_4_player = SDL_CreateTextureFromSurface(renderer, start_4_player);
+        this->hand = SDL_CreateTextureFromSurface(renderer, hand);
 
         sky_w = sky->w;
         buildings_w = buildings->w;
@@ -85,6 +100,11 @@ public:
         SDL_FreeSurface(bird4);
         SDL_FreeSurface(numbers);
         SDL_FreeSurface(score_background);
+        SDL_FreeSurface(start_1_player);
+        SDL_FreeSurface(start_2_player);
+        SDL_FreeSurface(start_3_player);
+        SDL_FreeSurface(start_4_player);
+        SDL_FreeSurface(hand);
 
         bird_frames.push_back({0, 0, 17, 12});
         bird_frames.push_back({17, 0, 17, 12});

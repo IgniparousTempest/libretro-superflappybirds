@@ -13,7 +13,8 @@ add_library(${PROJECT_NAME} SHARED
         textures.h
         bird.cpp bird.h
         input.h
-        auxillary.h)
+        auxillary.h
+        menu.cpp menu.h)
 
 INCLUDE(FindPkgConfig)
 

@@ -16,10 +16,9 @@ Game::Game(unsigned int screen_width, unsigned int screen_height) {
     renderer = SDL_CreateSoftwareRenderer(surface);
     textures = new Textures(renderer);
 
-    birds.push_back(new Bird(screen_width / 2, screen_height / 2, textures->bird, textures->bird_frames));
-    birds.push_back(new Bird(screen_width / 2, screen_height / 2, textures->bird2, textures->bird_frames));
-    birds.push_back(new Bird(screen_width / 2, screen_height / 2, textures->bird3, textures->bird_frames));
-    birds.push_back(new Bird(screen_width / 2, screen_height / 2, textures->bird4, textures->bird_frames));
+    menu = new Menu(textures->start_1_player, textures->start_2_player, textures->start_3_player, textures->start_4_player, textures->hand);
+
+    NewGame(4);
 }
 
 uint32_t *Game::surface_to_framebuffer(SDL_Surface* surface) {
@@ -43,7 +42,7 @@ void Game::generate_pipes(int number) {
     const int gap_between_top_and_bottom = 60;
     int last_x = 0;
     if (pipes.empty())
-        last_x = screen_width;
+        last_x = (int)distance_travelled + screen_width;
     else
         last_x = pipes.back().x;
 
@@ -161,6 +160,16 @@ void Game::GameLoop(double delta_time, std::vector<Input> controller_inputs) {
 
         score_all_birds();
     }
+    else if (state == InPostGameMenu || state == InMenu) {
+        for (int i = 0; i < birds.size(); ++i) {
+            if (controller_inputs[i].left_pressed)
+                menu->Left();
+            if (controller_inputs[i].right_pressed)
+                menu->Right();
+            if (controller_inputs[i].flap_pressed)
+                NewGame(menu->Select());
+        }
+    }
 }
 
 uint32_t* Game::GetFrameBuffer() {
@@ -171,6 +180,8 @@ uint32_t* Game::GetFrameBuffer() {
     for (auto bird : birds)
         bird->Render(renderer);
     DrawScores(renderer);
+    if (state == InPostGameMenu || state == InMenu)
+        menu->Render(renderer);
     return surface_to_framebuffer(surface);
 }
 
@@ -199,12 +210,31 @@ bool Game::all_birds_dead() {
     return true;
 }
 
+void Game::NewGame(int num_players) {
+    state = InGame;
+    std::cout << "Starting a new game with " << num_players << "players." << std::endl;
+    for (auto bird : birds)
+        delete bird;
+    birds = {};
+    birds.push_back(new Bird(screen_width / 2, screen_height / 2, textures->bird, textures->bird_frames));
+    if (num_players >= 2)
+        birds.push_back(new Bird(screen_width / 2, screen_height / 2, textures->bird2, textures->bird_frames));
+    if (num_players >= 3)
+        birds.push_back(new Bird(screen_width / 2, screen_height / 2, textures->bird3, textures->bird_frames));
+    if (num_players == 4)
+        birds.push_back(new Bird(screen_width / 2, screen_height / 2, textures->bird4, textures->bird_frames));
+
+    distance_travelled = 0;
+    pipes = {};
+}
+
 void Game::PostGameMenu() {
     state = InPostGameMenu;
+    std::cout << "Game over, entering post game score screen." << std::endl;
 }
 
 void Game::score_all_birds() {
     for (auto bird : birds)
         if (bird->IsAlive())
-            bird->score = std::max(0, (int)((birds[0]->x + distance_travelled - screen_width) / DISTANCE_BETWEEN_PIPES));
+            bird->score = std::max(0, (int)((bird->x + distance_travelled - screen_width) / DISTANCE_BETWEEN_PIPES));
 }

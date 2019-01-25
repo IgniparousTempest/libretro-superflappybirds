@@ -10,13 +10,14 @@
 #include "textures.h"
 #include "bird.h"
 #include "input.h"
+#include "menu.h"
 
 enum GameState { InGame, InPostGameMenu, InMenu };
 
 class Game {
 public:
     const char* game_name = "Super Flappy Birds";
-    const char* game_version = "0.1.0";
+    const char* game_version = "0.9.0";
     const int game_fps = 50;
 
     Game(unsigned int screen_width, unsigned int screen_height);
@@ -31,6 +32,7 @@ private:
 
     std::mt19937 rng;
     GameState state;
+    Menu* menu;
     double_t distance_travelled = 0;
     SDL_Renderer *renderer;
     SDL_Surface *surface;
@@ -50,6 +52,7 @@ private:
     bool all_birds_dead();
     void score_all_birds();
     void draw_score(int x, int y, int score, SDL_Texture* bird, SDL_Rect* bird_frame);
+    void NewGame(int num_players);
     /// Transitions the game to the Post Game Menu
     void PostGameMenu();
 };
