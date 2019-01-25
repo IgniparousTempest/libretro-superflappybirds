@@ -1,18 +1,19 @@
 cmake_minimum_required(VERSION 3.13)
 
-project(lr_superflappybird)
+project(lr_superflappybirds)
 
 set (CMAKE_CXX_STANDARD 17)
 
 add_library(${PROJECT_NAME} SHARED
         libretro.h
-        libretro_interface.cpp
+        libretro.cpp
         image_library.h
         game.cpp game.h
         pipe_pair.cpp pipe_pair.h
         textures.h
         bird.cpp bird.h
-        input.h)
+        input.h
+        auxillary.h)
 
 INCLUDE(FindPkgConfig)
 

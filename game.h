@@ -43,10 +43,13 @@ private:
 
     void DrawBackground(SDL_Renderer* renderer);
     void DrawGround(SDL_Renderer* renderer);
+    void DrawScores(SDL_Renderer *renderer);
     uint32_t* surface_to_framebuffer(SDL_Surface* surface);
     void generate_pipes(int number);
     bool bird_crashed(Bird* bird);
     bool all_birds_dead();
+    void score_all_birds();
+    void draw_score(int x, int y, int score, SDL_Texture* bird, SDL_Rect* bird_frame);
     /// Transitions the game to the Post Game Menu
     void PostGameMenu();
 };

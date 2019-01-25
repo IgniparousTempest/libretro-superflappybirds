@@ -3,6 +3,7 @@
 #include <algorithm>
 #include "game.h"
 #include "image_library.h"
+#include "auxillary.h"
 
 Game::Game(unsigned int screen_width, unsigned int screen_height) {
     state = InGame;
@@ -15,7 +16,10 @@ Game::Game(unsigned int screen_width, unsigned int screen_height) {
     renderer = SDL_CreateSoftwareRenderer(surface);
     textures = new Textures(renderer);
 
-    birds.push_back(new Bird(screen_width / 2, textures->bird, textures->bird_w / 4, textures->bird_h));
+    birds.push_back(new Bird(screen_width / 2, screen_height / 2, textures->bird, textures->bird_frames));
+    birds.push_back(new Bird(screen_width / 2, screen_height / 2, textures->bird2, textures->bird_frames));
+    birds.push_back(new Bird(screen_width / 2, screen_height / 2, textures->bird3, textures->bird_frames));
+    birds.push_back(new Bird(screen_width / 2, screen_height / 2, textures->bird4, textures->bird_frames));
 }
 
 uint32_t *Game::surface_to_framebuffer(SDL_Surface* surface) {
@@ -88,6 +92,46 @@ void Game::DrawGround(SDL_Renderer *renderer) {
     }
 }
 
+void Game::draw_score(int x, int y, int score, SDL_Texture* bird, SDL_Rect* bird_frame) {
+    // Extract digits from score
+    auto digits = Auxillary::digits(score);
+
+    // Draw background
+    SDL_Rect dest_rect = {x, y, textures->score_background_w, textures->score_background_h};
+    SDL_RenderCopy(renderer, textures->score_background, nullptr, &dest_rect);
+
+    // Draw player's bird
+    dest_rect = {x + 11, y + 14, bird_frame->w, bird_frame->h};
+    SDL_RenderCopy(renderer, bird, bird_frame, &dest_rect);
+
+    // Draw score
+    x += 35;
+    y += 10;
+    int x_offset = 0;
+    while (!digits.empty())
+    {
+        int digit = digits.top();
+        digits.pop();
+        auto number = textures->numbers_frames[digit];
+        dest_rect.x = x + x_offset;
+        dest_rect.y = y;
+        dest_rect.w = number.w;
+        dest_rect.h = number.h;
+        SDL_RenderCopy(renderer, textures->numbers, &number, &dest_rect);
+        x_offset += number.w + 1;
+    }
+}
+
+void Game::DrawScores(SDL_Renderer *renderer) {
+    draw_score(0, 0, birds[0]->score, birds[0]->texture, &birds[0]->animation_frames[2]);
+    if (birds.size() >= 2)
+        draw_score(screen_width / 3 - textures->score_background_w / 2, 0, birds[1]->score, birds[1]->texture, &birds[1]->animation_frames[2]);
+    if (birds.size() >= 3)
+        draw_score(2 * screen_width / 3 - textures->score_background_w / 2, 0, birds[2]->score, birds[2]->texture, &birds[2]->animation_frames[2]);
+    if (birds.size() >= 4)
+        draw_score(screen_width - textures->score_background_w, 0, birds[3]->score, birds[3]->texture, &birds[3]->animation_frames[2]);
+}
+
 void Game::GameLoop(double delta_time, std::vector<Input> controller_inputs) {
     if (state == InGame && all_birds_dead()) {
         PostGameMenu();
@@ -101,7 +145,7 @@ void Game::GameLoop(double delta_time, std::vector<Input> controller_inputs) {
         // Collision detection
         for (auto bird : birds)
             if (bird_crashed(bird)) {
-                std::cout << "Crashed" << std::endl;
+                std::cout << "Crashed with score: " << bird->score << std::endl;
                 bird->Kill();
             }
 
@@ -114,6 +158,8 @@ void Game::GameLoop(double delta_time, std::vector<Input> controller_inputs) {
             pipes.pop_front();
         if (pipes.size() < 5)
             generate_pipes(20);
+
+        score_all_birds();
     }
 }
 
@@ -124,11 +170,12 @@ uint32_t* Game::GetFrameBuffer() {
     DrawGround(renderer);
     for (auto bird : birds)
         bird->Render(renderer);
+    DrawScores(renderer);
     return surface_to_framebuffer(surface);
 }
 
 bool Game::bird_crashed(Bird *bird) {
-    if (bird->state != Alive)
+    if (!bird->IsAlive())
         return false;
 
     SDL_Rect bird_rect = bird->GetRect();
@@ -147,11 +194,17 @@ bool Game::bird_crashed(Bird *bird) {
 
 bool Game::all_birds_dead() {
     for (auto bird : birds)
-        if (bird->state == Alive)
+        if (bird->IsAlive())
             return false;
     return true;
 }
 
 void Game::PostGameMenu() {
     state = InPostGameMenu;
+}
+
+void Game::score_all_birds() {
+    for (auto bird : birds)
+        if (bird->IsAlive())
+            bird->score = std::max(0, (int)((birds[0]->x + distance_travelled - screen_width) / DISTANCE_BETWEEN_PIPES));
 }
