@@ -6,7 +6,7 @@
 #include "auxillary.h"
 
 Game::Game(unsigned int screen_width, unsigned int screen_height) {
-    state = InGame;
+    state = InMenu;
     this->screen_width = screen_width;
     this->screen_height = screen_height;
     framebuffer.resize(screen_width * screen_height);
@@ -16,9 +16,9 @@ Game::Game(unsigned int screen_width, unsigned int screen_height) {
     renderer = SDL_CreateSoftwareRenderer(surface);
     textures = new Textures(renderer);
 
-    menu = new Menu(textures->start_1_player, textures->start_2_player, textures->start_3_player, textures->start_4_player, textures->hand);
+    menu = new Menu(textures->title, textures->credits, textures->start_1_player, textures->start_2_player, textures->start_3_player, textures->start_4_player, textures->hand, textures->winner_background);
 
-    NewGame(4);
+//    NewGame(4);
 }
 
 uint32_t *Game::surface_to_framebuffer(SDL_Surface* surface) {
@@ -92,9 +92,6 @@ void Game::DrawGround(SDL_Renderer *renderer) {
 }
 
 void Game::draw_score(int x, int y, int score, SDL_Texture* bird, SDL_Rect* bird_frame) {
-    // Extract digits from score
-    auto digits = Auxillary::digits(score);
-
     // Draw background
     SDL_Rect dest_rect = {x, y, textures->score_background_w, textures->score_background_h};
     SDL_RenderCopy(renderer, textures->score_background, nullptr, &dest_rect);
@@ -104,21 +101,9 @@ void Game::draw_score(int x, int y, int score, SDL_Texture* bird, SDL_Rect* bird
     SDL_RenderCopy(renderer, bird, bird_frame, &dest_rect);
 
     // Draw score
-    x += 35;
-    y += 10;
-    int x_offset = 0;
-    while (!digits.empty())
-    {
-        int digit = digits.top();
-        digits.pop();
-        auto number = textures->numbers_frames[digit];
-        dest_rect.x = x + x_offset;
-        dest_rect.y = y;
-        dest_rect.w = number.w;
-        dest_rect.h = number.h;
-        SDL_RenderCopy(renderer, textures->numbers, &number, &dest_rect);
-        x_offset += number.w + 1;
-    }
+    auto rects = Auxillary::getNumberRects(score, &textures->numbers_frames, x + 35, y + 10, 1);
+    for (auto &rect : rects)
+        SDL_RenderCopy(renderer, textures->numbers, &rect.first, &rect.second);
 }
 
 void Game::DrawScores(SDL_Renderer *renderer) {
@@ -132,12 +117,14 @@ void Game::DrawScores(SDL_Renderer *renderer) {
 }
 
 void Game::GameLoop(double delta_time, std::vector<Input> controller_inputs) {
+    if (state == InGame || state == InMenu)
+        distance_travelled += scroll_speed;// * delta_time;
+
     if (state == InGame && all_birds_dead()) {
         PostGameMenu();
     }
 
     if (state == InGame) {
-        distance_travelled += scroll_speed;// * delta_time;
         for (auto bird : birds)
             bird->Update(delta_time);
 
@@ -161,7 +148,8 @@ void Game::GameLoop(double delta_time, std::vector<Input> controller_inputs) {
         score_all_birds();
     }
     else if (state == InPostGameMenu || state == InMenu) {
-        for (int i = 0; i < birds.size(); ++i) {
+        unsigned long controllers = (birds.empty())? 1 : birds.size();
+        for (int i = 0; i < controllers; ++i) {
             if (controller_inputs[i].left_pressed)
                 menu->Left();
             if (controller_inputs[i].right_pressed)
@@ -179,7 +167,8 @@ uint32_t* Game::GetFrameBuffer() {
     DrawGround(renderer);
     for (auto bird : birds)
         bird->Render(renderer);
-    DrawScores(renderer);
+    if (state != InMenu)
+        DrawScores(renderer);
     if (state == InPostGameMenu || state == InMenu)
         menu->Render(renderer);
     return surface_to_framebuffer(surface);
@@ -230,11 +219,28 @@ void Game::NewGame(int num_players) {
 
 void Game::PostGameMenu() {
     state = InPostGameMenu;
+
+    // Get winners
+    int highest_score = 0;
+    for (auto bird : birds) {
+        if (bird->score > highest_score)
+            highest_score = bird->score;
+    }
+    std::vector<SDL_Texture *> textures;
+    std::vector<SDL_Rect *> rects;
+    for (auto bird : birds) {
+        if (bird->score > highest_score)
+            highest_score = bird->score;
+        textures.push_back(bird->texture);
+        rects.push_back(&bird->animation_frames[2]);
+    }
+
+    menu->ShowScore(textures, rects);
     std::cout << "Game over, entering post game score screen." << std::endl;
 }
 
 void Game::score_all_birds() {
     for (auto bird : birds)
         if (bird->IsAlive())
-            bird->score = std::max(0, (int)((bird->x + distance_travelled - screen_width) / DISTANCE_BETWEEN_PIPES));
+            bird->score = std::max(0, (int)((bird->x + distance_travelled - screen_width - textures->pipe_bottom_w) / DISTANCE_BETWEEN_PIPES));
 }

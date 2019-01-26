@@ -22,6 +22,9 @@ public:
     SDL_Texture* start_3_player;
     SDL_Texture* start_4_player;
     SDL_Texture* hand;
+    SDL_Texture* title;
+    SDL_Texture* credits;
+    SDL_Texture* winner_background;
 
     int sky_w;
     int buildings_w;
@@ -57,6 +60,9 @@ public:
         SDL_Surface *start_3_player = SDL_LoadBMP("resources/start_3_player.bmp");
         SDL_Surface *start_4_player = SDL_LoadBMP("resources/start_4_player.bmp");
         SDL_Surface *hand = SDL_LoadBMP("resources/hand.bmp");
+        SDL_Surface *title = SDL_LoadBMP("resources/title.bmp");
+        SDL_Surface *credits = SDL_LoadBMP("resources/credits.bmp");
+        SDL_Surface *winner_background = SDL_LoadBMP("resources/winner_background.bmp");
 
         this->sky = SDL_CreateTextureFromSurface(renderer, sky);
         this->buildings = SDL_CreateTextureFromSurface(renderer, buildings);
@@ -74,6 +80,9 @@ public:
         this->start_3_player = SDL_CreateTextureFromSurface(renderer, start_3_player);
         this->start_4_player = SDL_CreateTextureFromSurface(renderer, start_4_player);
         this->hand = SDL_CreateTextureFromSurface(renderer, hand);
+        this->title = SDL_CreateTextureFromSurface(renderer, title);
+        this->credits = SDL_CreateTextureFromSurface(renderer, credits);
+        this->winner_background = SDL_CreateTextureFromSurface(renderer, winner_background);
 
         sky_w = sky->w;
         buildings_w = buildings->w;
@@ -105,6 +114,9 @@ public:
         SDL_FreeSurface(start_3_player);
         SDL_FreeSurface(start_4_player);
         SDL_FreeSurface(hand);
+        SDL_FreeSurface(title);
+        SDL_FreeSurface(credits);
+        SDL_FreeSurface(winner_background);
 
         bird_frames.push_back({0, 0, 17, 12});
         bird_frames.push_back({17, 0, 17, 12});
