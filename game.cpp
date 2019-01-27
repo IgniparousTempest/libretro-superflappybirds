@@ -201,7 +201,7 @@ bool Game::all_birds_dead() {
 
 void Game::NewGame(int num_players) {
     state = InGame;
-    std::cout << "Starting a new game with " << num_players << "players." << std::endl;
+    std::cout << "Starting a new game with " << num_players << " players." << std::endl;
     for (auto bird : birds)
         delete bird;
     birds = {};
@@ -230,10 +230,10 @@ void Game::PostGameMenu() {
     std::vector<SDL_Texture *> textures;
     std::vector<SDL_Rect *> rects;
     for (auto bird : birds) {
-        if (bird->score > highest_score)
-            highest_score = bird->score;
-        textures.push_back(bird->texture);
-        rects.push_back(&bird->animation_frames[2]);
+        if (bird->score == highest_score) {
+            textures.push_back(bird->texture);
+            rects.push_back(&bird->animation_frames[2]);
+        }
     }
 
     menu->ShowScore(textures, rects);

@@ -1,3 +1,7 @@
+#include <utility>
+
+#include <utility>
+
 #include "menu.h"
 
 Menu::Menu(SDL_Texture* texture_title, SDL_Texture* texture_credits, SDL_Texture *texture_start_1_player,
@@ -50,8 +54,21 @@ int Menu::Select() {
 }
 
 void Menu::ShowScore(std::vector<SDL_Texture*> texture_bird, std::vector<SDL_Rect*> frame_rect) {
-    bird = texture_bird[0];
-    bird_rect = frame_rect[0];
+    bird = std::move(texture_bird);
+    bird_src_rect = std::move(frame_rect);
+    bird_rect = {};
+    int bird_x = winner_background_rect.x + 10;
+    int bird_y = winner_background_rect.y + 23;
+    if (bird_src_rect.size() == 1)
+        bird_rect.push_back({bird_x, bird_y, bird_src_rect[0]->w * 2, bird_src_rect[0]->h * 2});
+    else
+        bird_rect.push_back({bird_x, bird_y, bird_src_rect[0]->w, bird_src_rect[0]->h});
+    if (bird_src_rect.size() >= 2)
+        bird_rect.push_back({bird_x + bird_src_rect[0]->w, bird_y, bird_src_rect[1]->w, bird_src_rect[1]->h});
+    if (bird_src_rect.size() >= 3)
+        bird_rect.push_back({bird_x, bird_y + bird_src_rect[0]->h, bird_src_rect[2]->w, bird_src_rect[2]->h});
+    if (bird_src_rect.size() >= 4)
+        bird_rect.push_back({bird_x + bird_src_rect[2]->w, bird_y + bird_src_rect[1]->h, bird_src_rect[3]->w, bird_src_rect[3]->h});
     showTitle = false;
 }
 
@@ -65,6 +82,9 @@ void Menu::Render(SDL_Renderer *renderer) {
         SDL_RenderCopy(renderer, credits, nullptr, &credits_rect);
     } else {
         SDL_RenderCopy(renderer, winner_background, nullptr, &winner_background_rect);
+        for (int i = 0; i < bird.size(); ++i) {
+            SDL_RenderCopy(renderer, bird[i], bird_src_rect[i], &bird_rect[i]);
+        }
     }
     SDL_RenderCopy(renderer, hand, nullptr, &hand_rect);
     SDL_RenderCopy(renderer, start_1_player, nullptr, &start_1_player_rect);

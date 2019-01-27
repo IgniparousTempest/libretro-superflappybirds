@@ -21,7 +21,7 @@ private:
     bool showTitle = true;
     SDL_Texture* title;
     SDL_Texture* credits;
-    SDL_Texture* bird;
+    std::vector<SDL_Texture*> bird;
     SDL_Texture* hand;
     SDL_Texture* start_1_player;
     SDL_Texture* start_2_player;
@@ -30,7 +30,8 @@ private:
     SDL_Texture* winner_background;
     SDL_Rect title_rect;
     SDL_Rect credits_rect;
-    SDL_Rect* bird_rect;
+    std::vector<SDL_Rect> bird_rect;
+    std::vector<SDL_Rect*> bird_src_rect;
     SDL_Rect hand_rect;
     SDL_Rect start_1_player_rect;
     SDL_Rect start_2_player_rect;
