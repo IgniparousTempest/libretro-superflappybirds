@@ -30,10 +30,10 @@ private:
     double speed_y = 0;
     const double FLAP_SPEED = -3.5;
     const double GRAVITY = 0.25;
-    const double TERMINAL_VELOCITY = 5;
-    unsigned int frames = 0;
+    const double TERMINAL_VELOCITY = 2;
+    double time = 0;
     const int frames_in_animation = 4;
-    const int frames_per_animation_frame = 3;
+    const double frames_per_second = 16;
 };
 
 

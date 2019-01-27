@@ -118,7 +118,7 @@ void Game::DrawScores(SDL_Renderer *renderer) {
 
 void Game::GameLoop(double delta_time, std::vector<Input> controller_inputs) {
     if (state == InGame || state == InMenu)
-        distance_travelled += scroll_speed;// * delta_time;
+        distance_travelled += scroll_speed * delta_time * Game::game_fps;
 
     if (state == InGame && all_birds_dead()) {
         PostGameMenu();

@@ -18,7 +18,7 @@ class Game {
 public:
     const char* game_name = "Super Flappy Birds";
     const char* game_version = "0.9.0";
-    const int game_fps = 50;
+    static const int game_fps = 50;
 
     Game(unsigned int screen_width, unsigned int screen_height);
     void GameLoop(double delta_time, std::vector<Input> controller_inputs);
@@ -26,14 +26,14 @@ public:
 
 private:
     /// The speed in pixels per second that the screen scrolls at
-    double_t scroll_speed = 1;
+    double scroll_speed = 1;
     /// How many pixels between each pipe
     const int DISTANCE_BETWEEN_PIPES = 100;
 
     std::mt19937 rng;
     GameState state;
     Menu* menu;
-    double_t distance_travelled = 0;
+    double distance_travelled = 0;
     SDL_Renderer *renderer;
     SDL_Surface *surface;
     Textures* textures;

@@ -1,5 +1,6 @@
 #include <iostream>
 #include "bird.h"
+#include "game.h"
 
 Bird::Bird(int x, int y, int floor_height, SDL_Texture* texture, std::vector<SDL_Rect> frames) {
     this->x = x;
@@ -25,8 +26,9 @@ void Bird::Kill(double distance_travelled) {
 }
 
 void Bird::Update(double delta_time, double distance_travelled) {
+    time += delta_time;
     if (state != Gliding) {
-        speed_y += GRAVITY;// * delta_time;
+        speed_y += GRAVITY * delta_time * Game::game_fps;
         if (speed_y > TERMINAL_VELOCITY)
             speed_y = TERMINAL_VELOCITY;
         y += (int) speed_y;
@@ -52,8 +54,7 @@ void Bird::Update(double delta_time, double distance_travelled) {
 }
 
 void Bird::Render(SDL_Renderer *renderer) {
-    frames += 1;
-    int frame_index = (frames / frames_per_animation_frame) % frames_in_animation;
+    int frame_index = (int)(time * frames_per_second) % frames_in_animation;
     if (state == Dead)
         frame_index = 0;
     SDL_Rect dest_rect;
