@@ -4,8 +4,8 @@
 
 #include <utility>
 
-#include "menu.h"
-#include "auxillary.h"
+#include "menu.hpp"
+#include "auxillary.hpp"
 
 Menu::Menu(SDL_Texture* texture_title, SDL_Texture* texture_credits, SDL_Texture *texture_start_1_player,
            SDL_Texture *texture_start_2_player, SDL_Texture *texture_start_3_player,

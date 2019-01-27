@@ -3,7 +3,7 @@
 
 
 #include <SDL_render.h>
-#include "textures.h"
+#include "textures.hpp"
 
 enum BirdState { Gliding, Alive, Dead };
 

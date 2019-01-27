@@ -5,16 +5,16 @@ project(lr_superflappybirds)
 set (CMAKE_CXX_STANDARD 14)
 
 add_library(${PROJECT_NAME} SHARED
-        libretro.h
+        libretro.hpp
         libretro.cpp
-        image_library.h
+        image_library.hpp
         game.cpp game.h
-        pipe_pair.cpp pipe_pair.h
-        textures.h
-        bird.cpp bird.h
-        input.h
-        auxillary.h
-        menu.cpp menu.h)
+        pipe_pair.cpp pipe_pair.hpp
+        textures.hpp
+        bird.cpp bird.hpp
+        input.hpp
+        auxillary.hpp
+        menu.cpp menu.hpp)
 
 INCLUDE(FindPkgConfig)
 

@@ -1,6 +1,6 @@
-#include "libretro.h"
+#include "libretro.hpp"
 #include "game.h"
-#include "input.h"
+#include "input.hpp"
 #include <cstring>
 #include <memory>
 #include <iostream>

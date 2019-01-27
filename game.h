@@ -6,11 +6,11 @@
 #include <vector>
 #include <SDL_render.h>
 #include <deque>
-#include "pipe_pair.h"
-#include "textures.h"
-#include "bird.h"
-#include "input.h"
-#include "menu.h"
+#include "pipe_pair.hpp"
+#include "textures.hpp"
+#include "bird.hpp"
+#include "input.hpp"
+#include "menu.hpp"
 
 enum GameState { InGame, InPostGameMenu, InMenu };
 

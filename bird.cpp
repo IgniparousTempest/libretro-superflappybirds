@@ -1,5 +1,5 @@
 #include <iostream>
-#include "bird.h"
+#include "bird.hpp"
 
 Bird::Bird(int x, int y, int floor_height, SDL_Texture* texture, std::vector<SDL_Rect> frames) {
     this->x = x;

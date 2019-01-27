@@ -2,8 +2,8 @@
 #include <iostream>
 #include <algorithm>
 #include "game.h"
-#include "image_library.h"
-#include "auxillary.h"
+#include "image_library.hpp"
+#include "auxillary.hpp"
 
 Game::Game(unsigned int screen_width, unsigned int screen_height) {
     state = InMenu;
