@@ -23,11 +23,20 @@ void Bird::Kill() {
 void Bird::Update(double delta_time) {
     switch (state) {
         case Alive:
+        {
             speed_y += GRAVITY;// * delta_time;
             if (speed_y > TERMINAL_VELOCITY)
                 speed_y = TERMINAL_VELOCITY;
             y += (int) speed_y;
+
+            // If bird is above screen
+            auto f = animation_frames[0];
+            if (y - f.h / 2 < 0) {
+                y = f.h / 2;
+                speed_y = 0;
+            }
             break;
+        }
         case Dead:
             x -= 1;
             break;

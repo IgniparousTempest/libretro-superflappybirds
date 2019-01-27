@@ -142,7 +142,7 @@ void Game::GameLoop(double delta_time, std::vector<Input> controller_inputs) {
 
         if (!pipes.empty() && pipes.front().x + textures->pipe_bottom_w < distance_travelled)
             pipes.pop_front();
-        if (pipes.size() < 5)
+        if (pipes.size() < 8)
             generate_pipes(20);
 
         score_all_birds();
