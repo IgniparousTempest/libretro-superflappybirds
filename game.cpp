@@ -16,7 +16,7 @@ Game::Game(unsigned int screen_width, unsigned int screen_height) {
     renderer = SDL_CreateSoftwareRenderer(surface);
     textures = new Textures(renderer);
 
-    menu = new Menu(textures->title, textures->credits, textures->start_1_player, textures->start_2_player, textures->start_3_player, textures->start_4_player, textures->hand, textures->winner_background);
+    menu = new Menu(textures->title, textures->credits, textures->start_1_player, textures->start_2_player, textures->start_3_player, textures->start_4_player, textures->hand, textures->winner_background, textures->numbers, textures->numbers_frames);
 
 //    NewGame(4);
 }
@@ -236,7 +236,7 @@ void Game::PostGameMenu() {
         }
     }
 
-    menu->ShowScore(textures, rects);
+    menu->ShowScore(highest_score, textures, rects);
     std::cout << "Game over, entering post game score screen." << std::endl;
 }
 

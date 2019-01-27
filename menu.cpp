@@ -2,11 +2,15 @@
 
 #include <utility>
 
+#include <utility>
+
 #include "menu.h"
+#include "auxillary.h"
 
 Menu::Menu(SDL_Texture* texture_title, SDL_Texture* texture_credits, SDL_Texture *texture_start_1_player,
            SDL_Texture *texture_start_2_player, SDL_Texture *texture_start_3_player,
-           SDL_Texture *texture_start_4_player, SDL_Texture *texture_hand, SDL_Texture* texture_winner_background) {
+           SDL_Texture *texture_start_4_player, SDL_Texture *texture_hand, SDL_Texture* texture_winner_background,
+           SDL_Texture* texture_numbers, std::vector<SDL_Rect> numbers_frames) {
     index = 0;
 
     title = texture_title;
@@ -17,6 +21,8 @@ Menu::Menu(SDL_Texture* texture_title, SDL_Texture* texture_credits, SDL_Texture
     start_3_player = texture_start_3_player;
     start_4_player = texture_start_4_player;
     winner_background = texture_winner_background;
+    numbers = texture_numbers;
+    this->numbers_frames = std::move(numbers_frames);
 
     int w, h;
     SDL_QueryTexture(title, nullptr, nullptr, &w, &h);
@@ -53,7 +59,22 @@ int Menu::Select() {
     return index + 1;
 }
 
-void Menu::ShowScore(std::vector<SDL_Texture*> texture_bird, std::vector<SDL_Rect*> frame_rect) {
+void Menu::ShowScore(int score, std::vector<SDL_Texture*> texture_bird, std::vector<SDL_Rect*> frame_rect) {
+    showTitle = false;
+
+    // Score
+    score_rects = Auxillary::getNumberRects(score, &numbers_frames, 0, winner_background_rect.y + 17, 1);
+    int score_x = winner_background_rect.x + 91 - (score_rects.back().second.x + score_rects.back().second.w) / 2;
+    for (auto &rect_pair : score_rects)
+        rect_pair.second.x += score_x;
+
+    // Best
+    best_score_rects = Auxillary::getNumberRects(0, &numbers_frames, 0, winner_background_rect.y + 47, 1, 0.5);
+    score_x = winner_background_rect.x + 93 - (best_score_rects.back().second.x + best_score_rects.back().second.w) / 2;
+    for (auto &rect_pair : best_score_rects)
+        rect_pair.second.x += score_x;
+
+    // Place players birds
     bird = std::move(texture_bird);
     bird_src_rect = std::move(frame_rect);
     bird_rect = {};
@@ -69,7 +90,6 @@ void Menu::ShowScore(std::vector<SDL_Texture*> texture_bird, std::vector<SDL_Rec
         bird_rect.push_back({bird_x, bird_y + bird_src_rect[0]->h, bird_src_rect[2]->w, bird_src_rect[2]->h});
     if (bird_src_rect.size() >= 4)
         bird_rect.push_back({bird_x + bird_src_rect[2]->w, bird_y + bird_src_rect[1]->h, bird_src_rect[3]->w, bird_src_rect[3]->h});
-    showTitle = false;
 }
 
 void Menu::Update() {
@@ -82,9 +102,12 @@ void Menu::Render(SDL_Renderer *renderer) {
         SDL_RenderCopy(renderer, credits, nullptr, &credits_rect);
     } else {
         SDL_RenderCopy(renderer, winner_background, nullptr, &winner_background_rect);
-        for (int i = 0; i < bird.size(); ++i) {
+        for (int i = 0; i < bird.size(); ++i)
             SDL_RenderCopy(renderer, bird[i], bird_src_rect[i], &bird_rect[i]);
-        }
+        for (auto rect_pair : score_rects)
+            SDL_RenderCopy(renderer, numbers, &rect_pair.first, &rect_pair.second);
+        for (auto rect_pair : best_score_rects)
+            SDL_RenderCopy(renderer, numbers, &rect_pair.first, &rect_pair.second);
     }
     SDL_RenderCopy(renderer, hand, nullptr, &hand_rect);
     SDL_RenderCopy(renderer, start_1_player, nullptr, &start_1_player_rect);
