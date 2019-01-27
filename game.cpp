@@ -208,11 +208,11 @@ void Game::NewGame(int num_players) {
     int floor_height = screen_height - textures->ground_h;
     birds.push_back(new Bird(screen_width / 2, screen_height / 2, floor_height, textures->bird, textures->bird_frames));
     if (num_players >= 2)
-        birds.push_back(new Bird(screen_width / 2, screen_height / 2, floor_height, textures->bird2, textures->bird_frames));
+        birds.push_back(new Bird(screen_width / 2 - 20, screen_height / 2, floor_height, textures->bird2, textures->bird_frames));
     if (num_players >= 3)
-        birds.push_back(new Bird(screen_width / 2, screen_height / 2, floor_height, textures->bird3, textures->bird_frames));
+        birds.push_back(new Bird(screen_width / 2 + 20, screen_height / 2, floor_height, textures->bird3, textures->bird_frames));
     if (num_players == 4)
-        birds.push_back(new Bird(screen_width / 2, screen_height / 2, floor_height, textures->bird4, textures->bird_frames));
+        birds.push_back(new Bird(screen_width / 2 - 40, screen_height / 2, floor_height, textures->bird4, textures->bird_frames));
 
     distance_travelled = 0;
     pipes = {};
