@@ -14,7 +14,8 @@ add_library(${PROJECT_NAME} SHARED
         bird.cpp bird.hpp
         input.hpp
         auxillary.hpp
-        menu.cpp menu.hpp)
+        menu.cpp menu.hpp
+        settings.cpp settings.hpp)
 
 INCLUDE(FindPkgConfig)
 

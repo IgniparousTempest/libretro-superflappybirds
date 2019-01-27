@@ -11,6 +11,7 @@
 #include "bird.hpp"
 #include "input.hpp"
 #include "menu.hpp"
+#include "settings.hpp"
 
 enum GameState { InGame, InPostGameMenu, InMenu };
 
@@ -33,6 +34,7 @@ private:
     std::mt19937 rng;
     GameState state;
     Menu* menu;
+    Settings* settings;
     double distance_travelled = 0;
     SDL_Renderer *renderer;
     SDL_Surface *surface;

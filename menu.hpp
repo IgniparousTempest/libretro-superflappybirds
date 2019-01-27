@@ -12,7 +12,7 @@ public:
     void Right();
     /// \return The number of players for the next game.
     int Select();
-    void ShowScore(int score, std::vector<SDL_Texture*> texture_bird, std::vector<SDL_Rect*> frame_rect);
+    void ShowScore(int score, int highscore, std::vector<SDL_Texture*> texture_bird, std::vector<SDL_Rect*> frame_rect);
     void Update();
     void Render(SDL_Renderer* renderer);
 

@@ -17,6 +17,8 @@ Game::Game(unsigned int screen_width, unsigned int screen_height) {
     textures = new Textures(renderer);
 
     menu = new Menu(textures->title, textures->credits, textures->start_1_player, textures->start_2_player, textures->start_3_player, textures->start_4_player, textures->hand, textures->winner_background, textures->numbers, textures->numbers_frames);
+    settings = new Settings();
+    settings->Deserialize();
 }
 
 uint32_t *Game::surface_to_framebuffer(SDL_Surface* surface) {
@@ -235,7 +237,13 @@ void Game::PostGameMenu() {
         }
     }
 
-    menu->ShowScore(highest_score, textures, rects);
+    // Update highscore
+    if (highest_score > settings->highscore) {
+        settings->highscore = highest_score;
+        settings->Serialize();
+    }
+
+    menu->ShowScore(highest_score, settings->highscore, textures, rects);
     std::cout << "Game over, entering post game score screen." << std::endl;
 }
 

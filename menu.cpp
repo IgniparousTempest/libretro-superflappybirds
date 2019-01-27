@@ -59,7 +59,7 @@ int Menu::Select() {
     return index + 1;
 }
 
-void Menu::ShowScore(int score, std::vector<SDL_Texture*> texture_bird, std::vector<SDL_Rect*> frame_rect) {
+void Menu::ShowScore(int score, int highscore, std::vector<SDL_Texture*> texture_bird, std::vector<SDL_Rect*> frame_rect) {
     showTitle = false;
 
     // Score
@@ -69,7 +69,7 @@ void Menu::ShowScore(int score, std::vector<SDL_Texture*> texture_bird, std::vec
         rect_pair.second.x += score_x;
 
     // Best
-    best_score_rects = Auxillary::getNumberRects(0, &numbers_frames, 0, winner_background_rect.y + 47, 1, 0.5);
+    best_score_rects = Auxillary::getNumberRects(highscore, &numbers_frames, 0, winner_background_rect.y + 47, 1, 0.5);
     score_x = winner_background_rect.x + 93 - (best_score_rects.back().second.x + best_score_rects.back().second.w) / 2;
     for (auto &rect_pair : best_score_rects)
         rect_pair.second.x += score_x;
