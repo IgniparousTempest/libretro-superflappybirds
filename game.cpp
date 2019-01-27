@@ -17,8 +17,6 @@ Game::Game(unsigned int screen_width, unsigned int screen_height) {
     textures = new Textures(renderer);
 
     menu = new Menu(textures->title, textures->credits, textures->start_1_player, textures->start_2_player, textures->start_3_player, textures->start_4_player, textures->hand, textures->winner_background, textures->numbers, textures->numbers_frames);
-
-//    NewGame(4);
 }
 
 uint32_t *Game::surface_to_framebuffer(SDL_Surface* surface) {
@@ -26,10 +24,11 @@ uint32_t *Game::surface_to_framebuffer(SDL_Surface* surface) {
     for (int x = 0; x < surface->w; ++x) {
         for (int y = 0; y < surface->h; ++y) {
             Uint8 *p = (Uint8 *)surface->pixels + y * surface->pitch + x * bpp;
-            if(SDL_BYTEORDER != SDL_BIG_ENDIAN)
+#if (SDL_BYTEORDER != SDL_BIG_ENDIAN)
                 framebuffer[y * surface->w + x] = p[0] << 16 | p[1] << 8 | p[2];
-            else
+#else
                 framebuffer[y * surface->w + x] = p[0] | p[1] << 8 | p[2] << 16;
+#endif
         }
     }
 

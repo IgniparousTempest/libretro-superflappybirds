@@ -33,7 +33,7 @@ private:
     std::mt19937 rng;
     GameState state;
     Menu* menu;
-    double_t distance_travelled = 0;
+    double distance_travelled = 0;
     SDL_Renderer *renderer;
     SDL_Surface *surface;
     Textures* textures;
