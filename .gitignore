@@ -31,6 +31,9 @@
 *.out
 *.app
 
-#CLion
+# CLion
 .idea/
 cmake-build-debug/
+
+# Game Files
+settings.txt
