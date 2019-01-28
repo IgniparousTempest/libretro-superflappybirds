@@ -30,17 +30,20 @@ Menu::Menu(SDL_Texture* texture_title, SDL_Texture* texture_credits, SDL_Texture
     SDL_QueryTexture(credits, nullptr, nullptr, &w, &h);
     credits_rect = {266, 324, w, h};
     SDL_QueryTexture(hand, nullptr, nullptr, &w, &h);
-    hand_rect = {147, 198, w, h};
-    SDL_QueryTexture(start_1_player, nullptr, nullptr, &w, &h);
-    start_1_player_rect = {112, 230, w, h};
-    SDL_QueryTexture(start_2_player, nullptr, nullptr, &w, &h);
-    start_2_player_rect = {224, 230, w, h};
-    SDL_QueryTexture(start_3_player, nullptr, nullptr, &w, &h);
-    start_3_player_rect = {336, 230, w, h};
-    SDL_QueryTexture(start_4_player, nullptr, nullptr, &w, &h);
-    start_4_player_rect = {448, 230, w, h};
+    hand_rect = {0, 198, w, h};
     SDL_QueryTexture(winner_background, nullptr, nullptr, &w, &h);
     winner_background_rect = {272, 115, w, h};
+
+    SDL_QueryTexture(start_1_player, nullptr, nullptr, &w, &h);
+    start_1_player_rect = {105, 230, w, h};
+    SDL_QueryTexture(start_2_player, nullptr, nullptr, &w, &h);
+    start_2_player_rect = {217, 230, w, h};
+    SDL_QueryTexture(start_3_player, nullptr, nullptr, &w, &h);
+    start_3_player_rect = {329, 230, w, h};
+    SDL_QueryTexture(start_4_player, nullptr, nullptr, &w, &h);
+    start_4_player_rect = {441, 230, w, h};
+
+    SetHandPosition(0);
 }
 
 void Menu::Left() {
