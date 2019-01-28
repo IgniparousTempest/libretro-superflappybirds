@@ -118,60 +118,60 @@ void Game::DrawScores(SDL_Renderer *renderer) {
 }
 
 void Game::GameLoop(double delta_time, std::vector<Input> controller_inputs) {
-    if (state == InGame || state == InMenu)
-        distance_travelled += scroll_speed;// * delta_time;
-
-    if (state == InGame && all_birds_dead()) {
-        PostGameMenu();
-    }
-
-    for (auto bird : birds)
-        bird->Update(delta_time, distance_travelled);
-
-    if (state == InGame) {
-        // Collision detection
-        for (auto bird : birds)
-            if (bird_crashed(bird)) {
-                std::cout << "Crashed with score: " << bird->score << std::endl;
-                bird->Kill(distance_travelled);
-            }
-
-        for (int i = 0; i < birds.size(); ++i) {
-            if (controller_inputs[i].flap_pressed)
-                birds[i]->Flap();
-        }
-
-        if (!pipes.empty() && pipes.front().x + textures->pipe_bottom_w < distance_travelled)
-            pipes.pop_front();
-        if (pipes.size() < 8)
-            generate_pipes(20);
-
-        score_all_birds();
-    }
-    else if (state == InPostGameMenu || state == InMenu) {
-        unsigned long controllers = (birds.empty())? 1 : birds.size();
-        for (int i = 0; i < controllers; ++i) {
-            if (controller_inputs[i].left_pressed)
-                menu->Left();
-            if (controller_inputs[i].right_pressed)
-                menu->Right();
-            if (controller_inputs[i].flap_pressed)
-                NewGame(menu->Select());
-        }
-    }
+//    if (state == InGame || state == InMenu)
+//        distance_travelled += scroll_speed;// * delta_time;
+//
+//    if (state == InGame && all_birds_dead()) {
+//        PostGameMenu();
+//    }
+//
+//    for (auto bird : birds)
+//        bird->Update(delta_time, distance_travelled);
+//
+//    if (state == InGame) {
+//        // Collision detection
+//        for (auto bird : birds)
+//            if (bird_crashed(bird)) {
+//                std::cout << "Crashed with score: " << bird->score << std::endl;
+//                bird->Kill(distance_travelled);
+//            }
+//
+//        for (int i = 0; i < birds.size(); ++i) {
+//            if (controller_inputs[i].flap_pressed)
+//                birds[i]->Flap();
+//        }
+//
+//        if (!pipes.empty() && pipes.front().x + textures->pipe_bottom_w < distance_travelled)
+//            pipes.pop_front();
+//        if (pipes.size() < 8)
+//            generate_pipes(20);
+//
+//        score_all_birds();
+//    }
+//    else if (state == InPostGameMenu || state == InMenu) {
+//        unsigned long controllers = (birds.empty())? 1 : birds.size();
+//        for (int i = 0; i < controllers; ++i) {
+//            if (controller_inputs[i].left_pressed)
+//                menu->Left();
+//            if (controller_inputs[i].right_pressed)
+//                menu->Right();
+//            if (controller_inputs[i].flap_pressed)
+//                NewGame(menu->Select());
+//        }
+//    }
 }
 
 uint32_t* Game::GetFrameBuffer() {
-    DrawBackground(renderer);
-    for (auto &pipe : pipes)
-        pipe.Render(renderer, textures, (int)distance_travelled);
-    for (auto bird : birds)
-        bird->Render(renderer);
-    DrawGround(renderer);
-    if (state != InMenu)
-        DrawScores(renderer);
-    if (state == InPostGameMenu || state == InMenu)
-        menu->Render(renderer);
+//    DrawBackground(renderer);
+//    for (auto &pipe : pipes)
+//        pipe.Render(renderer, textures, (int)distance_travelled);
+//    for (auto bird : birds)
+//        bird->Render(renderer);
+//    DrawGround(renderer);
+//    if (state != InMenu)
+//        DrawScores(renderer);
+//    if (state == InPostGameMenu || state == InMenu)
+//        menu->Render(renderer);
     return surface_to_framebuffer(surface);
 }
 
