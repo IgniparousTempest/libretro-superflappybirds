@@ -12,32 +12,14 @@ Game::Game(unsigned int screen_width, unsigned int screen_height) {
     framebuffer.resize(screen_width * screen_height);
     rng.seed(std::random_device()());
 
-    surface = ImageLib::create_sdl_surface(screen_width, screen_height);
-    renderer = SDL_CreateSoftwareRenderer(surface);
-    textures = new Textures(renderer);
+    textures = new Textures();
 
     menu = new Menu(textures->title, textures->credits, textures->start_1_player, textures->start_2_player, textures->start_3_player, textures->start_4_player, textures->hand, textures->winner_background, textures->numbers, textures->numbers_frames);
     settings = new Settings();
     settings->Deserialize();
 
-    screen = new Screen(screen_width, screen_height);
+    screen = new Renderer(screen_width, screen_height);
     box = new Box(10, 50, 90);
-}
-
-uint32_t *Game::surface_to_framebuffer(SDL_Surface* surface) {
-    int bpp = surface->format->BytesPerPixel;
-    for (int x = 0; x < surface->w; ++x) {
-        for (int y = 0; y < surface->h; ++y) {
-            Uint8 *p = (Uint8 *)surface->pixels + y * surface->pitch + x * bpp;
-#if (SDL_BYTEORDER != SDL_BIG_ENDIAN)
-                framebuffer[y * surface->w + x] = p[0] << 16 | p[1] << 8 | p[2];
-#else
-                framebuffer[y * surface->w + x] = p[0] | p[1] << 8 | p[2] << 16;
-#endif
-        }
-    }
-
-    return &framebuffer[0];
 }
 
 void Game::generate_pipes(int number) {
@@ -56,27 +38,27 @@ void Game::generate_pipes(int number) {
     }
 }
 
-void Game::DrawBackground(SDL_Renderer *renderer) {
-    SDL_Rect dest_rect;
+void Game::DrawBackground(Renderer *renderer) {
+    Rect dest_rect;
 
     // Draw Sky
-    for (int x = 0; x < screen_width / textures->sky_w + 1; ++x) {
-        for (int y = 0; y < screen_height / textures->sky_h + 1; ++y) {
-            dest_rect.x = x * textures->sky_w;
-            dest_rect.y = y * textures->sky_h;
-            dest_rect.w = textures->sky_w;
-            dest_rect.h = textures->sky_h;
-            SDL_RenderCopy(renderer, textures->sky, nullptr, &dest_rect);
+    for (int x = 0; x < screen_width / textures->sky->w + 1; ++x) {
+        for (int y = 0; y < screen_height / textures->sky->h + 1; ++y) {
+            dest_rect.x = x * textures->sky->w;
+            dest_rect.y = y * textures->sky->h;
+            dest_rect.w = textures->sky->w;
+            dest_rect.h = textures->sky->h;
+            renderer->Render(textures->sky->image, &dest_rect);
         }
     }
 
     // Draw Buildings
-    for (int x = 0; x < screen_width / textures->buildings_w + 1; ++x) {
-        dest_rect.x = x * textures->buildings_w;
-        dest_rect.y = screen_height - textures->buildings_h;
-        dest_rect.w = textures->buildings_w;
-        dest_rect.h = textures->buildings_h;
-        SDL_RenderCopy(renderer, textures->buildings, nullptr, &dest_rect);
+    for (int x = 0; x < screen_width / textures->buildings->w + 1; ++x) {
+        dest_rect.x = x * textures->buildings->w;
+        dest_rect.y = screen_height - textures->buildings->h;
+        dest_rect.w = textures->buildings->w;
+        dest_rect.h = textures->buildings->h;
+        renderer->Render(textures->buildings->image, &dest_rect);
     }
 }
 
@@ -96,18 +78,18 @@ void Game::DrawGround(SDL_Renderer *renderer) {
 }
 
 void Game::draw_score(int x, int y, int score, SDL_Texture* bird, SDL_Rect* bird_frame) {
-    // Draw background
-    SDL_Rect dest_rect = {x, y, textures->score_background_w, textures->score_background_h};
-    SDL_RenderCopy(renderer, textures->score_background, nullptr, &dest_rect);
-
-    // Draw player's bird
-    dest_rect = {x + 11, y + 14, bird_frame->w, bird_frame->h};
-    SDL_RenderCopy(renderer, bird, bird_frame, &dest_rect);
-
-    // Draw score
-    auto rects = Auxillary::getNumberRects(score, &textures->numbers_frames, x + 35, y + 10, 1);
-    for (auto &rect : rects)
-        SDL_RenderCopy(renderer, textures->numbers, &rect.first, &rect.second);
+//    // Draw background
+//    SDL_Rect dest_rect = {x, y, textures->score_background_w, textures->score_background_h};
+//    SDL_RenderCopy(renderer, textures->score_background, nullptr, &dest_rect);
+//
+//    // Draw player's bird
+//    dest_rect = {x + 11, y + 14, bird_frame->w, bird_frame->h};
+//    SDL_RenderCopy(renderer, bird, bird_frame, &dest_rect);
+//
+//    // Draw score
+//    auto rects = Auxillary::getNumberRects(score, &textures->numbers_frames, x + 35, y + 10, 1);
+//    for (auto &rect : rects)
+//        SDL_RenderCopy(renderer, textures->numbers, &rect.first, &rect.second);
 }
 
 void Game::DrawScores(SDL_Renderer *renderer) {
@@ -165,7 +147,7 @@ void Game::GameLoop(double delta_time, std::vector<Input> controller_inputs) {
 }
 
 uint32_t* Game::GetFrameBuffer() {
-//    DrawBackground(renderer);
+    DrawBackground(screen);
 //    for (auto &pipe : pipes)
 //        pipe.Render(renderer, textures, (int)distance_travelled);
 //    for (auto bird : birds)

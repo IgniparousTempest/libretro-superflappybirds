@@ -3,11 +3,12 @@
 
 #include <SDL_render.h>
 #include <vector>
+#include "engine/texture.hpp"
 
 class Textures {
 public:
-    SDL_Texture* sky;
-    SDL_Texture* buildings;
+    Texture* sky;
+    Texture* buildings;
     SDL_Texture* ground;
     SDL_Texture* pipe_top;
     SDL_Texture* pipe_bottom;
@@ -26,15 +27,11 @@ public:
     SDL_Texture* credits;
     SDL_Texture* winner_background;
 
-    int sky_w;
-    int buildings_w;
     int ground_w;
     int pipe_top_w;
     int pipe_bottom_w;
     int score_background_w;
 
-    int sky_h;
-    int buildings_h;
     int ground_h;
     int pipe_top_h;
     int pipe_bottom_h;
@@ -43,7 +40,7 @@ public:
     std::vector<SDL_Rect> bird_frames;
     std::vector<SDL_Rect> numbers_frames;
 
-    explicit Textures(SDL_Renderer *renderer) {
+    Textures() {
         SDL_Surface *sky = SDL_LoadBMP("resources/sky.bmp");
         SDL_Surface *buildings = SDL_LoadBMP("resources/buildings.bmp");
         SDL_Surface *ground = SDL_LoadBMP("resources/ground.bmp");
@@ -64,35 +61,31 @@ public:
         SDL_Surface *credits = SDL_LoadBMP("resources/credits.bmp");
         SDL_Surface *winner_background = SDL_LoadBMP("resources/winner_background.bmp");
 
-        this->sky = SDL_CreateTextureFromSurface(renderer, sky);
-        this->buildings = SDL_CreateTextureFromSurface(renderer, buildings);
-        this->ground = SDL_CreateTextureFromSurface(renderer, ground);
-        this->pipe_top = SDL_CreateTextureFromSurface(renderer, pipe_top);
-        this->pipe_bottom = SDL_CreateTextureFromSurface(renderer, pipe_bottom);
-        this->bird = SDL_CreateTextureFromSurface(renderer, bird);
-        this->bird2 = SDL_CreateTextureFromSurface(renderer, bird2);
-        this->bird3 = SDL_CreateTextureFromSurface(renderer, bird3);
-        this->bird4 = SDL_CreateTextureFromSurface(renderer, bird4);
-        this->numbers = SDL_CreateTextureFromSurface(renderer, numbers);
-        this->score_background = SDL_CreateTextureFromSurface(renderer, score_background);
-        this->start_1_player = SDL_CreateTextureFromSurface(renderer, start_1_player);
-        this->start_2_player = SDL_CreateTextureFromSurface(renderer, start_2_player);
-        this->start_3_player = SDL_CreateTextureFromSurface(renderer, start_3_player);
-        this->start_4_player = SDL_CreateTextureFromSurface(renderer, start_4_player);
-        this->hand = SDL_CreateTextureFromSurface(renderer, hand);
-        this->title = SDL_CreateTextureFromSurface(renderer, title);
-        this->credits = SDL_CreateTextureFromSurface(renderer, credits);
-        this->winner_background = SDL_CreateTextureFromSurface(renderer, winner_background);
+        this->sky = surface_to_texture(sky);
+        this->buildings = surface_to_texture(buildings);
+//        this->ground = SDL_CreateTextureFromSurface(renderer, ground);
+//        this->pipe_top = SDL_CreateTextureFromSurface(renderer, pipe_top);
+//        this->pipe_bottom = SDL_CreateTextureFromSurface(renderer, pipe_bottom);
+//        this->bird = SDL_CreateTextureFromSurface(renderer, bird);
+//        this->bird2 = SDL_CreateTextureFromSurface(renderer, bird2);
+//        this->bird3 = SDL_CreateTextureFromSurface(renderer, bird3);
+//        this->bird4 = SDL_CreateTextureFromSurface(renderer, bird4);
+//        this->numbers = SDL_CreateTextureFromSurface(renderer, numbers);
+//        this->score_background = SDL_CreateTextureFromSurface(renderer, score_background);
+//        this->start_1_player = SDL_CreateTextureFromSurface(renderer, start_1_player);
+//        this->start_2_player = SDL_CreateTextureFromSurface(renderer, start_2_player);
+//        this->start_3_player = SDL_CreateTextureFromSurface(renderer, start_3_player);
+//        this->start_4_player = SDL_CreateTextureFromSurface(renderer, start_4_player);
+//        this->hand = SDL_CreateTextureFromSurface(renderer, hand);
+//        this->title = SDL_CreateTextureFromSurface(renderer, title);
+//        this->credits = SDL_CreateTextureFromSurface(renderer, credits);
+//        this->winner_background = SDL_CreateTextureFromSurface(renderer, winner_background);
 
-        sky_w = sky->w;
-        buildings_w = buildings->w;
         ground_w = ground->w;
         pipe_top_w = pipe_top->w;
         pipe_bottom_w = pipe_bottom->w;
         score_background_w = score_background->w;
 
-        sky_h = sky->h;
-        buildings_h = buildings->h;
         ground_h = ground->h;
         pipe_top_h = pipe_top->h;
         pipe_bottom_h = pipe_bottom->h;
@@ -100,23 +93,23 @@ public:
 
         SDL_FreeSurface(sky);
         SDL_FreeSurface(buildings);
-        SDL_FreeSurface(ground);
-        SDL_FreeSurface(pipe_top);
-        SDL_FreeSurface(pipe_bottom);
-        SDL_FreeSurface(bird);
-        SDL_FreeSurface(bird2);
-        SDL_FreeSurface(bird3);
-        SDL_FreeSurface(bird4);
-        SDL_FreeSurface(numbers);
-        SDL_FreeSurface(score_background);
-        SDL_FreeSurface(start_1_player);
-        SDL_FreeSurface(start_2_player);
-        SDL_FreeSurface(start_3_player);
-        SDL_FreeSurface(start_4_player);
-        SDL_FreeSurface(hand);
-        SDL_FreeSurface(title);
-        SDL_FreeSurface(credits);
-        SDL_FreeSurface(winner_background);
+//        SDL_FreeSurface(ground);
+//        SDL_FreeSurface(pipe_top);
+//        SDL_FreeSurface(pipe_bottom);
+//        SDL_FreeSurface(bird);
+//        SDL_FreeSurface(bird2);
+//        SDL_FreeSurface(bird3);
+//        SDL_FreeSurface(bird4);
+//        SDL_FreeSurface(numbers);
+//        SDL_FreeSurface(score_background);
+//        SDL_FreeSurface(start_1_player);
+//        SDL_FreeSurface(start_2_player);
+//        SDL_FreeSurface(start_3_player);
+//        SDL_FreeSurface(start_4_player);
+//        SDL_FreeSurface(hand);
+//        SDL_FreeSurface(title);
+//        SDL_FreeSurface(credits);
+//        SDL_FreeSurface(winner_background);
 
         bird_frames.push_back({0, 0, 17, 12});
         bird_frames.push_back({17, 0, 17, 12});
@@ -133,6 +126,24 @@ public:
         numbers_frames.push_back({94,  0, 14, 20});
         numbers_frames.push_back({108, 0, 14, 20});
         numbers_frames.push_back({122, 0, 14, 20});
+    }
+
+private:
+    static Texture* surface_to_texture(SDL_Surface *surface) {
+        auto buffer = new uint32_t[surface->w * surface->h];
+        int bpp = surface->format->BytesPerPixel;
+        for (int x = 0; x < surface->w; ++x) {
+            for (int y = 0; y < surface->h; ++y) {
+                Uint8 *p = (Uint8 *)surface->pixels + y * surface->pitch + x * bpp;
+#if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
+                buffer[y * surface->w + x] = p[0] << 16 | p[1] << 8 | p[2];
+#else
+                buffer[y * surface->w + x] = p[0] | p[1] << 8 | p[2] << 16;
+#endif
+            }
+        }
+
+        return new Texture(buffer, surface->w, surface->h);
     }
 };
 

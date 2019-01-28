@@ -16,7 +16,11 @@ add_library(${PROJECT_NAME} SHARED
         auxillary.hpp
         menu.cpp menu.hpp
         settings.cpp settings.hpp
-        box.hpp)
+        box.hpp
+        engine/renderer.hpp
+        engine/rect.hpp
+        engine/pos.hpp
+        engine/texture.hpp)
 
 INCLUDE(FindPkgConfig)
 

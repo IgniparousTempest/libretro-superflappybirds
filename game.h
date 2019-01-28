@@ -32,15 +32,13 @@ private:
     /// How many pixels between each pipe
     const int DISTANCE_BETWEEN_PIPES = 100;
 
-    Screen* screen;
+    Renderer* screen;
     Box* box;
     std::mt19937 rng;
     GameState state;
     Menu* menu;
     Settings* settings;
     double distance_travelled = 0;
-    SDL_Renderer *renderer;
-    SDL_Surface *surface;
     Textures* textures;
     std::vector<uint32_t> framebuffer;
     unsigned int screen_width;
@@ -48,10 +46,9 @@ private:
     std::deque<PipePair> pipes = {};
     std::vector<Bird*> birds;
 
-    void DrawBackground(SDL_Renderer* renderer);
+    void DrawBackground(Renderer* renderer);
     void DrawGround(SDL_Renderer* renderer);
     void DrawScores(SDL_Renderer *renderer);
-    uint32_t* surface_to_framebuffer(SDL_Surface* surface);
     void generate_pipes(int number);
     bool bird_crashed(Bird* bird);
     bool all_birds_dead();
