@@ -15,7 +15,8 @@ add_library(${PROJECT_NAME} SHARED
         input.hpp
         auxillary.hpp
         menu.cpp menu.hpp
-        settings.cpp settings.hpp)
+        settings.cpp settings.hpp
+        box.hpp)
 
 INCLUDE(FindPkgConfig)
 
