@@ -172,7 +172,8 @@ uint32_t* Game::GetFrameBuffer() {
 //        DrawScores(renderer);
 //    if (state == InPostGameMenu || state == InMenu)
 //        menu->Render(renderer);
-    return surface_to_framebuffer(surface);
+//    return surface_to_framebuffer(surface);
+    return &framebuffer[0];
 }
 
 bool Game::bird_crashed(Bird *bird) {
