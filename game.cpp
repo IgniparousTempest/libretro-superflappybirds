@@ -19,6 +19,9 @@ Game::Game(unsigned int screen_width, unsigned int screen_height) {
     menu = new Menu(textures->title, textures->credits, textures->start_1_player, textures->start_2_player, textures->start_3_player, textures->start_4_player, textures->hand, textures->winner_background, textures->numbers, textures->numbers_frames);
     settings = new Settings();
     settings->Deserialize();
+
+    screen = new Screen(screen_width, screen_height);
+    box = new Box(10, 50, 90);
 }
 
 uint32_t *Game::surface_to_framebuffer(SDL_Surface* surface) {
@@ -173,7 +176,8 @@ uint32_t* Game::GetFrameBuffer() {
 //    if (state == InPostGameMenu || state == InMenu)
 //        menu->Render(renderer);
 //    return surface_to_framebuffer(surface);
-    return &framebuffer[0];
+    box->Render(screen);
+    return screen->framebuffer;
 }
 
 bool Game::bird_crashed(Bird *bird) {

@@ -12,6 +12,7 @@
 #include "input.hpp"
 #include "menu.hpp"
 #include "settings.hpp"
+#include "box.hpp"
 
 enum GameState { InGame, InPostGameMenu, InMenu };
 
@@ -31,6 +32,8 @@ private:
     /// How many pixels between each pipe
     const int DISTANCE_BETWEEN_PIPES = 100;
 
+    Screen* screen;
+    Box* box;
     std::mt19937 rng;
     GameState state;
     Menu* menu;
