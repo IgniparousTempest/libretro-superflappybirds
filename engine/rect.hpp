@@ -13,6 +13,13 @@ struct Rect
     Rect& operator-=(Pos pos)       { this->x -= pos.x; this->y -= pos.y; return *this; }
     Rect  operator+ (Pos pos) const { return { this->x + pos.x, this->y + pos.y, w, h }; }
     Rect  operator- (Pos pos) const { return { this->x - pos.x, this->y - pos.y, w, h }; }
+    bool  operator== (Rect rect) const { return this->x == rect.x && this->y == rect.y && this->w == rect.w && this->h == rect.h; }
+    bool  operator!= (Rect rect) const { return !(*this == rect); }
+
+    bool HasIntersection(Rect* other) {
+        //TODO: Make this less complicated
+        return (*this & *other) != Rect(0, 0, 0, 0);
+    }
 
     // Intersection
     Rect  operator&(Rect rect) const

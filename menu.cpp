@@ -1,49 +1,35 @@
 #include <utility>
-
-#include <utility>
-
-#include <utility>
-
 #include "menu.hpp"
 #include "auxillary.hpp"
 
-Menu::Menu(SDL_Texture* texture_title, SDL_Texture* texture_credits, SDL_Texture *texture_start_1_player,
-           SDL_Texture *texture_start_2_player, SDL_Texture *texture_start_3_player,
-           SDL_Texture *texture_start_4_player, SDL_Texture *texture_hand, SDL_Texture* texture_winner_background,
-           SDL_Texture* texture_numbers, std::vector<SDL_Rect> numbers_frames) {
+Menu::Menu(Texture* texture_title, Texture* texture_credits, Texture *texture_start_1_player,
+           Texture *texture_start_2_player, Texture *texture_start_3_player,
+           Texture *texture_start_4_player, Texture *texture_hand, Texture* texture_winner_background,
+           Texture* texture_numbers, std::vector<Rect> numbers_frames) {
     index = 0;
 
-//    title = texture_title;
-//    credits = texture_credits;
-//    hand = texture_hand;
-//    start_1_player = texture_start_1_player;
-//    start_2_player = texture_start_2_player;
-//    start_3_player = texture_start_3_player;
-//    start_4_player = texture_start_4_player;
-//    winner_background = texture_winner_background;
-//    numbers = texture_numbers;
-//    this->numbers_frames = std::move(numbers_frames);
-//
-//    int w, h;
-//    SDL_QueryTexture(title, nullptr, nullptr, &w, &h);
-//    title_rect = {154, 63, w, h};
-//    SDL_QueryTexture(credits, nullptr, nullptr, &w, &h);
-//    credits_rect = {266, 324, w, h};
-//    SDL_QueryTexture(hand, nullptr, nullptr, &w, &h);
-//    hand_rect = {0, 198, w, h};
-//    SDL_QueryTexture(winner_background, nullptr, nullptr, &w, &h);
-//    winner_background_rect = {272, 115, w, h};
-//
-//    SDL_QueryTexture(start_1_player, nullptr, nullptr, &w, &h);
-//    start_1_player_rect = {105, 230, w, h};
-//    SDL_QueryTexture(start_2_player, nullptr, nullptr, &w, &h);
-//    start_2_player_rect = {217, 230, w, h};
-//    SDL_QueryTexture(start_3_player, nullptr, nullptr, &w, &h);
-//    start_3_player_rect = {329, 230, w, h};
-//    SDL_QueryTexture(start_4_player, nullptr, nullptr, &w, &h);
-//    start_4_player_rect = {441, 230, w, h};
-//
-//    SetHandPosition(0);
+    title = texture_title;
+    credits = texture_credits;
+    hand = texture_hand;
+    start_1_player = texture_start_1_player;
+    start_2_player = texture_start_2_player;
+    start_3_player = texture_start_3_player;
+    start_4_player = texture_start_4_player;
+    winner_background = texture_winner_background;
+    numbers = texture_numbers;
+    this->numbers_frames = std::move(numbers_frames);
+
+    title_rect = {154, 63, title->w, title->h};
+    credits_rect = {266, 324, credits->w, credits->h};
+    hand_rect = {0, 198, hand->w, hand->h};
+    winner_background_rect = {272, 115, winner_background->w, winner_background->h};
+
+    start_1_player_rect = {105, 230, start_1_player->w, start_1_player->h};
+    start_2_player_rect = {217, 230, start_2_player->w, start_2_player->h};
+    start_3_player_rect = {329, 230, start_3_player->w, start_3_player->h};
+    start_4_player_rect = {441, 230, start_4_player->w, start_4_player->h};
+
+    SetHandPosition(0);
 }
 
 void Menu::Left() {
@@ -62,7 +48,7 @@ int Menu::Select() {
     return index + 1;
 }
 
-void Menu::ShowScore(int score, int highscore, std::vector<SDL_Texture*> texture_bird, std::vector<SDL_Rect*> frame_rect) {
+void Menu::ShowScore(int score, int highscore, std::vector<Texture*> texture_bird, std::vector<Rect*> frame_rect) {
     showTitle = false;
 
     // Score
@@ -99,28 +85,28 @@ void Menu::Update() {
 
 }
 
-void Menu::Render(SDL_Renderer *renderer) {
+void Menu::Render(Renderer *renderer) {
     if (showTitle) {
-        SDL_RenderCopy(renderer, title, nullptr, &title_rect);
-        SDL_RenderCopy(renderer, credits, nullptr, &credits_rect);
+        renderer->Render(title, &title_rect);
+        renderer->Render(credits, &credits_rect);
     } else {
-        SDL_RenderCopy(renderer, winner_background, nullptr, &winner_background_rect);
+        renderer->Render(winner_background, &winner_background_rect);
         for (int i = 0; i < bird.size(); ++i)
-            SDL_RenderCopy(renderer, bird[i], bird_src_rect[i], &bird_rect[i]);
+            renderer->Render(bird[i], bird_src_rect[i], &bird_rect[i]);
         for (auto rect_pair : score_rects)
-            SDL_RenderCopy(renderer, numbers, &rect_pair.first, &rect_pair.second);
+            renderer->Render(numbers, &rect_pair.first, &rect_pair.second);
         for (auto rect_pair : best_score_rects)
-            SDL_RenderCopy(renderer, numbers, &rect_pair.first, &rect_pair.second);
+            renderer->Render(numbers, &rect_pair.first, &rect_pair.second);
     }
-    SDL_RenderCopy(renderer, hand, nullptr, &hand_rect);
-    SDL_RenderCopy(renderer, start_1_player, nullptr, &start_1_player_rect);
-    SDL_RenderCopy(renderer, start_2_player, nullptr, &start_2_player_rect);
-    SDL_RenderCopy(renderer, start_3_player, nullptr, &start_3_player_rect);
-    SDL_RenderCopy(renderer, start_4_player, nullptr, &start_4_player_rect);
+    renderer->Render(hand, &hand_rect);
+    renderer->Render(start_1_player, &start_1_player_rect);
+    renderer->Render(start_2_player, &start_2_player_rect);
+    renderer->Render(start_3_player, &start_3_player_rect);
+    renderer->Render(start_4_player, &start_4_player_rect);
 }
 
 void Menu::SetHandPosition(int index) {
-    SDL_Rect* button_rect;
+    Rect* button_rect;
     switch (index) {
         case 0:
             button_rect = &start_1_player_rect;

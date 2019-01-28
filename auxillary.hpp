@@ -30,16 +30,16 @@ public:
     /// \param pixels_between_numbers The gap in pixels between the digits.
     /// \param scale The factor to scale the number by.
     /// \return The frames, each pair consists of the src and dest frame.
-    static std::vector<std::pair<SDL_Rect, SDL_Rect>> getNumberRects(int number, std::vector<SDL_Rect>* number_frames, int x, int y, int pixels_between_numbers, float scale = 1) {
+    static std::vector<std::pair<Rect, Rect>> getNumberRects(int number, std::vector<Rect>* number_frames, int x, int y, int pixels_between_numbers, float scale = 1) {
         auto ds = digits(number);
         int x_offset = 0;
-        std::vector<std::pair<SDL_Rect, SDL_Rect>> positions;
+        std::vector<std::pair<Rect, Rect>> positions;
         while (!ds.empty())
         {
             int digit = ds.top();
             ds.pop();
-            SDL_Rect frame = number_frames->at(digit);
-            SDL_Rect dest_rect;
+            Rect frame = number_frames->at(digit);
+            Rect dest_rect;
             dest_rect.x = x + x_offset;
             dest_rect.y = y;
             dest_rect.w = (int)(frame.w * scale);

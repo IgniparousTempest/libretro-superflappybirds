@@ -1,44 +1,44 @@
 #ifndef LR_SUPERFLAPPYBIRD_TEXTURES_H
 #define LR_SUPERFLAPPYBIRD_TEXTURES_H
 
+#include <iostream>
 #include <SDL_render.h>
 #include <vector>
 #include "engine/texture.hpp"
+#include "engine/rect.hpp"
 
 class Textures {
 public:
     Texture* sky;
     Texture* buildings;
-    SDL_Texture* ground;
-    SDL_Texture* pipe_top;
-    SDL_Texture* pipe_bottom;
-    SDL_Texture* bird;
-    SDL_Texture* bird2;
-    SDL_Texture* bird3;
-    SDL_Texture* bird4;
-    SDL_Texture* numbers;
-    SDL_Texture* score_background;
-    SDL_Texture* start_1_player;
-    SDL_Texture* start_2_player;
-    SDL_Texture* start_3_player;
-    SDL_Texture* start_4_player;
-    SDL_Texture* hand;
-    SDL_Texture* title;
-    SDL_Texture* credits;
-    SDL_Texture* winner_background;
+    Texture* ground;
+    Texture* pipe_top;
+    Texture* pipe_bottom;
+    Texture* bird;
+    Texture* bird2;
+    Texture* bird3;
+    Texture* bird4;
+    Texture* numbers;
+    Texture* score_background;
+    Texture* start_1_player;
+    Texture* start_2_player;
+    Texture* start_3_player;
+    Texture* start_4_player;
+    Texture* hand;
+    Texture* title;
+    Texture* credits;
+    Texture* winner_background;
 
-    int ground_w;
     int pipe_top_w;
     int pipe_bottom_w;
     int score_background_w;
 
-    int ground_h;
     int pipe_top_h;
     int pipe_bottom_h;
     int score_background_h;
 
-    std::vector<SDL_Rect> bird_frames;
-    std::vector<SDL_Rect> numbers_frames;
+    std::vector<Rect> bird_frames;
+    std::vector<Rect> numbers_frames;
 
     Textures() {
         SDL_Surface *sky = SDL_LoadBMP("resources/sky.bmp");
@@ -63,53 +63,51 @@ public:
 
         this->sky = surface_to_texture(sky);
         this->buildings = surface_to_texture(buildings);
-//        this->ground = SDL_CreateTextureFromSurface(renderer, ground);
-//        this->pipe_top = SDL_CreateTextureFromSurface(renderer, pipe_top);
-//        this->pipe_bottom = SDL_CreateTextureFromSurface(renderer, pipe_bottom);
-//        this->bird = SDL_CreateTextureFromSurface(renderer, bird);
-//        this->bird2 = SDL_CreateTextureFromSurface(renderer, bird2);
-//        this->bird3 = SDL_CreateTextureFromSurface(renderer, bird3);
-//        this->bird4 = SDL_CreateTextureFromSurface(renderer, bird4);
-//        this->numbers = SDL_CreateTextureFromSurface(renderer, numbers);
-//        this->score_background = SDL_CreateTextureFromSurface(renderer, score_background);
-//        this->start_1_player = SDL_CreateTextureFromSurface(renderer, start_1_player);
-//        this->start_2_player = SDL_CreateTextureFromSurface(renderer, start_2_player);
-//        this->start_3_player = SDL_CreateTextureFromSurface(renderer, start_3_player);
-//        this->start_4_player = SDL_CreateTextureFromSurface(renderer, start_4_player);
-//        this->hand = SDL_CreateTextureFromSurface(renderer, hand);
-//        this->title = SDL_CreateTextureFromSurface(renderer, title);
-//        this->credits = SDL_CreateTextureFromSurface(renderer, credits);
-//        this->winner_background = SDL_CreateTextureFromSurface(renderer, winner_background);
+        this->ground = surface_to_texture(ground);
+        this->pipe_top = surface_to_texture(pipe_top);
+        this->pipe_bottom = surface_to_texture(pipe_bottom);
+        this->bird = surface_to_texture(bird);
+        this->bird2 = surface_to_texture(bird2);
+        this->bird3 = surface_to_texture(bird3);
+        this->bird4 = surface_to_texture(bird4);
+        this->numbers = surface_to_texture(numbers);
+        this->score_background = surface_to_texture(score_background);
+        this->start_1_player = surface_to_texture(start_1_player);
+        this->start_2_player = surface_to_texture(start_2_player);
+        this->start_3_player = surface_to_texture(start_3_player);
+        this->start_4_player = surface_to_texture(start_4_player);
+        this->hand = surface_to_texture(hand);
+        this->title = surface_to_texture(title);
+        this->credits = surface_to_texture(credits);
+        this->winner_background = surface_to_texture(winner_background);
 
-        ground_w = ground->w;
         pipe_top_w = pipe_top->w;
         pipe_bottom_w = pipe_bottom->w;
         score_background_w = score_background->w;
 
-        ground_h = ground->h;
         pipe_top_h = pipe_top->h;
         pipe_bottom_h = pipe_bottom->h;
         score_background_h = score_background->h;
 
         SDL_FreeSurface(sky);
         SDL_FreeSurface(buildings);
-//        SDL_FreeSurface(ground);
-//        SDL_FreeSurface(pipe_top);
-//        SDL_FreeSurface(pipe_bottom);
-//        SDL_FreeSurface(bird);
-//        SDL_FreeSurface(bird2);
-//        SDL_FreeSurface(bird3);
-//        SDL_FreeSurface(bird4);
-//        SDL_FreeSurface(numbers);
-//        SDL_FreeSurface(score_background);
-//        SDL_FreeSurface(start_1_player);
-//        SDL_FreeSurface(start_2_player);
-//        SDL_FreeSurface(start_3_player);
-//        SDL_FreeSurface(start_4_player);
-//        SDL_FreeSurface(hand);
-//        SDL_FreeSurface(title);
-//        SDL_FreeSurface(credits);
-//        SDL_FreeSurface(winner_background);
+        SDL_FreeSurface(ground);
+        SDL_FreeSurface(pipe_top);
+        SDL_FreeSurface(pipe_bottom);
+        SDL_FreeSurface(bird);
+        SDL_FreeSurface(bird2);
+        SDL_FreeSurface(bird3);
+        SDL_FreeSurface(bird4);
+        SDL_FreeSurface(numbers);
+        SDL_FreeSurface(score_background);
+        SDL_FreeSurface(start_1_player);
+        SDL_FreeSurface(start_2_player);
+        SDL_FreeSurface(start_3_player);
+        SDL_FreeSurface(start_4_player);
+        SDL_FreeSurface(hand);
+        SDL_FreeSurface(title);
+        SDL_FreeSurface(credits);
+        SDL_FreeSurface(winner_background);
 
         bird_frames.push_back({0, 0, 17, 12});
         bird_frames.push_back({17, 0, 17, 12});
@@ -138,7 +136,7 @@ private:
 #if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
                 buffer[y * surface->w + x] = p[0] << 16 | p[1] << 8 | p[2];
 #else
-                buffer[y * surface->w + x] = p[0] | p[1] << 8 | p[2] << 16;
+                buffer[y * surface->w + x] = p[0] | p[1] << 8 | p[2] << 16 | p[3] << 24;
 #endif
             }
         }
