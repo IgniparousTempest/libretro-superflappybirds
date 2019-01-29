@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <cassert>
 #include "rect.hpp"
+#include "omp.h"
 
 class Renderer {
 public:
@@ -17,6 +18,10 @@ public:
 
     static uint32_t rgb(uint8_t r, uint8_t g, uint8_t b) {
         return r << 16 | g << 8 | b;
+    }
+
+    void Clear(uint32_t colour) {
+
     }
 
     void Render(Texture* image, Rect* dest) {
