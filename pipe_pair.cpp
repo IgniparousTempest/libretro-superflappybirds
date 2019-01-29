@@ -22,13 +22,13 @@ std::pair<Rect, Rect> PipePair::GetRect(Assets* assets, int distance_travelled) 
     // Bottom Pipe
     bot_rect.x = x - distance_travelled;
     bot_rect.y = y;
-    bot_rect.w = assets->pipe_bottom_w;
-    bot_rect.h = assets->pipe_bottom_h;
+    bot_rect.w = assets->pipe_bottom->w;
+    bot_rect.h = assets->pipe_bottom->h;
 
     // Top Pipe
     top_rect.x = x - distance_travelled;
-    top_rect.y = y - gap - assets->pipe_top_h;
-    top_rect.w = assets->pipe_top_w;
-    top_rect.h = assets->pipe_top_h;
+    top_rect.y = y - gap - assets->pipe_top->h;
+    top_rect.w = assets->pipe_top->w;
+    top_rect.h = assets->pipe_top->h;
     return {bot_rect, top_rect};
 }
