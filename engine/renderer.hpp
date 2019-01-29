@@ -76,29 +76,35 @@ public:
     }
 
     void Render(Texture* image, Rect* src, Rect* dest, double angle) {
-        angle *= M_PI / 180; // Convert to radians
-        double xs = src->w / (double)dest->w; // x-scale
-        double ys = src->h / (double)dest->h; // y-scale
+        assert(src->w == dest->w && src->h == dest->h)
+        angle *= -M_PI / 180; // Convert to radians
+        int hw = dest->w / 2;
+        int hh = dest->h / 2;
+
 #pragma omp parallel for
-        for (int x = 0; x < dest->w; ++x) {
-            int px, py;
-            int screen_x;
-            int screen_y;
+        for (int x = -hw; x < dest->w + hw; ++x) {
+            double dx, dy;
+            int screen_x, screen_y;
             uint32_t pixel;
             int alpha;
-            for (int y = 0; y < dest->h; ++y) {
-                px = x - dest->w / 2;
-                py = y - dest->h / 2;
-                screen_x = (int)(dest->x + px * std::cos(angle) - py * std::sin(angle));
-                screen_y = (int)(dest->y + px * std::sin(angle) + py * std::cos(angle));
-                screen_x += dest->w / 2;
-                screen_y += dest->h / 2;
-                if (screen_x >= 0 && screen_y >= 0 && screen_x < width && screen_y < height) {
-                    pixel = image->image[(src->y + (int)(y * ys)) * image->w + (src->x + (int)(x * xs))];
-                    alpha = pixel >> 24;
-                    //TODO: This can only handle full alpha or no alpha
-                    if (alpha != 0)
-                        framebuffer[screen_y * width + screen_x] = pixel;
+            for (int y = -hh; y < dest->h - hh; ++y) {
+                std::vector<std::pair<int, int>> quad;
+                dx = dest->x + (x-hw) * std::cos(angle) - (y-hh) * std::sin(angle) + hw;
+                dy = dest->y + (x-hw) * std::sin(angle) + (y-hh) * std::cos(angle) + hh;
+                quad.place_back({(int)dx, (int)dy});
+                quad.place_back({(int)dx + 1, (int)dy});
+                quad.place_back({(int)dx, (int)dy + 1});
+                quad.place_back({(int)dx + 1, (int)dy + 1});
+                for (int i = 0; i < quad.size(); ++i) {
+                    if (quad[i].first > 0 && quad[i].seccond > 0 && quad[i].first < src->w && quad[i].seccond < src->h) {
+                        screen_x = dest->x + quad[i].first;
+                        screen_y = dest->y + quad[i].seccond;
+                        pixel = image->image[quad[i].second * dest->w + quad[i].first];
+                        alpha = pixel >> 24;
+                        //TODO: This can only handle full alpha or no alpha
+                        if (alpha != 0)
+                            framebuffer[screen_y * width + screen_x] = pixel;
+                    }
                 }
             }
         }
