@@ -27,14 +27,6 @@ public:
     Texture* credits;
     Texture* winner_background;
 
-    int pipe_top_w;
-    int pipe_bottom_w;
-    int score_background_w;
-
-    int pipe_top_h;
-    int pipe_bottom_h;
-    int score_background_h;
-
     std::vector<Rect> bird_frames;
     std::vector<Rect> numbers_frames;
 
@@ -76,14 +68,6 @@ public:
         this->title = surface_to_texture(title);
         this->credits = surface_to_texture(credits);
         this->winner_background = surface_to_texture(winner_background);
-
-        pipe_top_w = pipe_top->w;
-        pipe_bottom_w = pipe_bottom->w;
-        score_background_w = score_background->w;
-
-        pipe_top_h = pipe_top->h;
-        pipe_bottom_h = pipe_bottom->h;
-        score_background_h = score_background->h;
 
         SDL_FreeSurface(buildings);
         SDL_FreeSurface(ground);

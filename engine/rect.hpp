@@ -18,33 +18,8 @@ struct Rect
 
     bool HasIntersection(Rect* other) {
         if (x + w <= other->x || y + h <= other->y || x >= other->x + other->w || y >= other->y + other->h)
-            return true;
+            return false;
     }
-
-    // Intersection
-    Rect  operator&(Rect rect) const
-    {
-        int x_left  = std::max(x, rect.x);
-        int x_right = std::min(x + w, rect.x + rect.w);
-        int width   = x_right - x_left;
-
-        int y_top    = std::max(y, rect.y);
-        int y_bottom = std::min(y + h, rect.y + rect.h);
-        int height   = y_bottom - y_top;
-
-        if (width <= 0 || height <= 0)
-            return {0, 0, 0, 0};
-        else
-            return {x_left, y_top, width, height};
-    }
-
-    Rect& operator&=(Rect rect)
-    {
-        *this = operator&(rect);
-        return *this;
-    }
-
-    explicit operator bool() const { return w > 0 && h > 0; }
 
     int x, y, w, h;
 };

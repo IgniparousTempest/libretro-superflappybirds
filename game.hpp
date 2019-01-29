@@ -50,7 +50,7 @@ private:
     bool bird_crashed(Bird* bird);
     bool all_birds_dead();
     void score_all_birds();
-    void draw_score(int x, int y, int score, Texture* bird, Rect* bird_frame);
+    void draw_score(Renderer* renderer, int x, int y, int score, Texture* bird, Rect* bird_frame);
     void NewGame(int num_players);
     /// Transitions the game to the Post Game Menu
     void PostGameMenu();

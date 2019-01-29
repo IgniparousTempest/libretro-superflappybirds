@@ -67,29 +67,29 @@ void Game::DrawGround(Renderer *renderer) {
     }
 }
 
-void Game::draw_score(int x, int y, int score, Texture* bird, Rect* bird_frame) {
+void Game::draw_score(Renderer* renderer, int x, int y, int score, Texture* bird, Rect* bird_frame) {
     // Draw background
-    Rect dest_rect = {x, y, assets->score_background_w, assets->score_background_h};
-    screen->Render(assets->score_background, &dest_rect);
+    Rect dest_rect = {x, y, assets->score_background->w, assets->score_background->h};
+    renderer->Render(assets->score_background, &dest_rect);
 
     // Draw player's bird
     dest_rect = {x + 11, y + 14, bird_frame->w, bird_frame->h};
-    screen->Render(bird, bird_frame, &dest_rect);
+    renderer->Render(bird, bird_frame, &dest_rect);
 
     // Draw score
     auto rects = Auxillary::getNumberRects(score, &assets->numbers_frames, x + 35, y + 10, 1);
     for (auto &rect : rects)
-        screen->Render(assets->numbers, &rect.first, &rect.second);
+        renderer->Render(assets->numbers, &rect.first, &rect.second);
 }
 
 void Game::DrawScores(Renderer *renderer) {
-    draw_score(0, 0, birds[0]->score, birds[0]->texture, &birds[0]->animation_frames[2]);
+    draw_score(renderer, 0, 0, birds[0]->score, birds[0]->texture, &birds[0]->animation_frames[2]);
     if (birds.size() >= 2)
-        draw_score(screen_width / 3 - assets->score_background_w / 2, 0, birds[1]->score, birds[1]->texture, &birds[1]->animation_frames[2]);
+        draw_score(renderer, screen_width / 3 - assets->score_background->w / 2, 0, birds[1]->score, birds[1]->texture, &birds[1]->animation_frames[2]);
     if (birds.size() >= 3)
-        draw_score(2 * screen_width / 3 - assets->score_background_w / 2, 0, birds[2]->score, birds[2]->texture, &birds[2]->animation_frames[2]);
+        draw_score(renderer, 2 * screen_width / 3 - assets->score_background->w / 2, 0, birds[2]->score, birds[2]->texture, &birds[2]->animation_frames[2]);
     if (birds.size() >= 4)
-        draw_score(screen_width - assets->score_background_w, 0, birds[3]->score, birds[3]->texture, &birds[3]->animation_frames[2]);
+        draw_score(renderer, screen_width - assets->score_background->w, 0, birds[3]->score, birds[3]->texture, &birds[3]->animation_frames[2]);
 }
 
 void Game::GameLoop(double delta_time, std::vector<Input> controller_inputs) {
@@ -116,7 +116,7 @@ void Game::GameLoop(double delta_time, std::vector<Input> controller_inputs) {
                 birds[i]->Flap();
         }
 
-        if (!pipes.empty() && pipes.front().x + assets->pipe_bottom_w < distance_travelled)
+        if (!pipes.empty() && pipes.front().x + assets->pipe_bottom->w < distance_travelled)
             pipes.pop_front();
         if (pipes.size() < 8)
             generate_pipes(20);
@@ -225,5 +225,5 @@ void Game::PostGameMenu() {
 void Game::score_all_birds() {
     for (auto bird : birds)
         if (bird->IsAlive())
-            bird->score = std::max(0, (int)((bird->x + distance_travelled - screen_width - assets->pipe_bottom_w) / DISTANCE_BETWEEN_PIPES));
+            bird->score = std::max(0, (int)((bird->x + distance_travelled - screen_width - assets->pipe_bottom->w) / DISTANCE_BETWEEN_PIPES));
 }
