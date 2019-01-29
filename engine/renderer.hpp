@@ -91,8 +91,8 @@ public:
                 py = y - dest->h / 2;
                 screen_x = (int)(dest->x + px * std::cos(angle) - py * std::sin(angle));
                 screen_y = (int)(dest->y + px * std::sin(angle) + py * std::cos(angle));
-                screen_x += px;
-                screen_y += py;
+                screen_x += dest->w / 2;
+                screen_y += dest->h / 2;
                 if (screen_x >= 0 && screen_y >= 0 && screen_x < width && screen_y < height) {
                     pixel = image->image[(src->y + (int)(y * ys)) * image->w + (src->x + (int)(x * xs))];
                     alpha = pixel >> 24;
