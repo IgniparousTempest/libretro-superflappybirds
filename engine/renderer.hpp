@@ -91,14 +91,14 @@ public:
                 std::vector<std::pair<int, int>> quad;
                 dx = dest->x + (x-hw) * std::cos(angle) - (y-hh) * std::sin(angle) + hw;
                 dy = dest->y + (x-hw) * std::sin(angle) + (y-hh) * std::cos(angle) + hh;
-                quad.place_back({(int)dx, (int)dy});
-                quad.place_back({(int)dx + 1, (int)dy});
-                quad.place_back({(int)dx, (int)dy + 1});
-                quad.place_back({(int)dx + 1, (int)dy + 1});
+                quad.push_back({(int)dx, (int)dy});
+                quad.push_back({(int)dx + 1, (int)dy});
+                quad.push_back({(int)dx, (int)dy + 1});
+                quad.push_back({(int)dx + 1, (int)dy + 1});
                 for (int i = 0; i < quad.size(); ++i) {
-                    if (quad[i].first > 0 && quad[i].seccond > 0 && quad[i].first < src->w && quad[i].seccond < src->h) {
+                    if (quad[i].first > 0 && quad[i].second > 0 && quad[i].first < src->w && quad[i].second < src->h) {
                         screen_x = dest->x + quad[i].first;
-                        screen_y = dest->y + quad[i].seccond;
+                        screen_y = dest->y + quad[i].second;
                         pixel = image->image[quad[i].second * dest->w + quad[i].first];
                         alpha = pixel >> 24;
                         //TODO: This can only handle full alpha or no alpha
