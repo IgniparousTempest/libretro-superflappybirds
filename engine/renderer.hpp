@@ -76,6 +76,7 @@ public:
     }
 
     void Render(Texture* image, Rect* src, Rect* dest, double angle) {
+        angle *= M_PI / 180; // Convert to radians
         double xs = src->w / (double)dest->w; // x-scale
         double ys = src->h / (double)dest->h; // y-scale
 #pragma omp parallel for
