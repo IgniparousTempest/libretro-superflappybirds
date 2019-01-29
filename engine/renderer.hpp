@@ -97,12 +97,8 @@ public:
                     pixel = image->image[(src->y + (int)(y * ys)) * image->w + (src->x + (int)(x * xs))];
                     alpha = pixel >> 24;
                     //TODO: This can only handle full alpha or no alpha
-                    if (alpha != 0) {
+                    if (alpha != 0)
                         framebuffer[screen_y * width + screen_x] = pixel;
-                        framebuffer[screen_y * width + screen_x + 1] = pixel;
-                        framebuffer[(screen_y + 1) * width + screen_x] = pixel;
-                        framebuffer[(screen_y + 1) * width + screen_x + 1] = pixel;
-                    }
                 }
             }
         }
