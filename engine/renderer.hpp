@@ -4,6 +4,7 @@
 #include <iostream>
 #include <cstdint>
 #include <cassert>
+#include <cmath>
 #include "rect.hpp"
 #include "omp.h"
 
@@ -84,8 +85,8 @@ public:
             uint32_t pixel;
             int alpha;
             for (int y = 0; y < dest->h; ++y) {
-                screen_x = dest->x + x;
-                screen_y = dest->y + y;
+                screen_x = (int)(dest->x + x * std::cos(angle) - y * std::sin(angle));
+                screen_y = (int)(dest->y + x * std::sin(angle) + y * std::cos(angle);
                 if (screen_x >= 0 && screen_y >= 0 && screen_x < width && screen_y < height) {
                     pixel = image->image[(src->y + (int)(y * ys)) * image->w + (src->x + (int)(x * xs))];
                     alpha = pixel >> 24;
