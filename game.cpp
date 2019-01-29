@@ -40,15 +40,16 @@ void Game::DrawBackground(Renderer *renderer) {
     Rect dest_rect;
 
     // Draw Sky
-    for (int x = 0; x < screen_width / textures->sky->w + 1; ++x) {
-        for (int y = 0; y < screen_height / textures->sky->h + 1; ++y) {
-            dest_rect.x = x * textures->sky->w;
-            dest_rect.y = y * textures->sky->h;
-            dest_rect.w = textures->sky->w;
-            dest_rect.h = textures->sky->h;
-            renderer->Render(textures->sky, &dest_rect);
-        }
-    }
+    renderer->Clear(Renderer::rgb(115, 183, 196));
+//    for (int x = 0; x < screen_width / textures->sky->w + 1; ++x) {
+//        for (int y = 0; y < screen_height / textures->sky->h + 1; ++y) {
+//            dest_rect.x = x * textures->sky->w;
+//            dest_rect.y = y * textures->sky->h;
+//            dest_rect.w = textures->sky->w;
+//            dest_rect.h = textures->sky->h;
+//            renderer->Render(textures->sky, &dest_rect);
+//        }
+//    }
 
     // Draw Buildings
     for (int x = 0; x < screen_width / textures->buildings->w + 1; ++x) {

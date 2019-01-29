@@ -22,7 +22,12 @@ public:
     }
 
     void Clear(uint32_t colour) {
-
+#pragma omp parallel for
+        for (int x = 0; x <width; ++x) {
+            for (int y = 0; y < height; ++y) {
+                framebuffer[y * width + x] = colour;
+            }
+        }
     }
 
     void Render(Texture* image, Rect* dest) {
