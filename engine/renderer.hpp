@@ -1,6 +1,7 @@
 #ifndef LR_SUPERFLAPPYBIRDS_RENDERERER_HPP
 #define LR_SUPERFLAPPYBIRDS_RENDERERER_HPP
 
+#include <iostream>
 #include <cstdint>
 #include <cassert>
 #include "rect.hpp"
@@ -27,6 +28,10 @@ public:
     void Render(Texture* image, Rect* dest) {
 #pragma omp parallel for
         for (int x = 0; x < dest->w; ++x) {
+            int id = omp_get_thread_num();
+            int data = id;
+            int total = omp_get_num_threads();
+            std::cout << "Greetings from process " << id << " out of " << total << " with Data" << data << std::endl;
             int screen_x;
             int screen_y;
             uint32_t pixel;
