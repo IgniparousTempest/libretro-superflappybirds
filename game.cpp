@@ -145,16 +145,16 @@ void Game::GameLoop(double delta_time, std::vector<Input> controller_inputs) {
 }
 
 uint32_t* Game::GetFrameBuffer() {
-    DrawBackground(screen);
-    for (auto &pipe : pipes)
-        pipe.Render(screen, textures, (int)distance_travelled);
-    for (auto bird : birds)
-        bird->Render(screen);
-    DrawGround(screen);
-    if (state != InMenu)
-        DrawScores(screen);
-    if (state == InPostGameMenu || state == InMenu)
-        menu->Render(screen);
+//    DrawBackground(screen);
+//    for (auto &pipe : pipes)
+//        pipe.Render(screen, textures, (int)distance_travelled);
+//    for (auto bird : birds)
+//        bird->Render(screen);
+//    DrawGround(screen);
+//    if (state != InMenu)
+//        DrawScores(screen);
+//    if (state == InPostGameMenu || state == InMenu)
+//        menu->Render(screen);
     return screen->framebuffer;
 }
 
