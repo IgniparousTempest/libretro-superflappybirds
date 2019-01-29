@@ -81,7 +81,7 @@ public:
         double ys = src->h / (double)dest->h; // y-scale
 #pragma omp parallel for
         for (int x = 0; x < dest->w; ++x) {
-            double px, py;
+            int px, py;
             int screen_x;
             int screen_y;
             uint32_t pixel;
@@ -89,10 +89,10 @@ public:
             for (int y = 0; y < dest->h; ++y) {
                 px = x - dest->w / 2;
                 py = y - dest->h / 2;
-                px = dest->x + px * std::cos(angle) - py * std::sin(angle);
-                py = dest->y + px * std::sin(angle) + py * std::cos(angle);
-                screen_x = px + dest->w / 2;
-                screen_y = px + dest->h / 2;
+                screen_x = (int)(dest->x + px * std::cos(angle) - py * std::sin(angle));
+                screen_y = (int)(dest->y + px * std::sin(angle) + py * std::cos(angle));
+                screen_x += dest->w / 2;
+                screen_y += dest->h / 2;
                 if (screen_x >= 0 && screen_y >= 0 && screen_x < width && screen_y < height) {
                     pixel = image->image[(src->y + (int)(y * ys)) * image->w + (src->x + (int)(x * xs))];
                     alpha = pixel >> 24;
