@@ -145,7 +145,7 @@ void Game::GameLoop(double delta_time, std::vector<Input> controller_inputs) {
 }
 
 uint32_t* Game::GetFrameBuffer() {
-//    DrawBackground(screen);
+    DrawBackground(screen);
 //    for (auto &pipe : pipes)
 //        pipe.Render(screen, textures, (int)distance_travelled);
 //    for (auto bird : birds)
