@@ -1,15 +1,13 @@
 #ifndef LR_SUPERFLAPPYBIRD_TEXTURES_H
 #define LR_SUPERFLAPPYBIRD_TEXTURES_H
 
-#include <iostream>
 #include <SDL_render.h>
 #include <vector>
 #include "engine/texture.hpp"
 #include "engine/rect.hpp"
 
-class Textures {
+class Assets {
 public:
-    Texture* sky;
     Texture* buildings;
     Texture* ground;
     Texture* pipe_top;
@@ -40,8 +38,7 @@ public:
     std::vector<Rect> bird_frames;
     std::vector<Rect> numbers_frames;
 
-    Textures() {
-        SDL_Surface *sky = SDL_LoadBMP("resources/sky.bmp");
+    Assets() {
         SDL_Surface *buildings = SDL_LoadBMP("resources/buildings.bmp");
         SDL_Surface *ground = SDL_LoadBMP("resources/ground.bmp");
         SDL_Surface *pipe_top = SDL_LoadBMP("resources/pipe_top.bmp");
@@ -61,7 +58,6 @@ public:
         SDL_Surface *credits = SDL_LoadBMP("resources/credits.bmp");
         SDL_Surface *winner_background = SDL_LoadBMP("resources/winner_background.bmp");
 
-        this->sky = surface_to_texture(sky);
         this->buildings = surface_to_texture(buildings);
         this->ground = surface_to_texture(ground);
         this->pipe_top = surface_to_texture(pipe_top);
@@ -89,7 +85,6 @@ public:
         pipe_bottom_h = pipe_bottom->h;
         score_background_h = score_background->h;
 
-        SDL_FreeSurface(sky);
         SDL_FreeSurface(buildings);
         SDL_FreeSurface(ground);
         SDL_FreeSurface(pipe_top);

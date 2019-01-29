@@ -1,6 +1,6 @@
 #include <iostream>
 #include <algorithm>
-#include "game.h"
+#include "game.hpp"
 #include "image_library.hpp"
 #include "auxillary.hpp"
 
@@ -11,9 +11,9 @@ Game::Game(unsigned int screen_width, unsigned int screen_height) {
     framebuffer.resize(screen_width * screen_height);
     rng.seed(std::random_device()());
 
-    textures = new Textures();
+    assets = new Assets();
 
-    menu = new Menu(textures->title, textures->credits, textures->start_1_player, textures->start_2_player, textures->start_3_player, textures->start_4_player, textures->hand, textures->winner_background, textures->numbers, textures->numbers_frames);
+    menu = new Menu(assets->title, assets->credits, assets->start_1_player, assets->start_2_player, assets->start_3_player, assets->start_4_player, assets->hand, assets->winner_background, assets->numbers, assets->numbers_frames);
     settings = new Settings();
     settings->Deserialize();
 
@@ -41,64 +41,55 @@ void Game::DrawBackground(Renderer *renderer) {
 
     // Draw Sky
     renderer->Clear(Renderer::rgb(115, 183, 196));
-//    for (int x = 0; x < screen_width / textures->sky->w + 1; ++x) {
-//        for (int y = 0; y < screen_height / textures->sky->h + 1; ++y) {
-//            dest_rect.x = x * textures->sky->w;
-//            dest_rect.y = y * textures->sky->h;
-//            dest_rect.w = textures->sky->w;
-//            dest_rect.h = textures->sky->h;
-//            renderer->Render(textures->sky, &dest_rect);
-//        }
-//    }
 
     // Draw Buildings
-    for (int x = 0; x < screen_width / textures->buildings->w + 1; ++x) {
-        dest_rect.x = x * textures->buildings->w;
-        dest_rect.y = screen_height - textures->buildings->h;
-        dest_rect.w = textures->buildings->w;
-        dest_rect.h = textures->buildings->h;
-        renderer->Render(textures->buildings, &dest_rect);
+    for (int x = 0; x < screen_width / assets->buildings->w + 1; ++x) {
+        dest_rect.x = x * assets->buildings->w;
+        dest_rect.y = screen_height - assets->buildings->h;
+        dest_rect.w = assets->buildings->w;
+        dest_rect.h = assets->buildings->h;
+        renderer->Render(assets->buildings, &dest_rect);
     }
 }
 
 void Game::DrawGround(Renderer *renderer) {
     Rect dest_rect;
 
-    int x_offset = (int)distance_travelled % textures->ground->w;
+    int x_offset = (int)distance_travelled % assets->ground->w;
 
     // Draw Ground
-    for (int x = 0; x < screen_width / textures->ground->w + 2; ++x) {
-        dest_rect.x = x * textures->ground->w - x_offset;
-        dest_rect.y = screen_height - textures->ground->h;
-        dest_rect.w = textures->ground->w;
-        dest_rect.h = textures->ground->h;
-        renderer->Render(textures->ground, &dest_rect);
+    for (int x = 0; x < screen_width / assets->ground->w + 2; ++x) {
+        dest_rect.x = x * assets->ground->w - x_offset;
+        dest_rect.y = screen_height - assets->ground->h;
+        dest_rect.w = assets->ground->w;
+        dest_rect.h = assets->ground->h;
+        renderer->Render(assets->ground, &dest_rect);
     }
 }
 
 void Game::draw_score(int x, int y, int score, Texture* bird, Rect* bird_frame) {
     // Draw background
-    Rect dest_rect = {x, y, textures->score_background_w, textures->score_background_h};
-    screen->Render(textures->score_background, &dest_rect);
+    Rect dest_rect = {x, y, assets->score_background_w, assets->score_background_h};
+    screen->Render(assets->score_background, &dest_rect);
 
     // Draw player's bird
     dest_rect = {x + 11, y + 14, bird_frame->w, bird_frame->h};
     screen->Render(bird, bird_frame, &dest_rect);
 
     // Draw score
-    auto rects = Auxillary::getNumberRects(score, &textures->numbers_frames, x + 35, y + 10, 1);
+    auto rects = Auxillary::getNumberRects(score, &assets->numbers_frames, x + 35, y + 10, 1);
     for (auto &rect : rects)
-        screen->Render(textures->numbers, &rect.first, &rect.second);
+        screen->Render(assets->numbers, &rect.first, &rect.second);
 }
 
 void Game::DrawScores(Renderer *renderer) {
     draw_score(0, 0, birds[0]->score, birds[0]->texture, &birds[0]->animation_frames[2]);
     if (birds.size() >= 2)
-        draw_score(screen_width / 3 - textures->score_background_w / 2, 0, birds[1]->score, birds[1]->texture, &birds[1]->animation_frames[2]);
+        draw_score(screen_width / 3 - assets->score_background_w / 2, 0, birds[1]->score, birds[1]->texture, &birds[1]->animation_frames[2]);
     if (birds.size() >= 3)
-        draw_score(2 * screen_width / 3 - textures->score_background_w / 2, 0, birds[2]->score, birds[2]->texture, &birds[2]->animation_frames[2]);
+        draw_score(2 * screen_width / 3 - assets->score_background_w / 2, 0, birds[2]->score, birds[2]->texture, &birds[2]->animation_frames[2]);
     if (birds.size() >= 4)
-        draw_score(screen_width - textures->score_background_w, 0, birds[3]->score, birds[3]->texture, &birds[3]->animation_frames[2]);
+        draw_score(screen_width - assets->score_background_w, 0, birds[3]->score, birds[3]->texture, &birds[3]->animation_frames[2]);
 }
 
 void Game::GameLoop(double delta_time, std::vector<Input> controller_inputs) {
@@ -125,7 +116,7 @@ void Game::GameLoop(double delta_time, std::vector<Input> controller_inputs) {
                 birds[i]->Flap();
         }
 
-        if (!pipes.empty() && pipes.front().x + textures->pipe_bottom_w < distance_travelled)
+        if (!pipes.empty() && pipes.front().x + assets->pipe_bottom_w < distance_travelled)
             pipes.pop_front();
         if (pipes.size() < 8)
             generate_pipes(20);
@@ -148,7 +139,7 @@ void Game::GameLoop(double delta_time, std::vector<Input> controller_inputs) {
 uint32_t* Game::GetFrameBuffer() {
     DrawBackground(screen);
     for (auto &pipe : pipes)
-        pipe.Render(screen, textures, (int)distance_travelled);
+        pipe.Render(screen, assets, (int)distance_travelled);
     for (auto bird : birds)
         bird->Render(screen);
     DrawGround(screen);
@@ -165,11 +156,11 @@ bool Game::bird_crashed(Bird *bird) {
 
     Rect bird_rect = bird->GetRect();
 
-    Rect ground_rect = {0, (int)screen_height - textures->ground->h, (int)screen_width, textures->ground->h};
+    Rect ground_rect = {0, (int)screen_height - assets->ground->h, (int)screen_width, assets->ground->h};
     if (bird_rect.HasIntersection(&ground_rect))
         return true;
     for (auto &pipe : pipes) {
-        auto rects = pipe.GetRect(textures, (int)distance_travelled);
+        auto rects = pipe.GetRect(assets, (int)distance_travelled);
         if (bird_rect.HasIntersection(&rects.first) || bird_rect.HasIntersection(&rects.second))
             return true;
     }
@@ -190,14 +181,14 @@ void Game::NewGame(int num_players) {
     for (auto bird : birds)
         delete bird;
     birds = {};
-    int floor_height = screen_height - textures->ground->h;
-    birds.push_back(new Bird(screen_width / 2, screen_height / 2, floor_height, textures->bird, textures->bird_frames));
+    int floor_height = screen_height - assets->ground->h;
+    birds.push_back(new Bird(screen_width / 2, screen_height / 2, floor_height, assets->bird, assets->bird_frames));
     if (num_players >= 2)
-        birds.push_back(new Bird(screen_width / 2 - 20, screen_height / 2, floor_height, textures->bird2, textures->bird_frames));
+        birds.push_back(new Bird(screen_width / 2 - 20, screen_height / 2, floor_height, assets->bird2, assets->bird_frames));
     if (num_players >= 3)
-        birds.push_back(new Bird(screen_width / 2 + 20, screen_height / 2, floor_height, textures->bird3, textures->bird_frames));
+        birds.push_back(new Bird(screen_width / 2 + 20, screen_height / 2, floor_height, assets->bird3, assets->bird_frames));
     if (num_players == 4)
-        birds.push_back(new Bird(screen_width / 2 - 40, screen_height / 2, floor_height, textures->bird4, textures->bird_frames));
+        birds.push_back(new Bird(screen_width / 2 - 40, screen_height / 2, floor_height, assets->bird4, assets->bird_frames));
 
     distance_travelled = 0;
     pipes = {};
@@ -234,5 +225,5 @@ void Game::PostGameMenu() {
 void Game::score_all_birds() {
     for (auto bird : birds)
         if (bird->IsAlive())
-            bird->score = std::max(0, (int)((bird->x + distance_travelled - screen_width - textures->pipe_bottom_w) / DISTANCE_BETWEEN_PIPES));
+            bird->score = std::max(0, (int)((bird->x + distance_travelled - screen_width - assets->pipe_bottom_w) / DISTANCE_BETWEEN_PIPES));
 }

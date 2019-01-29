@@ -3,7 +3,7 @@
 
 
 #include <utility>
-#include "textures.hpp"
+#include "assets.hpp"
 #include "engine/renderer.hpp"
 
 class PipePair {
@@ -13,8 +13,8 @@ public:
     int gap;
 
     PipePair(int x, int y, int gap);
-    void Render(Renderer *renderer, Textures* textures, int distance_travelled);
-    std::pair<Rect, Rect> GetRect(Textures* textures, int distance_travelled);
+    void Render(Renderer *renderer, Assets* assets, int distance_travelled);
+    std::pair<Rect, Rect> GetRect(Assets* assets, int distance_travelled);
 };
 
 

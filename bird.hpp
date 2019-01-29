@@ -2,7 +2,7 @@
 #define LR_SUPERFLAPPYBIRD_BIRD_H
 
 
-#include "textures.hpp"
+#include "assets.hpp"
 #include "engine/renderer.hpp"
 
 enum BirdState { Gliding, Alive, Dead };

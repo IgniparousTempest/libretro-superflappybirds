@@ -1,5 +1,5 @@
 #include "libretro.hpp"
-#include "game.h"
+#include "game.hpp"
 #include "input.hpp"
 #include <cstring>
 #include <memory>

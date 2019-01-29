@@ -17,8 +17,8 @@ struct Rect
     bool  operator!= (Rect rect) const { return !(*this == rect); }
 
     bool HasIntersection(Rect* other) {
-        //TODO: Make this less complicated
-        return (*this & *other) != Rect(0, 0, 0, 0);
+        if (x + w <= other->x || y + h <= other->y || x >= other->x + other->w || y >= other->y + other->h)
+            return true;
     }
 
     // Intersection

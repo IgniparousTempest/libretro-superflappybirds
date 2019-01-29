@@ -6,7 +6,7 @@
 #include <vector>
 #include <deque>
 #include "pipe_pair.hpp"
-#include "textures.hpp"
+#include "assets.hpp"
 #include "bird.hpp"
 #include "input.hpp"
 #include "menu.hpp"
@@ -36,7 +36,7 @@ private:
     Menu* menu;
     Settings* settings;
     double distance_travelled = 0;
-    Textures* textures;
+    Assets* assets;
     std::vector<uint32_t> framebuffer;
     unsigned int screen_width;
     unsigned int screen_height;

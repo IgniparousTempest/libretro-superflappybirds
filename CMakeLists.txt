@@ -16,9 +16,9 @@ add_library(${PROJECT_NAME} SHARED
         libretro.hpp
         libretro.cpp
         image_library.hpp
-        game.cpp game.h
+        game.cpp game.hpp
         pipe_pair.cpp pipe_pair.hpp
-        textures.hpp
+        assets.hpp
         bird.cpp bird.hpp
         input.hpp
         auxillary.hpp
