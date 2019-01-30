@@ -102,8 +102,6 @@ std::string get_library_path() {
 
 void retro_set_environment(retro_environment_t cb)
 {
-    std::cout << get_library_path() << std::endl;
-
     environ_cb = cb;
     // Start without rom
     bool no_rom = true;
@@ -114,8 +112,6 @@ void retro_set_environment(retro_environment_t cb)
     struct retro_frame_time_callback frame_cb = { frame_time_cb, time_reference };
     cb(RETRO_ENVIRONMENT_SET_FRAME_TIME_CALLBACK, &frame_cb);
     char* name = new char[1000];
-    cb(RETRO_ENVIRONMENT_GET_LIBRETRO_PATH, &name);
-    std::cout << name << std::endl;
 }
 
 void retro_set_audio_sample_batch(retro_audio_sample_batch_t cb) { audio_batch_cb = cb; }
@@ -128,6 +124,9 @@ void retro_set_input_state(retro_input_state_t cb) { input_state_cb = cb; }
 
 void retro_init(void)
 {
+    //TODO: RETRO_ENVIRONMENT_GET_LIBRETRO_PATH returns rubbish
+    std::cout << get_library_path() << std::endl;
+
 }
 
 void retro_get_system_info(struct retro_system_info *info)
