@@ -105,11 +105,15 @@ void retro_set_environment(retro_environment_t cb)
     cb(RETRO_ENVIRONMENT_SET_FRAME_TIME_CALLBACK, &frame_cb);
     // retro_set_environment seems to get called multiple times, but only the first time contains the right path.
     if (core_path.empty()) {
-        char *name = new char[1000];
+        char *name = new char[PATH_MAX];
         cb(RETRO_ENVIRONMENT_GET_LIBRETRO_PATH, &name);
         core_path = std::string(name);
         core_path = core_path.substr(0, core_path.find_last_of('/') + 1);
         std::cout << "core path: " << core_path << std::endl;
+        cb(RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY, &name);
+        std::cout << "system path: " << name << std::endl;
+        cb(RETRO_ENVIRONMENT_GET_CORE_ASSETS_DIRECTORY, &name);
+        std::cout << "core assets path: " << name << std::endl;
     }
 }
 

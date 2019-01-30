@@ -110,7 +110,6 @@ uint32_t *Image::ParsePAM(std::basic_istream<char, std::char_traits<char>> &file
 
 Texture *Image::LoadPNM(const std::string &file_path) {
     try {
-        std::cout << file_path << std::endl;
         std::ifstream infile(file_path);
         std::string magic_number;
         int width, height;
@@ -133,5 +132,6 @@ Texture *Image::LoadPNM(const std::string &file_path) {
     }
     catch( const std::exception & ex ) {
         std::cerr << ex.what() << std::endl;
+        throw ex;
     }
 }
