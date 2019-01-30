@@ -23,6 +23,14 @@ static retro_audio_sample_batch_t audio_batch_cb;
 
 static double delta_time;
 
+std::string get_library_path() {
+    Dl_info dl_info;
+    if(0 == dladdr((void*)get_library_path, &dl_info))
+        return std::string(dl_info.dli_fname);
+    else
+        return std::string();
+}
+
 unsigned retro_api_version(void)
 {
     return RETRO_API_VERSION;
@@ -40,6 +48,9 @@ void retro_cheat_set(unsigned index, bool enabled, const char *code)
 
 bool retro_load_game(const struct retro_game_info *info)
 {
+    //TODO: RETRO_ENVIRONMENT_GET_LIBRETRO_PATH returns rubbish
+    std::cout << "2: " << get_library_path() << std::endl;
+    game = std::make_unique<Game>(FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT);
     return true;
 }
 
@@ -92,14 +103,6 @@ void retro_deinit(void)
 {
 }
 
-std::string get_library_path() {
-    Dl_info dl_info;
-    if(0 == dladdr((void*)get_library_path, &dl_info))
-        return std::string(dl_info.dli_fname);
-    else
-        return std::string();
-}
-
 void retro_set_environment(retro_environment_t cb)
 {
     std::cout << "1: " << get_library_path() << std::endl;
@@ -126,9 +129,6 @@ void retro_set_input_state(retro_input_state_t cb) { input_state_cb = cb; }
 
 void retro_init(void)
 {
-    //TODO: RETRO_ENVIRONMENT_GET_LIBRETRO_PATH returns rubbish
-    std::cout << "2: " << get_library_path() << std::endl;
-    game = std::make_unique<Game>(FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT);
 }
 
 void retro_get_system_info(struct retro_system_info *info)
