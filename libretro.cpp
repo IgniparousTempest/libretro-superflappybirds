@@ -125,7 +125,9 @@ void retro_set_input_state(retro_input_state_t cb) { input_state_cb = cb; }
 void retro_init(void)
 {
     //TODO: RETRO_ENVIRONMENT_GET_LIBRETRO_PATH seems to return gibberish.
-    auto path = dirname(get_library_path().c_str());
+    auto library_path = get_library_path();
+    std::vector<char> cstr(library_path.c_str(), library_path.c_str() + library_path.size() + 1);
+    auto path = dirname(&cstr[0]);
     std::cout << path << std::endl;
     game = std::make_unique<Game>(FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT, std::string(path));
 }
