@@ -40,7 +40,7 @@ Image::ParseBinary(std::basic_istream<char, std::char_traits<char>> &file, int w
         b = buffer[i + 2];
         if (channels == 4)
             a = buffer[i + 3];
-        image[i / channels] = r | g << 8 | b << 16 | a << 24;
+        image[i / channels] = b | g << 8 | r << 16 | a << 24;
     }
 
     return image;
