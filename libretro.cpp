@@ -10,7 +10,7 @@ static const unsigned FRAMEBUFFER_WIDTH = 640;
 static const unsigned FRAMEBUFFER_HEIGHT = 360;
 
 std::vector<Input> input = {{}, {}, {}, {}};
-std::unique_ptr<Game> game = std::make_unique<Game>(FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT);
+std::unique_ptr<Game> game;
 
 // Callbacks
 static retro_log_printf_t log_cb;
@@ -102,6 +102,8 @@ std::string get_library_path() {
 
 void retro_set_environment(retro_environment_t cb)
 {
+    std::cout << "1: " << get_library_path() << std::endl;
+
     environ_cb = cb;
     // Start without rom
     bool no_rom = true;
@@ -125,8 +127,8 @@ void retro_set_input_state(retro_input_state_t cb) { input_state_cb = cb; }
 void retro_init(void)
 {
     //TODO: RETRO_ENVIRONMENT_GET_LIBRETRO_PATH returns rubbish
-    std::cout << get_library_path() << std::endl;
-
+    std::cout << "2: " << get_library_path() << std::endl;
+    game = std::make_unique<Game>(FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT);
 }
 
 void retro_get_system_info(struct retro_system_info *info)
@@ -140,7 +142,6 @@ void retro_get_system_info(struct retro_system_info *info)
 
 void retro_get_system_av_info(struct retro_system_av_info *info)
 {
-
     int pixel_format = RETRO_PIXEL_FORMAT_XRGB8888;
 
     memset(info, 0, sizeof(*info));
