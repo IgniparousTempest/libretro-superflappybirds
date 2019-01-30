@@ -39,7 +39,6 @@ public:
         SDL_Surface *bird3 = SDL_LoadBMP("resources/bird3.bmp");
         SDL_Surface *bird4 = SDL_LoadBMP("resources/bird4.bmp");
         SDL_Surface *numbers = SDL_LoadBMP("resources/numbers.bmp");
-        SDL_Surface *hand = SDL_LoadBMP("resources/hand.bmp");
         SDL_Surface *title = SDL_LoadBMP("resources/title.bmp");
 
         this->buildings = Image::LoadPNM(core_folder_path + "resources/buildings.pnm");
@@ -56,7 +55,7 @@ public:
         this->start_2_player = Image::LoadPNM(core_folder_path + "resources/start_2_player.pnm");
         this->start_3_player = Image::LoadPNM(core_folder_path + "resources/start_3_player.pnm");
         this->start_4_player = Image::LoadPNM(core_folder_path + "resources/start_4_player.pnm");
-        this->hand = surface_to_texture(hand);
+        this->hand = Image::LoadPNM(core_folder_path + "resources/hand.pam");
         this->title = surface_to_texture(title);
         this->credits = Image::LoadPNM(core_folder_path + "resources/credits.pnm");
         this->winner_background = Image::LoadPNM(core_folder_path + "resources/winner_background.pnm");
@@ -68,7 +67,6 @@ public:
         SDL_FreeSurface(bird3);
         SDL_FreeSurface(bird4);
         SDL_FreeSurface(numbers);
-        SDL_FreeSurface(hand);
         SDL_FreeSurface(title);
 
         bird_frames.push_back({0, 0, 17, 12});
