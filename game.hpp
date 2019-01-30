@@ -4,10 +4,9 @@
 #include <stdint.h>
 #include <random>
 #include <vector>
-#include <SDL_render.h>
 #include <deque>
 #include "pipe_pair.hpp"
-#include "textures.hpp"
+#include "assets.hpp"
 #include "bird.hpp"
 #include "input.hpp"
 #include "menu.hpp"
@@ -17,11 +16,11 @@ enum GameState { InGame, InPostGameMenu, InMenu };
 
 class Game {
 public:
-    const char* game_name = "Super Flappy Birds";
-    const char* game_version = "0.9.0";
-    const int game_fps = 50;
+    static const char* game_name;
+    static const char* game_version;
+    static const int game_fps = 50;
 
-    Game(unsigned int screen_width, unsigned int screen_height);
+    Game(unsigned int screen_width, unsigned int screen_height, std::string core_folder_path, std::string config_folder_path);
     void GameLoop(double delta_time, std::vector<Input> controller_inputs);
     uint32_t* GetFrameBuffer();
 
@@ -31,29 +30,27 @@ private:
     /// How many pixels between each pipe
     const int DISTANCE_BETWEEN_PIPES = 100;
 
+    Renderer* screen;
     std::mt19937 rng;
     GameState state;
     Menu* menu;
     Settings* settings;
     double distance_travelled = 0;
-    SDL_Renderer *renderer;
-    SDL_Surface *surface;
-    Textures* textures;
+    Assets* assets;
     std::vector<uint32_t> framebuffer;
     unsigned int screen_width;
     unsigned int screen_height;
     std::deque<PipePair> pipes = {};
     std::vector<Bird*> birds;
 
-    void DrawBackground(SDL_Renderer* renderer);
-    void DrawGround(SDL_Renderer* renderer);
-    void DrawScores(SDL_Renderer *renderer);
-    uint32_t* surface_to_framebuffer(SDL_Surface* surface);
+    void DrawBackground(Renderer* renderer);
+    void DrawGround(Renderer* renderer);
+    void DrawScores(Renderer *renderer);
     void generate_pipes(int number);
     bool bird_crashed(Bird* bird);
     bool all_birds_dead();
     void score_all_birds();
-    void draw_score(int x, int y, int score, SDL_Texture* bird, SDL_Rect* bird_frame);
+    void draw_score(Renderer* renderer, int x, int y, int score, Texture* bird, Rect* bird_frame);
     void NewGame(int num_players);
     /// Transitions the game to the Post Game Menu
     void PostGameMenu();

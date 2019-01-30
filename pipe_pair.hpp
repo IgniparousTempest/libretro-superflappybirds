@@ -3,9 +3,8 @@
 
 
 #include <utility>
-#include <SDL_surface.h>
-#include <SDL_render.h>
-#include "textures.hpp"
+#include "assets.hpp"
+#include "engine/renderer.hpp"
 
 class PipePair {
 public:
@@ -14,8 +13,8 @@ public:
     int gap;
 
     PipePair(int x, int y, int gap);
-    void Render(SDL_Renderer *renderer, Textures* textures, int distance_travelled);
-    std::pair<SDL_Rect, SDL_Rect> GetRect(Textures* textures, int distance_travelled);
+    void Render(Renderer *renderer, Assets* assets, int distance_travelled);
+    std::pair<Rect, Rect> GetRect(Assets* assets, int distance_travelled);
 };
 
 

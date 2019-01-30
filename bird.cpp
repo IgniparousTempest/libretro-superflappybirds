@@ -1,7 +1,7 @@
 #include <iostream>
 #include "bird.hpp"
 
-Bird::Bird(int x, int y, int floor_height, SDL_Texture* texture, std::vector<SDL_Rect> frames) {
+Bird::Bird(int x, int y, int floor_height, Texture* texture, std::vector<Rect> frames) {
     this->x = x;
     this->y = y;
     this->floor_height = floor_height;
@@ -51,23 +51,20 @@ void Bird::Update(double delta_time, double distance_travelled) {
     }
 }
 
-void Bird::Render(SDL_Renderer *renderer) {
+void Bird::Render(Renderer *renderer) {
     frames += 1;
     int frame_index = (frames / frames_per_animation_frame) % frames_in_animation;
     if (state == Dead)
         frame_index = 0;
-    SDL_Rect dest_rect;
+    Rect dest_rect = GetRect();
 
-    dest_rect = GetRect();
-
-    //TODO: Remove the ternary. It is a solution on my dev machine to stop textures from glitching.
-    SDL_Rect* src_rect = &animation_frames[frame_index + ((frame_index == 0) ? 2 : 0)];
+    Rect* src_rect = &animation_frames[frame_index];
 
     double angle = (state == Dead)? 90 : speed_y * 10.0;
-    SDL_RenderCopyEx(renderer, texture, src_rect, &dest_rect, angle, nullptr, SDL_FLIP_NONE);
+    renderer->Render(texture, src_rect, &dest_rect, angle);
 }
 
-SDL_Rect Bird::GetRect() {
+Rect Bird::GetRect() {
     auto f = animation_frames[0];
     return {x - f.w / 2, y - f.h / 2, f.w, f.h};
 }

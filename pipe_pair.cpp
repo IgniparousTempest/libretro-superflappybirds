@@ -1,5 +1,4 @@
 #include "pipe_pair.hpp"
-#include "image_library.hpp"
 
 PipePair::PipePair(int x, int y, int gap) {
     this->x = x;
@@ -7,28 +6,28 @@ PipePair::PipePair(int x, int y, int gap) {
     this->gap = gap;
 }
 
-void PipePair::Render(SDL_Renderer *renderer, Textures* textures, int distance_travelled) {
-    auto rects = GetRect(textures, distance_travelled);
+void PipePair::Render(Renderer *renderer, Assets* assets, int distance_travelled) {
+    auto rects = GetRect(assets, distance_travelled);
 
     // Bottom Pipe
-    SDL_RenderCopy(renderer, textures->pipe_bottom, nullptr, &rects.first);
+    renderer->Render(assets->pipe_bottom, &rects.first);
 
     // Top Pipe
-    SDL_RenderCopy(renderer, textures->pipe_top, nullptr, &rects.second);
+    renderer->Render(assets->pipe_top, &rects.second);
 }
 
-std::pair<SDL_Rect, SDL_Rect> PipePair::GetRect(Textures* textures, int distance_travelled) {
-    SDL_Rect bot_rect, top_rect;
+std::pair<Rect, Rect> PipePair::GetRect(Assets* assets, int distance_travelled) {
+    Rect bot_rect, top_rect;
     // Bottom Pipe
     bot_rect.x = x - distance_travelled;
     bot_rect.y = y;
-    bot_rect.w = textures->pipe_bottom_w;
-    bot_rect.h = textures->pipe_bottom_h;
+    bot_rect.w = assets->pipe_bottom->w;
+    bot_rect.h = assets->pipe_bottom->h;
 
     // Top Pipe
     top_rect.x = x - distance_travelled;
-    top_rect.y = y - gap - textures->pipe_top_h;
-    top_rect.w = textures->pipe_top_w;
-    top_rect.h = textures->pipe_top_h;
+    top_rect.y = y - gap - assets->pipe_top->h;
+    top_rect.w = assets->pipe_top->w;
+    top_rect.h = assets->pipe_top->h;
     return {bot_rect, top_rect};
 }

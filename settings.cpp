@@ -1,5 +1,8 @@
 #include "settings.hpp"
 
+Settings::Settings(std::string config_folder_path) {
+    filename = config_folder_path + filename;
+}
 void Settings::Serialize() {
     std::ofstream out_file (filename);
     out_file << highscore << std::endl;
