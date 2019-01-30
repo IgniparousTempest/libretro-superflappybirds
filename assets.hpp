@@ -50,7 +50,7 @@ public:
         SDL_Surface *credits = SDL_LoadBMP("resources/credits.bmp");
         SDL_Surface *winner_background = SDL_LoadBMP("resources/winner_background.bmp");
 
-        this->buildings = Image::LoadPNM("resources/buildings.pnm");
+        this->buildings = Image::LoadPNM(core_folder_path + "resources/buildings.pnm");
         this->ground = surface_to_texture(ground);
         this->pipe_top = surface_to_texture(pipe_top);
         this->pipe_bottom = surface_to_texture(pipe_bottom);
