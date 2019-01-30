@@ -76,7 +76,7 @@ Image::ParsePPM(std::basic_istream<char, std::char_traits<char>> &file, const st
         }
     }
 
-    throw "Invalid file format";
+    throw std::runtime_error("Did not find image data in PPM file.");
 }
 
 uint32_t *Image::ParsePAM(std::basic_istream<char, std::char_traits<char>> &file, int *width, int *height) {
@@ -105,28 +105,33 @@ uint32_t *Image::ParsePAM(std::basic_istream<char, std::char_traits<char>> &file
             return ParseBinary(file, *width, *height, max_value, depth);
     }
 
-    throw "Invalid file format";
+    throw std::runtime_error("Did not find image data in PAM file.");
 }
 
 Texture *Image::LoadPNM(const std::string &file_path) {
-    std::cout << file_path << std::endl;
-    std::ifstream infile(file_path);
-    std::string magic_number;
-    int width, height;
+    try {
+        std::cout << file_path << std::endl;
+        std::ifstream infile(file_path);
+        std::string magic_number;
+        int width, height;
 
-    if (infile.fail())
-        throw "File not found";
+        if (infile.fail())
+            throw std::runtime_error("File not found");
 
-    std::string line;
-    if (std::getline(infile, line))
-    {
-        // File format, aka magic number
-        if (line == "P3" || line == "P6")
-            return new Texture(ParsePPM(infile, line, &width, &height), width, height);
-        if (line == "P7")
-            return new Texture(ParsePAM(infile, &width, &height), width, height);
-        else
-            throw "Invalid file format";
+        std::string line;
+        if (std::getline(infile, line))
+        {
+            // File format, aka magic number
+            if (line == "P3" || line == "P6")
+                return new Texture(ParsePPM(infile, line, &width, &height), width, height);
+            if (line == "P7")
+                return new Texture(ParsePAM(infile, &width, &height), width, height);
+            else
+                throw std::runtime_error("Unknown magic number: " + line);
+        }
+        throw std::runtime_error("Unknown Error");
     }
-    throw "Invalid file format";
+    catch( const std::exception & ex ) {
+        std::cerr << ex.what() << std::endl;
+    }
 }
