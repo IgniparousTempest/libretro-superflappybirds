@@ -121,6 +121,7 @@ void retro_init(void)
     const char *path;
     if (count != -1) {
         path = dirname(buff);
+        std::cout << path << std::endl;
     }
 }
 
