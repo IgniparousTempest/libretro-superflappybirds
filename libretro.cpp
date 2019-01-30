@@ -108,6 +108,7 @@ void retro_set_environment(retro_environment_t cb)
         char *name = new char[1000];
         cb(RETRO_ENVIRONMENT_GET_LIBRETRO_PATH, &name);
         core_path = std::string(name);
+        core_path = core_path.substr(0, core_path.find('/') + 1);
         std::cout << "core path: " << core_path << std::endl;
     }
 }
@@ -122,7 +123,7 @@ void retro_set_input_state(retro_input_state_t cb) { input_state_cb = cb; }
 
 void retro_init(void)
 {
-    game = std::make_unique<Game>(FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT);
+    game = std::make_unique<Game>(FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT, core_path);
 }
 
 void retro_get_system_info(struct retro_system_info *info)

@@ -31,7 +31,7 @@ public:
     std::vector<Rect> bird_frames;
     std::vector<Rect> numbers_frames;
 
-    Assets() {
+    Assets(std::string core_folder_path) {
         SDL_Surface *ground = SDL_LoadBMP("resources/ground.bmp");
         SDL_Surface *pipe_top = SDL_LoadBMP("resources/pipe_top.bmp");
         SDL_Surface *pipe_bottom = SDL_LoadBMP("resources/pipe_bottom.bmp");

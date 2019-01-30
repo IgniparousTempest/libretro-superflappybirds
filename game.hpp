@@ -20,7 +20,7 @@ public:
     static const char* game_version;
     static const int game_fps = 50;
 
-    Game(unsigned int screen_width, unsigned int screen_height);
+    Game(unsigned int screen_width, unsigned int screen_height, std::string core_folder_path);
     void GameLoop(double delta_time, std::vector<Input> controller_inputs);
     uint32_t* GetFrameBuffer();
 
