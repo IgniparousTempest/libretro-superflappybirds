@@ -17,7 +17,7 @@ def image_to_pam(image_path, pam_path):
             for c in range(channels):
                 bytes.append(pix[x, y][c])
 
-    with open(pam_path, 'w') as f:
+    with open(pam_path, 'w', newline='\n') as f:
         f.write("P7\n")
         f.write(f"WIDTH {width}\n")
         f.write(f"HEIGHT {height}\n")
