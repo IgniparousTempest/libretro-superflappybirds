@@ -10,7 +10,7 @@ static const unsigned FRAMEBUFFER_HEIGHT = 360;
 
 std::string core_path;
 std::vector<Input> input = {{}, {}, {}, {}};
-std::unique_ptr<Game> game = std::make_unique<Game>(FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT);
+std::unique_ptr<Game> game;
 
 // Callbacks
 static retro_log_printf_t log_cb;
@@ -99,7 +99,7 @@ void retro_set_environment(retro_environment_t cb)
     bool no_rom = true;
     cb(RETRO_ENVIRONMENT_SET_SUPPORT_NO_GAME, &no_rom);
     // Delta time setup
-    retro_usec_t time_reference = 1000000 / game->game_fps;
+    retro_usec_t time_reference = 1000000 / Game::game_fps;
     auto frame_time_cb = [](retro_usec_t usec) { delta_time = usec / 1000000.0; };
     struct retro_frame_time_callback frame_cb = { frame_time_cb, time_reference };
     cb(RETRO_ENVIRONMENT_SET_FRAME_TIME_CALLBACK, &frame_cb);
@@ -122,6 +122,7 @@ void retro_set_input_state(retro_input_state_t cb) { input_state_cb = cb; }
 
 void retro_init(void)
 {
+    game = std::make_unique<Game>(FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT);
 }
 
 void retro_get_system_info(struct retro_system_info *info)
