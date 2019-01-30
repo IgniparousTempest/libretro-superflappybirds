@@ -79,7 +79,7 @@ public:
     void Render(Texture* image, Rect* src, Rect* dest, double angle) {
         assert(src->w == dest->w && src->h == dest->h);
 
-        CImg<float> img(src->w, src->h, 1, 4);
+        cimg_library::CImg<unsigned char> img(src->w, src->h, 1, 4);
         // Translate Texture to CImg
 #pragma omp parallel for
         for (int x = 0; x < dest->w; ++x) {
@@ -95,7 +95,7 @@ public:
 #pragma omp parallel for
         for (int x = 0; x < dest->w; ++x) {
             for (int y = 0; y < dest->h; ++y) {
-                data[y * dest->w + x] = buffer[y * surface->w + x] = img(x, y, 0, 0) | img(x, y, 0, 1) << 8 | img(x, y, 0, 2) << 16 | img(x, y, 0, 3) << 24;
+                data[y * dest->w + x] = img(x, y, 0, 0) | img(x, y, 0, 1) << 8 | img(x, y, 0, 2) << 16 | img(x, y, 0, 3) << 24;
             }
         }
     }
