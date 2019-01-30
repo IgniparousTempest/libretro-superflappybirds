@@ -92,13 +92,17 @@ void retro_deinit(void)
 {
 }
 
-void retro_set_environment(retro_environment_t cb)
-{
+std::string get_library_path() {
     Dl_info dl_info;
     if(0 == dladdr((void*)get_library_path, &dl_info))
-        std::cout << std::string(dl_info.dli_fname) << std::endl;
+        return std::string(dl_info.dli_fname);
     else
-        std::cout << std::string() << std::endl;
+        return std::string();
+}
+
+void retro_set_environment(retro_environment_t cb)
+{
+    std::cout << get_library_path() << std::endl;
 
     environ_cb = cb;
     // Start without rom
