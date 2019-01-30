@@ -4,6 +4,7 @@
 #include <cstring>
 #include <memory>
 #include <iostream>
+#include <libgen.h>
 
 static const unsigned FRAMEBUFFER_WIDTH = 640;
 static const unsigned FRAMEBUFFER_HEIGHT = 360;
@@ -39,10 +40,6 @@ void retro_cheat_set(unsigned index, bool enabled, const char *code)
 
 bool retro_load_game(const struct retro_game_info *info)
 {
-    if (info != nullptr)
-        std::cout << info->path << std::endl;
-    else
-        std::cout << "info is null!!!!!" << std::endl;
     return true;
 }
 
@@ -118,6 +115,12 @@ void retro_set_input_state(retro_input_state_t cb) { input_state_cb = cb; }
 
 void retro_init(void)
 {
+    char buff[PATH_MAX];
+    ssize_t count = readlink("/proc/self/exe", buff, PATH_MAX);
+    const char *path;
+    if (count != -1) {
+        path = dirname(buff);
+    }
 }
 
 void retro_get_system_info(struct retro_system_info *info)
@@ -125,7 +128,7 @@ void retro_get_system_info(struct retro_system_info *info)
     memset(info, 0, sizeof(*info));
     info->library_name = game->game_name;
     info->library_version = game->game_version;
-    info->need_fullpath = true;
+    info->need_fullpath = false;
     info->valid_extensions = "zip";
 }
 
