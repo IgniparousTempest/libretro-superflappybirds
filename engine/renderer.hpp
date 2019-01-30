@@ -82,13 +82,18 @@ public:
 
 #pragma omp parallel for
         for (int x = -hw; x < hw * 3; ++x) {
-            int px, py;
+            int px, py, sx, sy;
+            double s, c;
             for (int y = -hh; y < hh * 3; ++y) {
-                px = (int)(dest->x + (x - hw) * std::cos(-angle) - (y - hh) * std::sin(-angle)) + hw;
-                py = (int)(dest->y + (x - hw) * std::sin(-angle) + (y - hh) * std::cos(-angle)) + hh;
-                if (px > 0 && py > 0 && px < src->w && py < src->h)
-                    framebuffer[(dest->y + y) * width + (dest->x + x)] = image->image[py * src->w + px];
+                s = std::sin(-angle);
+                c = std::cos(-angle);
+                px = x - hw;
+                py = y - hh;
+                sx = px * c - py * s + hw;
+                sy = px * s + py * c + hh;
                 framebuffer[(dest->y + y) * width + (dest->x + x)] = 255;
+                if (sx > 0 && sy > 0 && sx < src->w && sy < src->h)
+                    framebuffer[(dest->y + y) * width + (dest->x + x)] = image->image[sy * src->w + sx];
             }
         }
     }
