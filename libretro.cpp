@@ -4,11 +4,11 @@
 #include <cstring>
 #include <memory>
 #include <iostream>
-#include <dlfcn.h>
 
 static const unsigned FRAMEBUFFER_WIDTH = 640;
 static const unsigned FRAMEBUFFER_HEIGHT = 360;
 
+std::string core_path;
 std::vector<Input> input = {{}, {}, {}, {}};
 std::unique_ptr<Game> game = std::make_unique<Game>(FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT);
 
@@ -94,7 +94,6 @@ void retro_deinit(void)
 
 void retro_set_environment(retro_environment_t cb)
 {
-    std::cout << "Environment" << std::endl;
     environ_cb = cb;
     // Start without rom
     bool no_rom = true;
@@ -104,9 +103,13 @@ void retro_set_environment(retro_environment_t cb)
     auto frame_time_cb = [](retro_usec_t usec) { delta_time = usec / 1000000.0; };
     struct retro_frame_time_callback frame_cb = { frame_time_cb, time_reference };
     cb(RETRO_ENVIRONMENT_SET_FRAME_TIME_CALLBACK, &frame_cb);
-    char* name = new char[1000];
-    cb(RETRO_ENVIRONMENT_GET_LIBRETRO_PATH, &name);
-    std::cout << "Name: " << name << std::endl;
+    // retro_set_environment seems to get called multiple times, but only the first time contains the right path.
+    if (core_path.empty()) {
+        char *name = new char[1000];
+        cb(RETRO_ENVIRONMENT_GET_LIBRETRO_PATH, &name);
+        core_path = std::string(name);
+        std::cout << "core path: " << core_path << std::endl;
+    }
 }
 
 void retro_set_audio_sample_batch(retro_audio_sample_batch_t cb) { audio_batch_cb = cb; }
@@ -119,14 +122,13 @@ void retro_set_input_state(retro_input_state_t cb) { input_state_cb = cb; }
 
 void retro_init(void)
 {
-    std::cout << "retro_init" << std::endl;
 }
 
 void retro_get_system_info(struct retro_system_info *info)
 {
     memset(info, 0, sizeof(*info));
-    info->library_name = game->game_name;
-    info->library_version = game->game_version;
+    info->library_name = Game::game_name;
+    info->library_version = Game::game_version;
     info->need_fullpath = false;
     info->valid_extensions = "zip";
 }
@@ -137,7 +139,7 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
     int pixel_format = RETRO_PIXEL_FORMAT_XRGB8888;
 
     memset(info, 0, sizeof(*info));
-    info->timing.fps            = game->game_fps;
+    info->timing.fps            = Game::game_fps;
     info->timing.sample_rate    = 44100;
     info->geometry.base_width   = FRAMEBUFFER_WIDTH;
     info->geometry.base_height  = FRAMEBUFFER_HEIGHT;

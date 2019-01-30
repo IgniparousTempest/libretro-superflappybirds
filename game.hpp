@@ -16,9 +16,9 @@ enum GameState { InGame, InPostGameMenu, InMenu };
 
 class Game {
 public:
-    const char* game_name = "Super Flappy Birds";
-    const char* game_version = "0.9.0";
-    const int game_fps = 50;
+    static const char* game_name;
+    static const char* game_version;
+    static const int game_fps = 50;
 
     Game(unsigned int screen_width, unsigned int screen_height);
     void GameLoop(double delta_time, std::vector<Input> controller_inputs);
