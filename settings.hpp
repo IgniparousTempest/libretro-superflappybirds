@@ -6,7 +6,7 @@
 
 class Settings {
 public:
-    int highscore;
+    int highscore = 0;
     std::string filename = "settings.txt";
 
     explicit Settings(std::string config_folder_path);
