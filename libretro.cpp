@@ -117,11 +117,10 @@ void retro_set_input_state(retro_input_state_t cb) { input_state_cb = cb; }
 void retro_init(void)
 {
     char buff[PATH_MAX];
-    ssize_t count = readlink("/proc/self/exe", buff, PATH_MAX);
-    const char *path;
-    if (count != -1) {
-        path = dirname(buff);
-        std::cout << path << std::endl;
+    ssize_t len = ::readlink("/proc/self/exe", buff, sizeof(buff)-1);
+    if (len != -1) {
+        buff[len] = '\0';
+        std::cout << std::string(buff) << std::endl;
     }
     else
         std::cout << "Failed !!!!!!!!!!!!!!!!" << std::endl;
