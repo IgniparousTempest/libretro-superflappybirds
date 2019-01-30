@@ -78,27 +78,46 @@ public:
 
     void Render(Texture* image, Rect* src, Rect* dest, double angle) {
         assert(src->w == dest->w && src->h == dest->h);
+        int hw = dest->w / 2;
+        int hh = dest->h / 2;
 
-        cimg_library::CImg<unsigned char> img(src->w, src->h, 1, 4);
-        // Translate Texture to CImg
 #pragma omp parallel for
-        for (int x = 0; x < dest->w; ++x) {
-            for (int y = 0; y < dest->h; ++y) {
-                img(x, y, 0, 0) = image->image[y * dest->w + x] & 0xFF;
-                img(x, y, 0, 1) = (image->image[y * dest->w + x] >> 8) & 0xFF;
-                img(x, y, 0, 2) = (image->image[y * dest->w + x] >> 16) & 0xFF;
-                img(x, y, 0, 3) = (image->image[y * dest->w + x] >> 24) & 0xFF;
-            }
-        }
-        // Translate back
-        uint32_t* data = new uint32_t[img.width() * img.height()];
-#pragma omp parallel for
-        for (int x = 0; x < dest->w; ++x) {
-            for (int y = 0; y < dest->h; ++y) {
-                data[y * dest->w + x] = img(x, y, 0, 0) | img(x, y, 0, 1) << 8 | img(x, y, 0, 2) << 16 | img(x, y, 0, 3) << 24;
+        for (int x = -hw; x < hw * 3; ++x) {
+            int px, py;
+            for (int y = -hh; y < hh * 3; ++y) {
+                px = (int)(dest->x + (x - hw) * std::cos(-angle) - (y - hh) * std::sin(-angle)) + hw;
+                py = (int)(dest->y + (x - hw) * std::sin(-angle) + (y - hh) * std::cos(-angle)) + hh;
+                if (px > 0 && py > 0 && px < src->w && py < src->h)
+                    framebuffer[(dest->y + y) * width + (dest->x + x)] = image->image[py * src->w + px];
             }
         }
     }
+
+//    void Render(Texture* image, Rect* src, Rect* dest, double angle) {
+//        assert(src->w == dest->w && src->h == dest->h);
+//
+//        cimg_library::CImg<unsigned char> img(src->w, src->h, 1, 4);
+//        // Translate Texture to CImg
+//#pragma omp parallel for
+//        for (int x = 0; x < dest->w; ++x) {
+//            for (int y = 0; y < dest->h; ++y) {
+//                img(x, y, 0, 0) = image->image[y * dest->w + x] & 0xFF;
+//                img(x, y, 0, 1) = (image->image[y * dest->w + x] >> 8) & 0xFF;
+//                img(x, y, 0, 2) = (image->image[y * dest->w + x] >> 16) & 0xFF;
+//                img(x, y, 0, 3) = (image->image[y * dest->w + x] >> 24) & 0xFF;
+//            }
+//        }
+//        // Translate back
+//        uint32_t* data = new uint32_t[img.width() * img.height()];
+//#pragma omp parallel for
+//        for (int x = 0; x < dest->w; ++x) {
+//            for (int y = 0; y < dest->h; ++y) {
+//                data[y * dest->w + x] = img(x, y, 0, 0) | img(x, y, 0, 1) << 8 | img(x, y, 0, 2) << 16 | img(x, y, 0, 3) << 24;
+//            }
+//        }
+//        //Render
+//        Render(new Texture(data, img.width(), img.height()), dest);
+//    }
 };
 
 
