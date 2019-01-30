@@ -23,6 +23,7 @@ add_library(${PROJECT_NAME} SHARED
         auxillary.hpp
         menu.cpp menu.hpp
         settings.cpp settings.hpp
+        engine/image.cpp engine/image.hpp
         engine/rect.hpp
         engine/pos.hpp
         engine/renderer.cpp engine/renderer.hpp

@@ -5,6 +5,7 @@
 #include <vector>
 #include "engine/texture.hpp"
 #include "engine/rect.hpp"
+#include "engine/image.hpp"
 
 class Assets {
 public:
@@ -31,7 +32,6 @@ public:
     std::vector<Rect> numbers_frames;
 
     Assets() {
-        SDL_Surface *buildings = SDL_LoadBMP("resources/buildings.bmp");
         SDL_Surface *ground = SDL_LoadBMP("resources/ground.bmp");
         SDL_Surface *pipe_top = SDL_LoadBMP("resources/pipe_top.bmp");
         SDL_Surface *pipe_bottom = SDL_LoadBMP("resources/pipe_bottom.bmp");
@@ -50,7 +50,7 @@ public:
         SDL_Surface *credits = SDL_LoadBMP("resources/credits.bmp");
         SDL_Surface *winner_background = SDL_LoadBMP("resources/winner_background.bmp");
 
-        this->buildings = surface_to_texture(buildings);
+        this->buildings = Image::LoadPNM("resources/buildings.bmp");
         this->ground = surface_to_texture(ground);
         this->pipe_top = surface_to_texture(pipe_top);
         this->pipe_bottom = surface_to_texture(pipe_bottom);
@@ -69,7 +69,6 @@ public:
         this->credits = surface_to_texture(credits);
         this->winner_background = surface_to_texture(winner_background);
 
-        SDL_FreeSurface(buildings);
         SDL_FreeSurface(ground);
         SDL_FreeSurface(pipe_top);
         SDL_FreeSurface(pipe_bottom);
