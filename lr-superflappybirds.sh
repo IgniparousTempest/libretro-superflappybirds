@@ -41,7 +41,5 @@ function configure_lr-superflappybirds() {
     mkRomDir "ports/superflappybirds"
     ensureSystemretroconfig "ports/superflappybirds"
 
-#    cp -Rv "$md_inst/resources" "$romdir/ports"
-
     chown $user:$user -R "$romdir/ports/superflappybirds"
 }
