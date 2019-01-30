@@ -7,7 +7,6 @@
 #include <cmath>
 #include "rect.hpp"
 #include "omp.h"
-#include "CImg.hpp"
 
 class Renderer {
 public:
@@ -90,6 +89,7 @@ public:
                 if (px > 0 && py > 0 && px < src->w && py < src->h)
                     framebuffer[(dest->y + y) * width + (dest->x + x)] = image->image[py * src->w + px];
             }
+            framebuffer[(dest->y + y) * width + (dest->x + x)] = 255;
         }
     }
 

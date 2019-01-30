@@ -24,7 +24,6 @@ add_library(${PROJECT_NAME} SHARED
         auxillary.hpp
         menu.cpp menu.hpp
         settings.cpp settings.hpp
-        engine/CImg.hpp
         engine/rect.hpp
         engine/pos.hpp
         engine/texture.hpp)
