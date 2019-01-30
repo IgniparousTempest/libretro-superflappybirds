@@ -103,6 +103,7 @@ void retro_deinit(void)
 
 void retro_set_environment(retro_environment_t cb)
 {
+    std::cout << "path1: " << get_library_path() << std::endl;
     environ_cb = cb;
     // Start without rom
     bool no_rom = true;
@@ -126,10 +127,10 @@ void retro_init(void)
 {
     //TODO: RETRO_ENVIRONMENT_GET_LIBRETRO_PATH seems to return gibberish.
     auto library_path = get_library_path();
-    std::cout << library_path << std::endl;
+    std::cout << "path1: " << library_path << std::endl;
     std::vector<char> cstr(library_path.c_str(), library_path.c_str() + library_path.size() + 1);
     auto path = dirname(&cstr[0]);
-    std::cout << path << std::endl;
+    std::cout << "path2: " << path << std::endl;
     std::cout << "Done!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
     game = std::make_unique<Game>(FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT, std::string(path));
 }
