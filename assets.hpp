@@ -43,7 +43,7 @@ public:
         SDL_Surface *title = SDL_LoadBMP("resources/title.bmp");
 
         this->buildings = Image::LoadPNM(core_folder_path + "resources/buildings.pnm");
-        this->ground = Image::LoadPNM(core_folder_path + "resources/ground.bmp");
+        this->ground = Image::LoadPNM(core_folder_path + "resources/ground.pnm");
         this->pipe_top = surface_to_texture(pipe_top);
         this->pipe_bottom = surface_to_texture(pipe_bottom);
         this->bird = surface_to_texture(bird);
@@ -51,15 +51,15 @@ public:
         this->bird3 = surface_to_texture(bird3);
         this->bird4 = surface_to_texture(bird4);
         this->numbers = surface_to_texture(numbers);
-        this->score_background = Image::LoadPNM(core_folder_path + "resources/score_background.bmp");
-        this->start_1_player = Image::LoadPNM(core_folder_path + "resources/start_1_player.bmp");
-        this->start_2_player = Image::LoadPNM(core_folder_path + "resources/start_2_player.bmp");
-        this->start_3_player = Image::LoadPNM(core_folder_path + "resources/start_3_player.bmp");
-        this->start_4_player = Image::LoadPNM(core_folder_path + "resources/start_4_player.bmp");
+        this->score_background = Image::LoadPNM(core_folder_path + "resources/score_background.pnm");
+        this->start_1_player = Image::LoadPNM(core_folder_path + "resources/start_1_player.pnm");
+        this->start_2_player = Image::LoadPNM(core_folder_path + "resources/start_2_player.pnm");
+        this->start_3_player = Image::LoadPNM(core_folder_path + "resources/start_3_player.pnm");
+        this->start_4_player = Image::LoadPNM(core_folder_path + "resources/start_4_player.pnm");
         this->hand = surface_to_texture(hand);
         this->title = surface_to_texture(title);
-        this->credits = Image::LoadPNM(core_folder_path + "resources/credits.bmp");
-        this->winner_background = Image::LoadPNM(core_folder_path + "resources/winner_background.bmp");
+        this->credits = Image::LoadPNM(core_folder_path + "resources/credits.pnm");
+        this->winner_background = Image::LoadPNM(core_folder_path + "resources/winner_background.pnm");
 
         SDL_FreeSurface(pipe_top);
         SDL_FreeSurface(pipe_bottom);
