@@ -40,9 +40,11 @@ void retro_cheat_set(unsigned index, bool enabled, const char *code)
 
 bool retro_load_game(const struct retro_game_info *info)
 {
+    std::string rom_folder;
     if (info != nullptr)
-        std::cout << "rom path: " << info->path << std::endl;
-    game = std::make_unique<Game>(FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT, core_path);
+        rom_folder = std::string(info->path);
+    std::cout << "rom path: " << rom_folder << std::endl;
+    game = std::make_unique<Game>(FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT, core_path, rom_folder);
     return true;
 }
 
@@ -113,12 +115,6 @@ void retro_set_environment(retro_environment_t cb)
         core_path = std::string(name);
         core_path = core_path.substr(0, core_path.find_last_of('/') + 1);
         std::cout << "core path: " << core_path << std::endl;
-        cb(RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY, &name);
-        std::cout << "system path: " << name << std::endl;
-        cb(RETRO_ENVIRONMENT_GET_CORE_ASSETS_DIRECTORY, &name);
-        std::cout << "core assets path: " << name << std::endl;
-        cb(RETRO_ENVIRONMENT_GET_SAVE_DIRECTORY, &name);
-        std::cout << "save  path: " << name << std::endl;
     }
 }
 

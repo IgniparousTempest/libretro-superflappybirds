@@ -6,7 +6,7 @@
 const char *Game::game_name = "Super Flappy Birds";
 const char *Game::game_version = "0.9.0";
 
-Game::Game(unsigned int screen_width, unsigned int screen_height, std::string core_folder_path) {
+Game::Game(unsigned int screen_width, unsigned int screen_height, std::string core_folder_path, std::string config_folder_path) {
     state = InMenu;
     this->screen_width = screen_width;
     this->screen_height = screen_height;
@@ -16,7 +16,7 @@ Game::Game(unsigned int screen_width, unsigned int screen_height, std::string co
     assets = new Assets(core_folder_path);
 
     menu = new Menu(assets->title, assets->credits, assets->start_1_player, assets->start_2_player, assets->start_3_player, assets->start_4_player, assets->hand, assets->winner_background, assets->numbers, assets->numbers_frames);
-    settings = new Settings();
+    settings = new Settings(config_folder_path);
     settings->Deserialize();
 
     screen = new Renderer(screen_width, screen_height);

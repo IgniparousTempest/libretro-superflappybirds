@@ -7,8 +7,9 @@
 class Settings {
 public:
     int highscore;
-    const std::string filename = "settings.txt";
+    std::string filename = "settings.txt";
 
+    explicit Settings(std::string config_folder_path);
     void Serialize();
     void Deserialize();
 };
