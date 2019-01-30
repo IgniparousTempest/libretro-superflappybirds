@@ -19,7 +19,7 @@ uint32_t * Image::ParseASCII(std::basic_istream<char, std::char_traits<char>> &f
             case 2:
                 b = pixel;
 
-                image[line_i / 3] = r | g << 8 | b << 16 | 255 << 24;
+                image[line_i / 3] = b | g << 8 | r << 16 | 255 << 24;
                 break;
         }
         line_i++;

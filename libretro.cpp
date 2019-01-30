@@ -39,6 +39,7 @@ void retro_cheat_set(unsigned index, bool enabled, const char *code)
 
 bool retro_load_game(const struct retro_game_info *info)
 {
+    std::cout << info->path << std::endl;
     return true;
 }
 
@@ -121,7 +122,7 @@ void retro_get_system_info(struct retro_system_info *info)
     memset(info, 0, sizeof(*info));
     info->library_name = game->game_name;
     info->library_version = game->game_version;
-    info->need_fullpath = false;
+    info->need_fullpath = true;
     info->valid_extensions = "zip";
 }
 
