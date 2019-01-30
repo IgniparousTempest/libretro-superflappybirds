@@ -3,14 +3,14 @@
 #include "game.hpp"
 #include "auxillary.hpp"
 
-Game::Game(unsigned int screen_width, unsigned int screen_height) {
+Game::Game(unsigned int screen_width, unsigned int screen_height, std::string path) {
     state = InMenu;
     this->screen_width = screen_width;
     this->screen_height = screen_height;
     framebuffer.resize(screen_width * screen_height);
     rng.seed(std::random_device()());
 
-    assets = new Assets();
+    assets = new Assets(path);
 
     menu = new Menu(assets->title, assets->credits, assets->start_1_player, assets->start_2_player, assets->start_3_player, assets->start_4_player, assets->hand, assets->winner_background, assets->numbers, assets->numbers_frames);
     settings = new Settings();
