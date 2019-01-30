@@ -1,3 +1,4 @@
+#include <iostream>
 #include "image.hpp"
 
 uint32_t * Image::ParseASCII(std::basic_istream<char, std::char_traits<char>> &file, int width, int height, int max_value) {
@@ -108,6 +109,7 @@ uint32_t *Image::ParsePAM(std::basic_istream<char, std::char_traits<char>> &file
 }
 
 Texture *Image::LoadPNM(const std::string &file_path) {
+    std::cout << file_path << std::endl;
     std::ifstream infile(file_path);
     std::string magic_number;
     int width, height;
