@@ -123,6 +123,8 @@ void retro_init(void)
         path = dirname(buff);
         std::cout << path << std::endl;
     }
+    else
+        std::cout << "Failed !!!!!!!!!!!!!!!!" << std::endl;
 }
 
 void retro_get_system_info(struct retro_system_info *info)
