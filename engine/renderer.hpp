@@ -82,16 +82,16 @@ public:
 
 #pragma omp parallel for
         for (int x = -hw; x < hw * 3; ++x) {
-            int px, py, sx, sy, dest_index, alpha;
-            double s, c;
+            int sx, sy, dest_index, alpha;
+            double s, c, px, py;
             uint32_t pixel;
             for (int y = -hh; y < hh * 3; ++y) {
                 s = std::sin(-angle * M_PI / 180);
                 c = std::cos(-angle * M_PI / 180);
                 px = x - hw;
                 py = y - hh;
-                sx = px * c - py * s + hw;
-                sy = px * s + py * c + hh;
+                sx = std::round(px * c - py * s + hw);
+                sy = std::round(px * s + py * c + hh);
                 dest_index = (dest->y + y) * width + (dest->x + x);
                 pixel = image->image[(src->y + sy) * image->w + (src->x + sx)];
                 alpha = pixel >> 24;
