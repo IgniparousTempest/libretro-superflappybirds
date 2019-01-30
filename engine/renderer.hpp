@@ -7,6 +7,7 @@
 #include <cmath>
 #include "rect.hpp"
 #include "omp.h"
+#include "CImg.hpp"
 
 class Renderer {
 public:
@@ -76,36 +77,25 @@ public:
     }
 
     void Render(Texture* image, Rect* src, Rect* dest, double angle) {
-        assert(src->w == dest->w && src->h == dest->h)
-        angle *= -M_PI / 180; // Convert to radians
-        int hw = dest->w / 2;
-        int hh = dest->h / 2;
+        assert(src->w == dest->w && src->h == dest->h);
 
+        CImg<float> img(src->w, src->h, 1, 4);
+        // Translate Texture to CImg
 #pragma omp parallel for
-        for (int x = -hw; x < dest->w + hw; ++x) {
-            double dx, dy;
-            int screen_x, screen_y;
-            uint32_t pixel;
-            int alpha;
-            for (int y = -hh; y < dest->h - hh; ++y) {
-                std::vector<std::pair<int, int>> quad;
-                dx = dest->x + (x-hw) * std::cos(angle) - (y-hh) * std::sin(angle) + hw;
-                dy = dest->y + (x-hw) * std::sin(angle) + (y-hh) * std::cos(angle) + hh;
-                quad.push_back({(int)dx, (int)dy});
-                quad.push_back({(int)dx + 1, (int)dy});
-                quad.push_back({(int)dx, (int)dy + 1});
-                quad.push_back({(int)dx + 1, (int)dy + 1});
-                for (int i = 0; i < quad.size(); ++i) {
-                    if (quad[i].first > 0 && quad[i].second > 0 && quad[i].first < src->w && quad[i].second < src->h) {
-                        screen_x = dest->x + quad[i].first;
-                        screen_y = dest->y + quad[i].second;
-                        pixel = image->image[quad[i].second * dest->w + quad[i].first];
-                        alpha = pixel >> 24;
-                        //TODO: This can only handle full alpha or no alpha
-                        if (alpha != 0)
-                            framebuffer[screen_y * width + screen_x] = pixel;
-                    }
-                }
+        for (int x = 0; x < dest->w; ++x) {
+            for (int y = 0; y < dest->h; ++y) {
+                img(x, y, 0, 0) = image->image[y * dest->w + x] & 0xFF;
+                img(x, y, 0, 1) = (image->image[y * dest->w + x] >> 8) & 0xFF;
+                img(x, y, 0, 2) = (image->image[y * dest->w + x] >> 16) & 0xFF;
+                img(x, y, 0, 3) = (image->image[y * dest->w + x] >> 24) & 0xFF;
+            }
+        }
+        // Translate back
+        uint32_t* data = new uint32_t[img.width() * img.height()];
+#pragma omp parallel for
+        for (int x = 0; x < dest->w; ++x) {
+            for (int y = 0; y < dest->h; ++y) {
+                data[y * dest->w + x] = buffer[y * surface->w + x] = img(x, y, 0, 0) | img(x, y, 0, 1) << 8 | img(x, y, 0, 2) << 16 | img(x, y, 0, 3) << 24;
             }
         }
     }
