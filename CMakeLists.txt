@@ -28,9 +28,4 @@ add_library(${PROJECT_NAME} SHARED
         engine/renderer.cpp engine/renderer.hpp
         engine/texture.hpp)
 
-INCLUDE(FindPkgConfig)
-
-PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
-
-INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS})
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${SDL2_LIBRARIES} ${OpenMP_CXX_FLAGS})
+TARGET_LINK_LIBRARIES(${PROJECT_NAME})
