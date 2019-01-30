@@ -114,6 +114,8 @@ void retro_set_environment(retro_environment_t cb)
         std::cout << "system path: " << name << std::endl;
         cb(RETRO_ENVIRONMENT_GET_CORE_ASSETS_DIRECTORY, &name);
         std::cout << "core assets path: " << name << std::endl;
+        cb(RETRO_ENVIRONMENT_GET_SAVE_DIRECTORY, &name);
+        std::cout << "save path: " << name << std::endl;
     }
 }
 
