@@ -1,5 +1,4 @@
 #include "pipe_pair.hpp"
-#include "image_library.hpp"
 
 PipePair::PipePair(int x, int y, int gap) {
     this->x = x;

@@ -15,7 +15,6 @@ ENDIF()
 add_library(${PROJECT_NAME} SHARED
         libretro.hpp
         libretro.cpp
-        image_library.hpp
         game.cpp game.hpp
         pipe_pair.cpp pipe_pair.hpp
         assets.hpp
@@ -26,6 +25,7 @@ add_library(${PROJECT_NAME} SHARED
         settings.cpp settings.hpp
         engine/rect.hpp
         engine/pos.hpp
+        engine/renderer.cpp engine/renderer.hpp
         engine/texture.hpp)
 
 INCLUDE(FindPkgConfig)
