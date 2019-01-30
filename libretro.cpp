@@ -40,6 +40,9 @@ void retro_cheat_set(unsigned index, bool enabled, const char *code)
 
 bool retro_load_game(const struct retro_game_info *info)
 {
+    if (info != nullptr)
+        std::cout << "rom path: " << info->path << std::endl;
+    game = std::make_unique<Game>(FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT, core_path);
     return true;
 }
 
@@ -115,7 +118,7 @@ void retro_set_environment(retro_environment_t cb)
         cb(RETRO_ENVIRONMENT_GET_CORE_ASSETS_DIRECTORY, &name);
         std::cout << "core assets path: " << name << std::endl;
         cb(RETRO_ENVIRONMENT_GET_SAVE_DIRECTORY, &name);
-        std::cout << "save path: " << name << std::endl;
+        std::cout << "save  path: " << name << std::endl;
     }
 }
 
@@ -129,7 +132,6 @@ void retro_set_input_state(retro_input_state_t cb) { input_state_cb = cb; }
 
 void retro_init(void)
 {
-    game = std::make_unique<Game>(FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT, core_path);
 }
 
 void retro_get_system_info(struct retro_system_info *info)
@@ -137,8 +139,8 @@ void retro_get_system_info(struct retro_system_info *info)
     memset(info, 0, sizeof(*info));
     info->library_name = Game::game_name;
     info->library_version = Game::game_version;
-    info->need_fullpath = false;
-    info->valid_extensions = "zip";
+    info->need_fullpath = true;
+    info->valid_extensions = "*";
 }
 
 void retro_get_system_av_info(struct retro_system_av_info *info)
