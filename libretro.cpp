@@ -108,7 +108,7 @@ void retro_set_environment(retro_environment_t cb)
         char *name = new char[1000];
         cb(RETRO_ENVIRONMENT_GET_LIBRETRO_PATH, &name);
         core_path = std::string(name);
-        core_path = core_path.substr(0, core_path.find('/') + 1);
+        core_path = core_path.substr(0, core_path.find_last_of('/') + 1);
         std::cout << "core path: " << core_path << std::endl;
     }
 }
