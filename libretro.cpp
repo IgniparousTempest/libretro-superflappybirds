@@ -114,6 +114,8 @@ void retro_set_environment(retro_environment_t cb)
     struct retro_frame_time_callback frame_cb = { frame_time_cb, time_reference };
     cb(RETRO_ENVIRONMENT_SET_FRAME_TIME_CALLBACK, &frame_cb);
     char* name = new char[1000];
+    cb(RETRO_ENVIRONMENT_GET_LIBRETRO_PATH, &name);
+    std::cout << "Name: " << name << std::endl;
 }
 
 void retro_set_audio_sample_batch(retro_audio_sample_batch_t cb) { audio_batch_cb = cb; }
