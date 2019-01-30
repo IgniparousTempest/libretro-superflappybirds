@@ -88,8 +88,8 @@ public:
                 py = (int)(dest->y + (x - hw) * std::sin(-angle) + (y - hh) * std::cos(-angle)) + hh;
                 if (px > 0 && py > 0 && px < src->w && py < src->h)
                     framebuffer[(dest->y + y) * width + (dest->x + x)] = image->image[py * src->w + px];
+                framebuffer[(dest->y + y) * width + (dest->x + x)] = 255;
             }
-            framebuffer[(dest->y + y) * width + (dest->x + x)] = 255;
         }
     }
 
