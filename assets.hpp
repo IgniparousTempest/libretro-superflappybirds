@@ -32,7 +32,6 @@ public:
     std::vector<Rect> numbers_frames;
 
     Assets(std::string core_folder_path) {
-        SDL_Surface *ground = SDL_LoadBMP("resources/ground.bmp");
         SDL_Surface *pipe_top = SDL_LoadBMP("resources/pipe_top.bmp");
         SDL_Surface *pipe_bottom = SDL_LoadBMP("resources/pipe_bottom.bmp");
         SDL_Surface *bird = SDL_LoadBMP("resources/bird.bmp");
@@ -40,18 +39,11 @@ public:
         SDL_Surface *bird3 = SDL_LoadBMP("resources/bird3.bmp");
         SDL_Surface *bird4 = SDL_LoadBMP("resources/bird4.bmp");
         SDL_Surface *numbers = SDL_LoadBMP("resources/numbers.bmp");
-        SDL_Surface *score_background = SDL_LoadBMP("resources/score_background.bmp");
-        SDL_Surface *start_1_player = SDL_LoadBMP("resources/start_1_player.bmp");
-        SDL_Surface *start_2_player = SDL_LoadBMP("resources/start_2_player.bmp");
-        SDL_Surface *start_3_player = SDL_LoadBMP("resources/start_3_player.bmp");
-        SDL_Surface *start_4_player = SDL_LoadBMP("resources/start_4_player.bmp");
         SDL_Surface *hand = SDL_LoadBMP("resources/hand.bmp");
         SDL_Surface *title = SDL_LoadBMP("resources/title.bmp");
-        SDL_Surface *credits = SDL_LoadBMP("resources/credits.bmp");
-        SDL_Surface *winner_background = SDL_LoadBMP("resources/winner_background.bmp");
 
         this->buildings = Image::LoadPNM(core_folder_path + "resources/buildings.pnm");
-        this->ground = surface_to_texture(ground);
+        this->ground = Image::LoadPNM(core_folder_path + "resources/ground.bmp");
         this->pipe_top = surface_to_texture(pipe_top);
         this->pipe_bottom = surface_to_texture(pipe_bottom);
         this->bird = surface_to_texture(bird);
@@ -59,17 +51,16 @@ public:
         this->bird3 = surface_to_texture(bird3);
         this->bird4 = surface_to_texture(bird4);
         this->numbers = surface_to_texture(numbers);
-        this->score_background = surface_to_texture(score_background);
-        this->start_1_player = surface_to_texture(start_1_player);
-        this->start_2_player = surface_to_texture(start_2_player);
-        this->start_3_player = surface_to_texture(start_3_player);
-        this->start_4_player = surface_to_texture(start_4_player);
+        this->score_background = Image::LoadPNM(core_folder_path + "resources/score_background.bmp");
+        this->start_1_player = Image::LoadPNM(core_folder_path + "resources/start_1_player.bmp");
+        this->start_2_player = Image::LoadPNM(core_folder_path + "resources/start_2_player.bmp");
+        this->start_3_player = Image::LoadPNM(core_folder_path + "resources/start_3_player.bmp");
+        this->start_4_player = Image::LoadPNM(core_folder_path + "resources/start_4_player.bmp");
         this->hand = surface_to_texture(hand);
         this->title = surface_to_texture(title);
-        this->credits = surface_to_texture(credits);
-        this->winner_background = surface_to_texture(winner_background);
+        this->credits = Image::LoadPNM(core_folder_path + "resources/credits.bmp");
+        this->winner_background = Image::LoadPNM(core_folder_path + "resources/winner_background.bmp");
 
-        SDL_FreeSurface(ground);
         SDL_FreeSurface(pipe_top);
         SDL_FreeSurface(pipe_bottom);
         SDL_FreeSurface(bird);
@@ -77,15 +68,8 @@ public:
         SDL_FreeSurface(bird3);
         SDL_FreeSurface(bird4);
         SDL_FreeSurface(numbers);
-        SDL_FreeSurface(score_background);
-        SDL_FreeSurface(start_1_player);
-        SDL_FreeSurface(start_2_player);
-        SDL_FreeSurface(start_3_player);
-        SDL_FreeSurface(start_4_player);
         SDL_FreeSurface(hand);
         SDL_FreeSurface(title);
-        SDL_FreeSurface(credits);
-        SDL_FreeSurface(winner_background);
 
         bird_frames.push_back({0, 0, 17, 12});
         bird_frames.push_back({17, 0, 17, 12});
