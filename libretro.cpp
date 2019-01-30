@@ -92,18 +92,9 @@ void retro_deinit(void)
 {
 }
 
-std::string get_library_path() {
-    Dl_info dl_info;
-    if(0 == dladdr((void*)get_library_path, &dl_info))
-        return std::string(dl_info.dli_fname);
-    else
-        return std::string();
-}
-
 void retro_set_environment(retro_environment_t cb)
 {
-    std::cout << get_library_path() << std::endl;
-
+    std::cout << "Environment" << std::endl;
     environ_cb = cb;
     // Start without rom
     bool no_rom = true;
@@ -128,6 +119,7 @@ void retro_set_input_state(retro_input_state_t cb) { input_state_cb = cb; }
 
 void retro_init(void)
 {
+    std::cout << "retro_init" << std::endl;
 }
 
 void retro_get_system_info(struct retro_system_info *info)
