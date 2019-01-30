@@ -39,7 +39,10 @@ void retro_cheat_set(unsigned index, bool enabled, const char *code)
 
 bool retro_load_game(const struct retro_game_info *info)
 {
-    std::cout << info->path << std::endl;
+    if (info != nullptr)
+        std::cout << info->path << std::endl;
+    else
+        std::cout << "info is null!!!!!" << std::endl;
     return true;
 }
 
