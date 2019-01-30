@@ -4,8 +4,7 @@
 #include <cstring>
 #include <memory>
 #include <iostream>
-#include <libgen.h>
-#include <unistd.h>
+#include <dlfcn.h>
 
 static const unsigned FRAMEBUFFER_WIDTH = 640;
 static const unsigned FRAMEBUFFER_HEIGHT = 360;
@@ -95,6 +94,12 @@ void retro_deinit(void)
 
 void retro_set_environment(retro_environment_t cb)
 {
+    Dl_info dl_info;
+    if(0 == dladdr((void*)get_library_path, &dl_info))
+        std::cout << std::string(dl_info.dli_fname) << std::endl;
+    else
+        std::cout << std::string() << std::endl;
+
     environ_cb = cb;
     // Start without rom
     bool no_rom = true;
