@@ -85,8 +85,8 @@ public:
             int px, py, sx, sy;
             double s, c;
             for (int y = -hh; y < hh * 3; ++y) {
-                s = std::sin(-angle);
-                c = std::cos(-angle);
+                s = std::sin(-angle * M_PI / 180);
+                c = std::cos(-angle * M_PI / 180);
                 px = x - hw;
                 py = y - hh;
                 sx = px * c - py * s + hw;
