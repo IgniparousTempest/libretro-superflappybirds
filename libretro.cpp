@@ -5,6 +5,7 @@
 #include <memory>
 #include <iostream>
 #include <libgen.h>
+#include <unistd.h>
 
 static const unsigned FRAMEBUFFER_WIDTH = 640;
 static const unsigned FRAMEBUFFER_HEIGHT = 360;
