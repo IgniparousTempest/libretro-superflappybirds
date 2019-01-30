@@ -7,7 +7,7 @@ A multiplayer Flappy Bird clone designed for the libretro framework.
 
 ## Adding to RetroPie
 
-Copy the script `lr-superflappybirds.sh` to `/home/pi/RetroPie-Setup/scriptmodules/ports/lr-superflappybirds.sh` and run it from the `./retropie_setup` menu.
+Copy the script `lr-superflappybirds.sh` to `/home/pi/RetroPie-Setup/scriptmodules/libretrocores/lr-superflappybirds.sh` and run it from the `./retropie_setup` menu.
 
 ## Building from source
 
