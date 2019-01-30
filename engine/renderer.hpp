@@ -96,7 +96,7 @@ public:
                 pixel = image->image[(src->y + sy) * image->w + (src->x + sx)];
                 alpha = pixel >> 24;
                 //TODO: This can only handle full alpha or no alpha
-                if (alpha != 0 && sx > 0 && sy > 0 && sx < src->w && sy < src->h)
+                if (alpha != 0 && sx >= 0 && sy >= 0 && sx < src->w && sy < src->h)
                     framebuffer[dest_index] = pixel;
             }
         }
