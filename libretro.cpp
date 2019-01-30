@@ -5,13 +5,12 @@
 #include <memory>
 #include <iostream>
 #include <dlfcn.h>
-#include <libgen.h>
 
 static const unsigned FRAMEBUFFER_WIDTH = 640;
 static const unsigned FRAMEBUFFER_HEIGHT = 360;
 
 std::vector<Input> input = {{}, {}, {}, {}};
-std::unique_ptr<Game> game;
+std::unique_ptr<Game> game = std::make_unique<Game>(FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT);
 
 // Callbacks
 static retro_log_printf_t log_cb;
@@ -23,14 +22,6 @@ static retro_audio_sample_t audio_cb;
 static retro_audio_sample_batch_t audio_batch_cb;
 
 static double delta_time;
-
-std::string get_library_path() {
-    Dl_info dl_info;
-    if(0 == dladdr((void*)get_library_path, &dl_info))
-        return std::string(dl_info.dli_fname);
-    else
-        return std::string();
-}
 
 unsigned retro_api_version(void)
 {
@@ -101,9 +92,18 @@ void retro_deinit(void)
 {
 }
 
+std::string get_library_path() {
+    Dl_info dl_info;
+    if(0 == dladdr((void*)get_library_path, &dl_info))
+        return std::string(dl_info.dli_fname);
+    else
+        return std::string();
+}
+
 void retro_set_environment(retro_environment_t cb)
 {
-    std::cout << "path1: " << get_library_path() << std::endl;
+    std::cout << get_library_path() << std::endl;
+
     environ_cb = cb;
     // Start without rom
     bool no_rom = true;
@@ -113,6 +113,9 @@ void retro_set_environment(retro_environment_t cb)
     auto frame_time_cb = [](retro_usec_t usec) { delta_time = usec / 1000000.0; };
     struct retro_frame_time_callback frame_cb = { frame_time_cb, time_reference };
     cb(RETRO_ENVIRONMENT_SET_FRAME_TIME_CALLBACK, &frame_cb);
+    char* name = new char[1000];
+    cb(RETRO_ENVIRONMENT_GET_LIBRETRO_PATH, &name);
+    std::cout << name << std::endl;
 }
 
 void retro_set_audio_sample_batch(retro_audio_sample_batch_t cb) { audio_batch_cb = cb; }
@@ -125,14 +128,6 @@ void retro_set_input_state(retro_input_state_t cb) { input_state_cb = cb; }
 
 void retro_init(void)
 {
-    //TODO: RETRO_ENVIRONMENT_GET_LIBRETRO_PATH seems to return gibberish.
-    auto library_path = get_library_path();
-    std::cout << "path1: " << library_path << std::endl;
-    std::vector<char> cstr(library_path.c_str(), library_path.c_str() + library_path.size() + 1);
-    auto path = dirname(&cstr[0]);
-    std::cout << "path2: " << path << std::endl;
-    std::cout << "Done!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
-    game = std::make_unique<Game>(FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT, std::string(path));
 }
 
 void retro_get_system_info(struct retro_system_info *info)
