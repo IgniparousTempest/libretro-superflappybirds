@@ -4,7 +4,7 @@
 #include "auxillary.hpp"
 
 const char *Game::game_name = "Super Flappy Birds";
-const char *Game::game_version = "0.9.0";
+const char *Game::game_version = "0.9.1";
 
 Game::Game(unsigned int screen_width, unsigned int screen_height, std::string core_folder_path, std::string config_folder_path) {
     state = InMenu;
