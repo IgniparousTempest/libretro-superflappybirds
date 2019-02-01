@@ -1,9 +1,7 @@
 #include "libretro.hpp"
 #include "game.hpp"
-#include "input.hpp"
 #include <cstring>
 #include <memory>
-#include <iostream>
 
 static const unsigned FRAMEBUFFER_WIDTH = 640;
 static const unsigned FRAMEBUFFER_HEIGHT = 360;
