@@ -81,6 +81,7 @@ int Menu::Select() {
 }
 
 void Menu::ShowScore(int score, int highscore, std::vector<Texture*> texture_bird, std::vector<Rect*> frame_rect) {
+    assert(texture_bird.size() == frame_rect.size());  // TODO: Rather throw an exception.
     showTitle = false;
 
     // Score
@@ -103,14 +104,34 @@ void Menu::ShowScore(int score, int highscore, std::vector<Texture*> texture_bir
     int bird_y = winner_background_rect.y + 23;
     if (bird_src_rect.size() == 1)
         bird_rect.emplace_back(bird_x, bird_y, bird_src_rect[0]->w * 2, bird_src_rect[0]->h * 2);
-    else
+    else if (bird_src_rect.size() <= 4) {
         bird_rect.emplace_back(bird_x, bird_y, bird_src_rect[0]->w, bird_src_rect[0]->h);
-    if (bird_src_rect.size() >= 2)
-        bird_rect.emplace_back(bird_x + bird_src_rect[0]->w, bird_y, bird_src_rect[1]->w, bird_src_rect[1]->h);
-    if (bird_src_rect.size() >= 3)
-        bird_rect.emplace_back(bird_x, bird_y + bird_src_rect[0]->h, bird_src_rect[2]->w, bird_src_rect[2]->h);
-    if (bird_src_rect.size() >= 4)
-        bird_rect.emplace_back(bird_x + bird_src_rect[2]->w, bird_y + bird_src_rect[1]->h, bird_src_rect[3]->w, bird_src_rect[3]->h);
+        if (bird_src_rect.size() >= 2)
+            bird_rect.emplace_back(bird_x + bird_src_rect[0]->w, bird_y, bird_src_rect[1]->w, bird_src_rect[1]->h);
+        if (bird_src_rect.size() >= 3)
+            bird_rect.emplace_back(bird_x, bird_y + bird_src_rect[0]->h, bird_src_rect[2]->w, bird_src_rect[2]->h);
+        if (bird_src_rect.size() >= 4)
+            bird_rect.emplace_back(bird_x + bird_src_rect[2]->w, bird_y + bird_src_rect[1]->h, bird_src_rect[3]->w, bird_src_rect[3]->h);
+    }
+    else if (bird_src_rect.size() <= 9) {
+        int w = 2 * bird_src_rect[0]->w / 3;
+        int h = 2 * bird_src_rect[0]->h / 3;
+        bird_rect.emplace_back(bird_x, bird_y, w, h);
+        bird_rect.emplace_back(bird_x + w, bird_y, w, h);
+        bird_rect.emplace_back(bird_x + w * 2, bird_y, w, h);
+        bird_rect.emplace_back(bird_x, bird_y + h, w, h);
+        if (bird_src_rect.size() >= 5)
+            bird_rect.emplace_back(bird_x + w, bird_y + h, w, h);
+        if (bird_src_rect.size() >= 6)
+            bird_rect.emplace_back(bird_x + w * 2, bird_y + h, w, h);
+        if (bird_src_rect.size() >= 7)
+            bird_rect.emplace_back(bird_x, bird_y + h * 2, w, h);
+        if (bird_src_rect.size() >= 8)
+            bird_rect.emplace_back(bird_x + w, bird_y + h * 2, w, h);
+        if (bird_src_rect.size() >= 9)
+            bird_rect.emplace_back(bird_x + w * 2, bird_y + h * 2, w, h);
+    }
+    assert(bird.size() == bird_rect.size());  // TODO: Rather throw an exception.
 }
 
 void Menu::Render(Renderer *renderer) {

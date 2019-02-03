@@ -15,10 +15,11 @@ Copy the script `lr-superflappybirds.sh` to `/home/pi/RetroPie-Setup/scriptmodul
     cd libretro-superflappybirds
     cmake .
     make
+    retroarch.exe -L liblr_superflappybirds.dll 
     
 ## About the Engine
 
-The engine is only capable of opening image of the [PNM](https://en.wikipedia.org/wiki/Netpbm_format) family plus the generic extension format [PAM](https://en.wikipedia.org/wiki/Netpbm#PAM_graphics_format). The PNM family only allows RGB images, while the more complex PAM format allows RGB images with transparency. Although any image parser that can translate an image to RGBA can be used with the engine.
+The engine is only capable of opening images of the [PNM](https://en.wikipedia.org/wiki/Netpbm_format) family plus the generic extension format [PAM](https://en.wikipedia.org/wiki/Netpbm#PAM_graphics_format). The PNM family only allows RGB images, while the more complex PAM format allows RGB images with transparency. Although any image parser that can translate an image to RGBA can be used with the engine.
 
 The engine allows for screen rendering, collision detection, image translation, and image rotation with cubic filtering. All screen drawing is multi-threaded.
 

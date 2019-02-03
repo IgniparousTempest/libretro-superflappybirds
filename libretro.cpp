@@ -148,14 +148,14 @@ void retro_set_environment(retro_environment_t cb)
 
     // Environment variables
     environ_cb = cb;
-    // Sets the default value to 4, this is very hackish, but there doesn't seem to be a better way.
+    // TODO: Sets the default value to 4, this is very hackish, but there doesn't seem to be a better way.
     retro_variable vars[] = {
-            { "sfb_max_players", "Maximum number of players allowed; 4|2|3|1|5|6|7|8" },
+            { "sfb_max_players", "Maximum number of players allowed (Requires restart); 4|2|3|1|5|6|7|8" },
             { nullptr, nullptr },
     };
     cb(RETRO_ENVIRONMENT_SET_VARIABLES, vars);
     retro_variable vars1[] = {
-            { "sfb_max_players", "Maximum number of players allowed; 1|2|3|4|5|6|7|8" },
+            { "sfb_max_players", "Maximum number of players allowed (Requires restart); 1|2|3|4|5|6|7|8" },
             { nullptr, nullptr },
     };
     cb(RETRO_ENVIRONMENT_SET_VARIABLES, vars1);
