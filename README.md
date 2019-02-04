@@ -9,6 +9,20 @@ A multiplayer Flappy Bird clone designed for the libretro framework. This game r
 
 Copy the script `lr-superflappybirds.sh` to `/home/pi/RetroPie-Setup/scriptmodules/libretrocores/lr-superflappybirds.sh` and run it from the `./retropie_setup` menu.
 
+### Step by step:
+
+    cd ~/RetroPie-Setup/scriptmodules/libretrocores/
+    wget https://raw.githubusercontent.com/IgniparousTempest/libretro-superflappybirds/master/lr-superflappybirds.sh
+    cd ~/RetroPie-Setup/
+    sudo ./retropie_setup.sh
+
+1. Select `P  Manage packages`
+2. Select `exp     Manage experimental packages`
+3. Select `lr-superflappybirds`
+4. Select `S  Install from source`
+
+Restart EmulationStation and you should see the game under the ports menu.
+
 ## Building from source
 
     git clone https://github.com/IgniparousTempest/libretro-superflappybirds

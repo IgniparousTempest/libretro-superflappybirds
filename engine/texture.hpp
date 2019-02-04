@@ -8,6 +8,26 @@ public:
     uint32_t* image;
     int w, h;
     Texture(uint32_t* image, int w, int h): image(image), w(w), h(h) {}
+    /// Copy Constructor
+    Texture(const Texture& other): w(other.w), h(other.h) {
+        image = new uint32_t[other.w * other.h];
+        std::copy(other.image , other.image + other.w * other.h, image);
+    }
+    /// Copy Assignment Operator
+    Texture& operator=(const Texture& other)
+    {
+        if (&other != this) {
+            delete image;
+            image = nullptr;
+            image = new uint32_t[*(other.image)];
+            std::copy(other.image , other.image + other.w * other.h, image);
+            w = other.w;
+            h = other.h;
+        }
+        return *this;
+    }
+    /// Destructor
+    ~Texture() {delete image;}
 
     Texture* FlipHorizontally() {
         auto tex = new uint32_t[w * h];
