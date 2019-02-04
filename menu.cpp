@@ -2,11 +2,11 @@
 #include "menu.hpp"
 #include "auxillary.hpp"
 
-Menu::Menu(Texture* texture_title, Texture* texture_credits, Texture *texture_start_1_player,
+Menu::Menu(Texture *texture_title, Texture *texture_credits, Texture *texture_start_1_player,
            Texture *texture_start_2_player, Texture *texture_start_3_player, Texture *texture_start_4_player,
            Texture *texture_start_5_player, Texture *texture_start_6_player, Texture *texture_start_7_player,
            Texture *texture_start_8_player, Texture *texture_arrow_left, Texture *texture_arrow_right,
-           Texture *texture_hand, Texture* texture_winner_background, Texture* texture_numbers,
+           Texture *texture_hand, Texture *texture_winner_background, Texture *texture_numbers,
            std::vector<Rect> numbers_frames, unsigned int max_players) {
     index = 0;
     index_start = 0;
@@ -15,7 +15,8 @@ Menu::Menu(Texture* texture_title, Texture* texture_credits, Texture *texture_st
     title = texture_title;
     credits = texture_credits;
     hand = texture_hand;
-    start_buttons = {texture_start_1_player, texture_start_2_player, texture_start_3_player, texture_start_4_player, texture_start_5_player, texture_start_6_player, texture_start_7_player, texture_start_8_player};
+    start_buttons = {texture_start_1_player, texture_start_2_player, texture_start_3_player, texture_start_4_player,
+                     texture_start_5_player, texture_start_6_player, texture_start_7_player, texture_start_8_player};
     arrow_left = texture_arrow_left;
     arrow_right = texture_arrow_right;
     winner_background = texture_winner_background;
@@ -80,8 +81,10 @@ int Menu::Select() {
     return index + 1;
 }
 
-void Menu::ShowScore(int score, int highscore, std::vector<Texture*> texture_bird, std::vector<Rect*> frame_rect) {
-    assert(texture_bird.size() == frame_rect.size());  // TODO: Rather throw an exception.
+void Menu::ShowScore(int score, int highscore, std::vector<Texture *> texture_bird, std::vector<Rect *> frame_rect) {
+    if (texture_bird.size() != frame_rect.size())
+        throw std::runtime_error("The textures and frame rects should be the same size. Instead got texture_bird: "
+        + std::to_string(texture_bird.size()) + " and frame_rect: " + std::to_string(frame_rect.size()) + ".");
     showTitle = false;
 
     // Score
@@ -112,8 +115,7 @@ void Menu::ShowScore(int score, int highscore, std::vector<Texture*> texture_bir
             bird_rect.emplace_back(bird_x, bird_y + bird_src_rect[0]->h, bird_src_rect[2]->w, bird_src_rect[2]->h);
         if (bird_src_rect.size() >= 4)
             bird_rect.emplace_back(bird_x + bird_src_rect[2]->w, bird_y + bird_src_rect[1]->h, bird_src_rect[3]->w, bird_src_rect[3]->h);
-    }
-    else if (bird_src_rect.size() <= 9) {
+    } else if (bird_src_rect.size() <= 9) {
         int w = 2 * bird_src_rect[0]->w / 3;
         int h = 2 * bird_src_rect[0]->h / 3;
         bird_rect.emplace_back(bird_x, bird_y, w, h);
@@ -131,7 +133,8 @@ void Menu::ShowScore(int score, int highscore, std::vector<Texture*> texture_bir
         if (bird_src_rect.size() >= 9)
             bird_rect.emplace_back(bird_x + w * 2, bird_y + h * 2, w, h);
     }
-    assert(bird.size() == bird_rect.size());  // TODO: Rather throw an exception.
+    if (bird.size() != bird_rect.size())
+        throw std::runtime_error("There were too many winners to add to the screen, improve this function.");
 }
 
 void Menu::Render(Renderer *renderer) {
@@ -157,6 +160,6 @@ void Menu::Render(Renderer *renderer) {
 }
 
 void Menu::SetHandPosition(int index) {
-    Rect* button_rect = &start_button_rects[index - index_start];
+    Rect *button_rect = &start_button_rects[index - index_start];
     hand_rect.x = button_rect->x + button_rect->w / 2 - hand_rect.w / 2;
 }

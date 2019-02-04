@@ -1,6 +1,10 @@
 #include "renderer.hpp"
 
 void Renderer::Render(Texture *image, Rect *dest) {
+    // Skip this render call if the destination is off the screen.
+    if (dest->x > width || dest->y > height || dest->x + dest->w < 0 || dest->y + dest->h < 0)
+        return;
+
 #pragma omp parallel for
     for (int x = 0; x < dest->w; ++x) {
         int screen_x;
@@ -21,9 +25,13 @@ void Renderer::Render(Texture *image, Rect *dest) {
     }
 }
 
-void Renderer::Render(Texture* image, Rect* src, Rect* dest) {
-    double xs = src->w / (double)dest->w; // x-scale
-    double ys = src->h / (double)dest->h; // y-scale
+void Renderer::Render(Texture *image, Rect *src, Rect *dest) {
+    // Skip this render call if the destination is off the screen.
+    if (dest->x > width || dest->y > height || dest->x + dest->w < 0 || dest->y + dest->h < 0)
+        return;
+
+    double xs = src->w / (double) dest->w; // x-scale
+    double ys = src->h / (double) dest->h; // y-scale
 #pragma omp parallel for
     for (int x = 0; x < dest->w; ++x) {
         int screen_x;
@@ -34,7 +42,7 @@ void Renderer::Render(Texture* image, Rect* src, Rect* dest) {
             screen_x = dest->x + x;
             screen_y = dest->y + y;
             if (screen_x >= 0 && screen_y >= 0 && screen_x < width && screen_y < height) {
-                pixel = image->image[(src->y + (int)(y * ys)) * image->w + (src->x + (int)(x * xs))];
+                pixel = image->image[(src->y + (int) (y * ys)) * image->w + (src->x + (int) (x * xs))];
                 alpha = pixel >> 24;
                 //TODO: This can only handle full alpha or no alpha
                 if (alpha != 0)
@@ -45,6 +53,10 @@ void Renderer::Render(Texture* image, Rect* src, Rect* dest) {
 }
 
 void Renderer::Render(Texture *image, Rect *src, Rect *dest, double angle) {
+    // Skip this render call if the destination is off the screen.
+    if (dest->x > width || dest->y > height || dest->x + dest->w < 0 || dest->y + dest->h < 0)
+        return;
+
     assert(src->w == dest->w && src->h == dest->h);
     int hw = dest->w / 2;
     int hh = dest->h / 2;
