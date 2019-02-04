@@ -7,7 +7,7 @@
 const char *Game::game_name = "Super Flappy Birds";
 const char *Game::game_version = "0.9.1";
 
-Game::Game(unsigned int screen_width, unsigned int screen_height, std::string core_folder_path, std::string config_folder_path) {
+Game::Game(unsigned int screen_width, unsigned int screen_height, std::string core_folder_path, std::string config_folder_path, unsigned int max_players) {
     state = InMenu;
     this->screen_width = screen_width;
     this->screen_height = screen_height;
@@ -16,7 +16,7 @@ Game::Game(unsigned int screen_width, unsigned int screen_height, std::string co
 
     assets = new Assets(std::move(core_folder_path));
 
-    menu = new Menu(assets->title, assets->credits, assets->start_1_player, assets->start_2_player, assets->start_3_player, assets->start_4_player, assets->hand, assets->winner_background, assets->numbers, assets->numbers_frames);
+    menu = new Menu(assets->title, assets->credits, assets->start_1_player, assets->start_2_player, assets->start_3_player, assets->start_4_player, assets->start_5_player, assets->start_6_player, assets->start_7_player, assets->start_8_player, assets->arrow_left, assets->arrow_right, assets->hand, assets->winner_background, assets->numbers, assets->numbers_frames, max_players);
     settings = new Settings(std::move(config_folder_path));
     settings->Deserialize();
 
@@ -93,6 +93,14 @@ void Game::DrawScores(Renderer *renderer) {
         draw_score(renderer, 2 * screen_width / 3 - assets->score_background->w / 2, 0, birds[2]->score, birds[2]->texture, &birds[2]->animation_frames[2]);
     if (birds.size() >= 4)
         draw_score(renderer, screen_width - assets->score_background->w, 0, birds[3]->score, birds[3]->texture, &birds[3]->animation_frames[2]);
+    if (birds.size() >= 5)
+        draw_score(renderer, 0, screen_height - assets->score_background->h, birds[4]->score, birds[4]->texture, &birds[4]->animation_frames[2]);
+    if (birds.size() >= 6)
+        draw_score(renderer, screen_width / 3 - assets->score_background->w / 2, screen_height - assets->score_background->h, birds[5]->score, birds[5]->texture, &birds[5]->animation_frames[2]);
+    if (birds.size() >= 7)
+        draw_score(renderer, 2 * screen_width / 3 - assets->score_background->w / 2, screen_height - assets->score_background->h, birds[6]->score, birds[6]->texture, &birds[6]->animation_frames[2]);
+    if (birds.size() >= 8)
+        draw_score(renderer, screen_width - assets->score_background->w, screen_height - assets->score_background->h, birds[7]->score, birds[7]->texture, &birds[7]->animation_frames[2]);
 }
 
 void Game::GameLoop(double delta_time, std::vector<Input> controller_inputs) {
@@ -190,8 +198,16 @@ void Game::NewGame(int num_players) {
         birds.push_back(new Bird(screen_width / 2 - 20, screen_height / 2, floor_height, assets->bird2, assets->bird_frames));
     if (num_players >= 3)
         birds.push_back(new Bird(screen_width / 2 + 20, screen_height / 2, floor_height, assets->bird3, assets->bird_frames));
-    if (num_players == 4)
+    if (num_players >= 4)
         birds.push_back(new Bird(screen_width / 2 - 40, screen_height / 2, floor_height, assets->bird4, assets->bird_frames));
+    if (num_players >= 5)
+        birds.push_back(new Bird(screen_width / 2 + 40, screen_height / 2, floor_height, assets->bird5, assets->bird_frames));
+    if (num_players >= 6)
+        birds.push_back(new Bird(screen_width / 2 - 60, screen_height / 2, floor_height, assets->bird6, assets->bird_frames));
+    if (num_players >= 7)
+        birds.push_back(new Bird(screen_width / 2 + 60, screen_height / 2, floor_height, assets->bird7, assets->bird_frames));
+    if (num_players >= 8)
+        birds.push_back(new Bird(screen_width / 2 - 80, screen_height / 2, floor_height, assets->bird8, assets->bird_frames));
 
     distance_travelled = 0;
     pipes = {};

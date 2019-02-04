@@ -7,7 +7,7 @@ static const unsigned FRAMEBUFFER_WIDTH = 640;
 static const unsigned FRAMEBUFFER_HEIGHT = 360;
 
 std::string core_path;
-std::vector<Input> input = {{}, {}, {}, {}};
+std::vector<Input> input;
 std::unique_ptr<Game> game;
 
 // Callbacks
@@ -20,6 +20,31 @@ static retro_audio_sample_t audio_cb;
 static retro_audio_sample_batch_t audio_batch_cb;
 
 static double delta_time;
+
+struct EnvVariables {
+    unsigned int max_players;
+};
+
+static EnvVariables get_env_variables() {
+    unsigned int default_max_players = 4;
+    EnvVariables vars{};
+    retro_variable var = { "sfb_max_players" };
+    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+    {
+        vars.max_players = std::stoul(var.value);
+        std::cout << "Config states the max players should be: " << vars.max_players << std::endl;
+    } else {
+        std::cout << "Config does not have a max players value, defaulting to: " << default_max_players << std::endl;
+        vars.max_players = default_max_players;
+    }
+
+    return vars;
+}
+
+static bool env_variables_changed() {
+    bool update = false;
+    return environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE, &update) && update;
+}
 
 unsigned retro_api_version(void)
 {
@@ -42,7 +67,9 @@ bool retro_load_game(const struct retro_game_info *info)
     if (info != nullptr)
         rom_folder = std::string(info->path);
     std::cout << "rom path: " << rom_folder << std::endl;
-    game = std::make_unique<Game>(FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT, core_path, rom_folder);
+    auto env_variables = get_env_variables();
+    input = {{}, {}, {}, {}, {}, {}, {}, {}};
+    game = std::make_unique<Game>(FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT, core_path, rom_folder, env_variables.max_players);
     return true;
 }
 
@@ -68,7 +95,7 @@ void retro_set_controller_port_device(unsigned port, unsigned device)
 
 void *retro_get_memory_data(unsigned id)
 {
-    return NULL;
+    return nullptr;
 }
 
 size_t retro_get_memory_size(unsigned id)
@@ -101,19 +128,38 @@ void retro_set_environment(retro_environment_t cb)
     // Start without rom
     bool no_rom = true;
     cb(RETRO_ENVIRONMENT_SET_SUPPORT_NO_GAME, &no_rom);
+
     // Delta time setup
     retro_usec_t time_reference = 1000000 / Game::game_fps;
     auto frame_time_cb = [](retro_usec_t usec) { delta_time = usec / 1000000.0; };
     struct retro_frame_time_callback frame_cb = { frame_time_cb, time_reference };
     cb(RETRO_ENVIRONMENT_SET_FRAME_TIME_CALLBACK, &frame_cb);
+
     // retro_set_environment seems to get called multiple times, but only the first time contains the right path.
     if (core_path.empty()) {
-        char *name = new char[PATH_MAX];
+        char *name = new char[PATH_MAX];  // TODO: Memory leak, but I can't delete[] it?
         cb(RETRO_ENVIRONMENT_GET_LIBRETRO_PATH, &name);
         core_path = std::string(name);
         core_path = core_path.substr(0, core_path.find_last_of('/') + 1);
         std::cout << "core path: " << core_path << std::endl;
+        cb(RETRO_ENVIRONMENT_GET_SAVE_DIRECTORY, &name);
+        std::cout << "save dir path: " << name << std::endl;
     }
+
+    get_env_variables();
+
+    // Environment variables
+    environ_cb = cb;
+    // TODO: Sets the default value to 4, this is very hackish, but there doesn't seem to be a better way.
+    retro_variable vars[] = {
+            { "sfb_max_players", "Maximum number of players allowed (Requires restart); 4|2|3|1|5|6|7|8" },
+            { nullptr, nullptr },
+    };
+    cb(RETRO_ENVIRONMENT_SET_VARIABLES, vars);
+    vars[0] = { "sfb_max_players", "Maximum number of players allowed (Requires restart); 1|2|3|4|5|6|7|8" };
+    cb(RETRO_ENVIRONMENT_SET_VARIABLES, vars);
+
+    get_env_variables();
 }
 
 void retro_set_audio_sample_batch(retro_audio_sample_batch_t cb) { audio_batch_cb = cb; }
@@ -126,6 +172,15 @@ void retro_set_input_state(retro_input_state_t cb) { input_state_cb = cb; }
 
 void retro_init(void)
 {
+    struct retro_log_callback log{};
+    if (environ_cb(RETRO_ENVIRONMENT_GET_LOG_INTERFACE, &log))
+        log_cb = log.log;
+    else
+        log_cb = nullptr;
+    std::cout << "Setting up a maximum of " << input.size() << " controllers." << std::endl;
+    std::cout << "Max threads available for this system: " << omp_get_max_threads() << std::endl;
+    if (log_cb)
+        log_cb(RETRO_LOG_INFO, "SuperFlappyBird: ", "Max threads available for this system: %d.\n", omp_get_max_threads());
 }
 
 void retro_get_system_info(struct retro_system_info *info)
