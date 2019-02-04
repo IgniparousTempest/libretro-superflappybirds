@@ -8,7 +8,7 @@ Sound *Audio::LoadWav(const std::string &file_path) {
         std::ifstream input_file(file_path, std::ios::binary);
 
         if (input_file.fail())
-            throw std::runtime_error("File not found");
+            throw std::runtime_error("File not found: " + file_path);
 
         // RIFF Header
         RiffHeader riff_header{};

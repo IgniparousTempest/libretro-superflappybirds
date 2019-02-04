@@ -2,6 +2,7 @@
 #define LR_SUPERFLAPPYBIRDS_AUDIO_MIXER_HPP
 
 
+#include <cstddef>
 #include "sound.hpp"
 
 class AudioMixer {
