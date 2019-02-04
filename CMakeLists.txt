@@ -24,7 +24,10 @@ add_library(${PROJECT_NAME} SHARED
         auxillary.hpp
         menu.cpp menu.hpp
         settings.cpp settings.hpp
+        engine/audio.cpp engine/audio.hpp
+        engine/audio_mixer.cpp engine/audio_mixer.hpp
         engine/image.cpp engine/image.hpp
+        engine/sound.hpp
         engine/rect.hpp
         engine/pos.hpp
         engine/renderer.cpp engine/renderer.hpp

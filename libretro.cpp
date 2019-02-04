@@ -10,6 +10,8 @@ std::string core_path;
 std::vector<Input> input;
 std::unique_ptr<Game> game;
 
+static bool use_audio_cb;
+
 // Callbacks
 static retro_log_printf_t log_cb;
 static retro_video_refresh_t video_cb;
@@ -61,8 +63,28 @@ void retro_cheat_set(unsigned index, bool enabled, const char *code)
 
 }
 
+static void audio_callback(void)
+{
+    size_t AUDIO_FRAMES = 44100 / 60;
+    int16_t buffer[AUDIO_FRAMES * 2];
+    game->mixer.Render(buffer, AUDIO_FRAMES * 2);
+    for (size_t i = 0; i < AUDIO_FRAMES; )
+    {
+        size_t written = audio_batch_cb(buffer + 2 * i, AUDIO_FRAMES - i);
+        i += written;
+    }
+}
+
+static void audio_set_state(bool enable)
+{
+    game->mixer.Enable(enable);
+}
+
 bool retro_load_game(const struct retro_game_info *info)
 {
+    struct retro_audio_callback cb = { audio_callback, audio_set_state };
+    use_audio_cb = environ_cb(RETRO_ENVIRONMENT_SET_AUDIO_CALLBACK, &cb);
+
     std::string rom_folder;
     if (info != nullptr)
         rom_folder = std::string(info->path);

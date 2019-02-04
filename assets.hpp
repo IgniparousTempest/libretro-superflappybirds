@@ -2,9 +2,11 @@
 #define LR_SUPERFLAPPYBIRD_TEXTURES_H
 
 #include <vector>
-#include "engine/texture.hpp"
-#include "engine/rect.hpp"
+#include "engine/audio.hpp"
 #include "engine/image.hpp"
+#include "engine/rect.hpp"
+#include "engine/sound.hpp"
+#include "engine/texture.hpp"
 
 class Assets {
 public:
@@ -37,10 +39,12 @@ public:
     Texture* credits;
     Texture* winner_background;
 
+    Sound* snd_hit;
+
     std::vector<Rect> bird_frames;
     std::vector<Rect> numbers_frames;
 
-    Assets(std::string core_folder_path) {
+    explicit Assets(const std::string &core_folder_path) {
         buildings = Image::LoadPNM(core_folder_path + "resources/buildings.pnm");
         ground = Image::LoadPNM(core_folder_path + "resources/ground.pnm");
         pipe_top = Image::LoadPNM(core_folder_path + "resources/pipe.pam");
@@ -85,6 +89,8 @@ public:
         numbers_frames.push_back({94,  0, 14, 20});
         numbers_frames.push_back({108, 0, 14, 20});
         numbers_frames.push_back({122, 0, 14, 20});
+
+        snd_hit = Audio::LoadWav(core_folder_path + "resources/audio/hit.wav");
     }
 };
 

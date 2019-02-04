@@ -120,6 +120,7 @@ void Game::GameLoop(double delta_time, std::vector<Input> controller_inputs) {
             if (bird_crashed(bird)) {
                 std::cout << "Crashed with score: " << bird->score << std::endl;
                 bird->Kill(distance_travelled);
+                mixer.Play(assets->snd_hit);
             }
 
         for (int i = 0; i < birds.size(); ++i) {
