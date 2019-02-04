@@ -156,11 +156,8 @@ void retro_set_environment(retro_environment_t cb)
             { nullptr, nullptr },
     };
     cb(RETRO_ENVIRONMENT_SET_VARIABLES, vars);
-    retro_variable vars1[] = {
-            { "sfb_max_players", "Maximum number of players allowed (Requires restart); 1|2|3|4|5|6|7|8" },
-            { nullptr, nullptr },
-    };
-    cb(RETRO_ENVIRONMENT_SET_VARIABLES, vars1);
+    vars[0] = { "sfb_max_players", "Maximum number of players allowed (Requires restart); 1|2|3|4|5|6|7|8" };
+    cb(RETRO_ENVIRONMENT_SET_VARIABLES, vars);
 
     get_env_variables();
 }
