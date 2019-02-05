@@ -11,6 +11,7 @@
 #include "input.hpp"
 #include "menu.hpp"
 #include "settings.hpp"
+#include "engine/audio_mixer.hpp"
 
 enum GameState { InGame, InPostGameMenu, InMenu };
 
@@ -19,6 +20,8 @@ public:
     static const char* game_name;
     static const char* game_version;
     static const int game_fps = 50;
+
+    AudioMixer mixer;
 
     Game(unsigned int screen_width, unsigned int screen_height, std::string core_folder_path, std::string config_folder_path, unsigned int max_players);
     void GameLoop(double delta_time, std::vector<Input> controller_inputs);
