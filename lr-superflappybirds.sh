@@ -22,12 +22,12 @@ function sources_lr-superflappybirds() {
 function build_lr-superflappybirds() {
     cmake .
     make
-    md_ret_require="$md_build/liblr_superflappybirds.so"
+    md_ret_require="$md_build/superflappybirds_libretro.so"
 }
 
 function install_lr-superflappybirds() {
     md_ret_files=(
-        'liblr_superflappybirds.so'
+        'superflappybirds_libretro.so'
         'resources'
     )
 }
@@ -36,7 +36,7 @@ function install_lr-superflappybirds() {
 function configure_lr-superflappybirds() {
     setConfigRoot "ports"
 
-    addPort "$md_id" "superflappybirds" "Super Flappy Birds" "$md_inst/liblr_superflappybirds.so" "$romdir/ports/superflappybirds/"
+    addPort "$md_id" "superflappybirds" "Super Flappy Birds" "$md_inst/superflappybirds_libretro.so"
 
     mkRomDir "ports/superflappybirds"
     ensureSystemretroconfig "ports/superflappybirds"

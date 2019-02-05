@@ -29,7 +29,7 @@ Restart EmulationStation and you should see the game under the ports menu.
     cd libretro-superflappybirds
     cmake .
     make
-    retroarch.exe -L liblr_superflappybirds.dll 
+    retroarch.exe -L superflappybirds_libretro.dll 
     
 ## About the Engine
 
