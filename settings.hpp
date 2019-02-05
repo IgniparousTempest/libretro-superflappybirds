@@ -7,7 +7,7 @@
 class Settings {
 public:
     int highscore = 0;
-    std::string filename = "settings.txt";
+    std::string filename = "superflappybirds_highscore.dat";
 
     explicit Settings(std::string config_folder_path);
     void Serialize();

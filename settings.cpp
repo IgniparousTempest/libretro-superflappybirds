@@ -5,6 +5,8 @@ Settings::Settings(std::string config_folder_path) {
 }
 void Settings::Serialize() {
     std::ofstream out_file (filename);
+    if (out_file.fail())
+        std::cerr << "Failed to write saved data at: " << filename << std::endl;
     out_file << highscore << std::endl;
 }
 

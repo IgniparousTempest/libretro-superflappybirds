@@ -36,10 +36,7 @@ function install_lr-superflappybirds() {
 function configure_lr-superflappybirds() {
     setConfigRoot "ports"
 
-    addPort "$md_id" "superflappybirds" "Super Flappy Birds" "$md_inst/superflappybirds_libretro.so" "$romdir/ports/superflappybirds/"
+    addPort "$md_id" "superflappybirds" "Super Flappy Birds" "$md_inst/superflappybirds_libretro.so"
 
-    mkRomDir "ports/superflappybirds"
     ensureSystemretroconfig "ports/superflappybirds"
-
-    chown $user:$user -R "$romdir/ports/superflappybirds"
 }

@@ -7,6 +7,7 @@ static const unsigned FRAMEBUFFER_WIDTH = 640;
 static const unsigned FRAMEBUFFER_HEIGHT = 360;
 
 std::string core_path;
+std::string system_dir;
 std::vector<Input> input;
 std::unique_ptr<Game> game;
 #define AUDIO_FRAMES (44100 / 60)
@@ -85,13 +86,9 @@ bool retro_load_game(const struct retro_game_info *info)
     struct retro_audio_callback cb = { audio_callback, audio_set_state };
     use_audio_cb = environ_cb(RETRO_ENVIRONMENT_SET_AUDIO_CALLBACK, &cb);
 
-    std::string rom_folder;
-    if (info != nullptr)
-        rom_folder = std::string(info->path);
-    std::cout << "rom path: " << rom_folder << std::endl;
-    auto env_variables = get_env_variables();
+   auto env_variables = get_env_variables();
     input = {{}, {}, {}, {}, {}, {}, {}, {}};
-    game = std::make_unique<Game>(FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT, core_path, rom_folder, env_variables.max_players);
+    game = std::make_unique<Game>(FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT, core_path, system_dir, env_variables.max_players);
     return true;
 }
 
@@ -164,8 +161,13 @@ void retro_set_environment(retro_environment_t cb)
         core_path = std::string(name);
         core_path = core_path.substr(0, core_path.find_last_of('/') + 1);
         std::cout << "core path: " << core_path << std::endl;
-        cb(RETRO_ENVIRONMENT_GET_SAVE_DIRECTORY, &name);
-        std::cout << "save dir path: " << name << std::endl;
+        cb(RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY, &name);
+        system_dir = std::string(name);
+        if (system_dir.find('/') != std::string::npos)
+            system_dir += '/';
+        else if (system_dir.find('\\') != std::string::npos)
+            system_dir += '\\';
+        std::cout << "system dir path: " << system_dir << std::endl;
     }
 
     get_env_variables();
@@ -210,7 +212,7 @@ void retro_get_system_info(struct retro_system_info *info)
     memset(info, 0, sizeof(*info));
     info->library_name = Game::game_name;
     info->library_version = Game::game_version;
-    info->need_fullpath = true;
+    info->need_fullpath = false;
     info->valid_extensions = "zip";
 }
 
