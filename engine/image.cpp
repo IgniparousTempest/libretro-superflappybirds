@@ -115,7 +115,7 @@ Texture *Image::LoadPNM(const std::string &file_path) {
         int width, height;
 
         if (infile.fail())
-            throw std::runtime_error("File not found");
+            throw std::runtime_error("File not found: " + file_path);
 
         std::string line;
         if (std::getline(infile, line))

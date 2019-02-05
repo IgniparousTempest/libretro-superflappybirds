@@ -4,6 +4,7 @@ project(lr_superflappybirds)
 
 set (CMAKE_CXX_STANDARD 14)
 
+# Enable OpenMP for multithreading in Engine
 OPTION (USE_OpenMP "Use OpenMP" ON)
 IF(USE_OpenMP)
     FIND_PACKAGE(OpenMP)
@@ -13,6 +14,10 @@ IF(USE_OpenMP)
     ENDIF()
 ENDIF()
 
+# Include engine files
+file(GLOB ENGINE_SOURCE "engine/*.hpp" "engine/*.cpp")
+
+# Set source files
 add_library(${PROJECT_NAME} SHARED
         libretro.hpp
         libretro.cpp
@@ -24,13 +29,6 @@ add_library(${PROJECT_NAME} SHARED
         auxillary.hpp
         menu.cpp menu.hpp
         settings.cpp settings.hpp
-        engine/audio.cpp engine/audio.hpp
-        engine/audio_mixer.cpp engine/audio_mixer.hpp
-        engine/image.cpp engine/image.hpp
-        engine/sound.hpp
-        engine/rect.hpp
-        engine/pos.hpp
-        engine/renderer.cpp engine/renderer.hpp
-        engine/texture.hpp)
+        ${ENGINE_SOURCE})
 
 TARGET_LINK_LIBRARIES(${PROJECT_NAME})
