@@ -58,8 +58,8 @@ Sound *Audio::LoadWav(const std::string &file_path) {
         input_file.read((char*)wav.data, wav.subchunk2_size);
 
         std::vector<int16_t> data;
-        data.reserve(wav.subchunk2_size);
-        for (int i = 0; i < wav.subchunk2_size; ++i)
+        data.reserve(wav.subchunk2_size / 2);  // TODO: Why is this number double the length it should be? Does it measure bytes and not samples?
+        for (int i = 0; i < wav.subchunk2_size / 2; ++i)
             data.push_back(wav.data[i]);
         return new Sound(wav.num_chanels, wav.sample_rate, data);
     }
@@ -69,7 +69,7 @@ Sound *Audio::LoadWav(const std::string &file_path) {
     }
 }
 
-void Audio::ExplainWavFile(WavFile wav) {
+void Audio::ExplainWavFile(WavFile wav, bool data) {
     std::cout << "ChunkID:        " << std::string(wav.chunk_id, 4) << "; should be 'RIFF'." << std::endl;
     std::cout << "ChunkSize:      " << wav.chunk_size << " bytes; should be size of file in bytes -8 bytes for the first two fields." << std::endl;
     std::cout << "Format:         " << std::string(wav.format, 4) << "; should be 'WAVE'." << std::endl;
@@ -84,5 +84,12 @@ void Audio::ExplainWavFile(WavFile wav) {
     std::cout << "ExtraParamSize: " << wav.extra_param_size << " bytes; The size of the subsequent ExtraParams chunk." << std::endl;
     std::cout << "Subchunk2ID:    " << std::string(wav.subchunk2_id, 4) << "; should be 'data'." << std::endl;
     std::cout << "Subchunk2Size:  " << wav.subchunk2_size << "; = NumSamples * NumChannels * BitsPerSample/8. Number of samples in data (i.e. length od data[])." << std::endl;
-    std::cout << "Data:           " << wav.data << "; The actual sound data." << std::endl;
+    if (data) {
+        std::cout << "Data:           ";
+        for (int i = 0; i < wav.subchunk2_size / 2; ++i) {
+            std::cout << wav.data[i];
+            std::cout << ", ";
+        }
+        std::cout << std::endl;
+    }
 }

@@ -48,10 +48,15 @@ struct WavFile {
 
 class Audio {
 public:
+    /// Loads a wav file from disk.
+    /// \param file_path The path to the wav file.
+    /// \return The wav as a sound object.
     static Sound *LoadWav(const std::string &file_path);
 
 private:
-    static void ExplainWavFile(WavFile wav);
+    /// Prints a description of the Wav file.
+    /// \param wav The wav file to describe.
+    static void ExplainWavFile(WavFile wav, bool data = false);
 };
 
 

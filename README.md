@@ -37,4 +37,4 @@ The engine is only capable of opening images of the [PNM](https://en.wikipedia.o
 
 The engine allows for screen rendering, collision detection, image translation, and image rotation with cubic filtering. All screen drawing is multi-threaded.
 
-The engine does not support sound yet, but I intend to implement the ability to play [.wav](http://soundfile.sapp.org/doc/WaveFormat/) files, as they are quite simple.
+The engine only supports [.wav](http://soundfile.sapp.org/doc/WaveFormat/) files for sound with 16 bit, 2 channel inputs, sampled at 44100 Hz, and encoded with PCM.

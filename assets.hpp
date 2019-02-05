@@ -40,6 +40,7 @@ public:
     Texture* winner_background;
 
     Sound* snd_hit;
+    Sound* snd_score;
 
     std::vector<Rect> bird_frames;
     std::vector<Rect> numbers_frames;
@@ -91,6 +92,7 @@ public:
         numbers_frames.push_back({122, 0, 14, 20});
 
         snd_hit = Audio::LoadWav(core_folder_path + "resources/audio/hit.wav");
+        snd_score = Audio::LoadWav(core_folder_path + "resources/audio/point.wav");
     }
 };
 

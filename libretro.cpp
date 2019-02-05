@@ -9,6 +9,8 @@ static const unsigned FRAMEBUFFER_HEIGHT = 360;
 std::string core_path;
 std::vector<Input> input;
 std::unique_ptr<Game> game;
+#define AUDIO_FRAMES (44100 / 60)
+int16_t buffer[AUDIO_FRAMES * 2];
 
 static bool use_audio_cb;
 
@@ -65,8 +67,6 @@ void retro_cheat_set(unsigned index, bool enabled, const char *code)
 
 static void audio_callback(void)
 {
-    size_t AUDIO_FRAMES = 44100 / 60;
-    int16_t buffer[AUDIO_FRAMES * 2];
     game->mixer.Render(buffer, AUDIO_FRAMES * 2);
     for (size_t i = 0; i < AUDIO_FRAMES; )
     {

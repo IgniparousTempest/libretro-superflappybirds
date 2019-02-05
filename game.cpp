@@ -243,7 +243,13 @@ void Game::PostGameMenu() {
 }
 
 void Game::score_all_birds() {
+    int new_Score;
     for (auto bird : birds)
-        if (bird->IsAlive())
-            bird->score = std::max(0, (int)((bird->x + distance_travelled - screen_width - assets->pipe_bottom->w) / DISTANCE_BETWEEN_PIPES));
+        if (bird->IsAlive()) {
+            new_Score = std::max(0, (int) ((bird->x + distance_travelled - screen_width - assets->pipe_bottom->w) /
+                                           DISTANCE_BETWEEN_PIPES));
+            if (bird->score != new_Score)
+                mixer.Play(assets->snd_score);
+            bird->score = new_Score;
+        }
 }
