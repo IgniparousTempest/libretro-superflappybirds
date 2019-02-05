@@ -211,7 +211,7 @@ void retro_get_system_info(struct retro_system_info *info)
     info->library_name = Game::game_name;
     info->library_version = Game::game_version;
     info->need_fullpath = true;
-    info->valid_extensions = "*";
+    info->valid_extensions = "zip";
 }
 
 void retro_get_system_av_info(struct retro_system_av_info *info)
@@ -233,7 +233,7 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
 
 void retro_reset(void) { }
 
-std::vector<Input> retropad_map_input(unsigned int num_controllers, std::vector<Input> previous_input) {
+std::vector<Input> retropad_map_input(unsigned long num_controllers, std::vector<Input> previous_input) {
     // Poll input
     input_poll_cb();
 

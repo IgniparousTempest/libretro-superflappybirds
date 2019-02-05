@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.7)
 
-project(lr_superflappybirds)
+project(superflappybirds_libretro)
 
 set (CMAKE_CXX_STANDARD 14)
 
@@ -31,4 +31,7 @@ add_library(${PROJECT_NAME} SHARED
         settings.cpp settings.hpp
         ${ENGINE_SOURCE})
 
-TARGET_LINK_LIBRARIES(${PROJECT_NAME})
+target_link_libraries(${PROJECT_NAME})
+
+# Removes the 'lib' prefix on Linux
+set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "")
