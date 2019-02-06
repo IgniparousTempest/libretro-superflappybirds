@@ -116,10 +116,10 @@ void Game::GameLoop(double delta_time, std::vector<Input> controller_inputs) {
 
     if (state == InGame) {
         // Collision detection
-        for (auto bird : birds)
-            if (bird_crashed(bird)) {
-                std::cout << "Crashed with score: " << bird->score << std::endl;
-                bird->Kill(distance_travelled);
+        for (int i = 0; i < birds.size(); ++i)
+            if (bird_crashed(birds[i])) {
+                std::cout << "Player " << i << " crashed with score: " << birds[i]->score << std::endl;
+                birds[i]->Kill(distance_travelled);
                 mixer.Play(assets->snd_hit);
             }
 
@@ -193,22 +193,12 @@ void Game::NewGame(int num_players) {
     for (auto bird : birds)
         delete bird;
     birds = {};
+    std::vector<Texture*> textures = {assets->bird, assets->bird2, assets->bird3, assets->bird4, assets->bird5, assets->bird6, assets->bird7, assets->bird8};
     int floor_height = screen_height - assets->ground->h;
-    birds.push_back(new Bird(screen_width / 2, screen_height / 2, floor_height, assets->bird, assets->bird_frames));
-    if (num_players >= 2)
-        birds.push_back(new Bird(screen_width / 2 - 20, screen_height / 2, floor_height, assets->bird2, assets->bird_frames));
-    if (num_players >= 3)
-        birds.push_back(new Bird(screen_width / 2 + 20, screen_height / 2, floor_height, assets->bird3, assets->bird_frames));
-    if (num_players >= 4)
-        birds.push_back(new Bird(screen_width / 2 - 40, screen_height / 2, floor_height, assets->bird4, assets->bird_frames));
-    if (num_players >= 5)
-        birds.push_back(new Bird(screen_width / 2 + 40, screen_height / 2, floor_height, assets->bird5, assets->bird_frames));
-    if (num_players >= 6)
-        birds.push_back(new Bird(screen_width / 2 - 60, screen_height / 2, floor_height, assets->bird6, assets->bird_frames));
-    if (num_players >= 7)
-        birds.push_back(new Bird(screen_width / 2 + 60, screen_height / 2, floor_height, assets->bird7, assets->bird_frames));
-    if (num_players >= 8)
-        birds.push_back(new Bird(screen_width / 2 - 80, screen_height / 2, floor_height, assets->bird8, assets->bird_frames));
+    for (int i = 0; i < num_players; ++i) {
+        int x_offset = -20 * (num_players / 2 + 1) + 20 * (num_players - i);
+        birds.push_back(new Bird(screen_width / 2 + x_offset, screen_height / 2, floor_height, textures[i], assets->bird_frames));
+    }
 
     distance_travelled = 0;
     pipes = {};
