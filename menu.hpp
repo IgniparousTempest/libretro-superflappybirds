@@ -12,9 +12,9 @@ public:
     Menu(Texture *texture_title, Texture *texture_credits, Texture *texture_start_1_player,
          Texture *texture_start_2_player, Texture *texture_start_3_player, Texture *texture_start_4_player,
          Texture *texture_start_5_player, Texture *texture_start_6_player, Texture *texture_start_7_player,
-         Texture *texture_start_8_player, Texture *texture_arrow_left, Texture *texture_arrow_right,
-         Texture *texture_hand, Texture *texture_winner_background, Texture *texture_numbers,
-         std::vector<Rect> numbers_frames, unsigned int max_players);
+         Texture *texture_start_8_player, Texture *texture_start_single_player, Texture *texture_arrow_left,
+         Texture *texture_arrow_right, Texture *texture_hand, Texture *texture_winner_background,
+         Texture *texture_numbers, std::vector<Rect> numbers_frames, unsigned int max_players);
 
     void Left();
 

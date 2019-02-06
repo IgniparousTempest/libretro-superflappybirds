@@ -32,6 +32,7 @@ public:
     Texture* start_6_player;
     Texture* start_7_player;
     Texture* start_8_player;
+    Texture* start_single_player;
     Texture* arrow_left;
     Texture* arrow_right;
     Texture* hand;
@@ -68,6 +69,7 @@ public:
         start_6_player = Image::LoadPNM(core_folder_path + "resources/start_6_player.pnm");
         start_7_player = Image::LoadPNM(core_folder_path + "resources/start_7_player.pnm");
         start_8_player = Image::LoadPNM(core_folder_path + "resources/start_8_player.pnm");
+        start_single_player = Image::LoadPNM(core_folder_path + "resources/start_single_player.pnm");
         arrow_left = Image::LoadPNM(core_folder_path + "resources/arrow.pam");
         arrow_right = arrow_left->FlipVertical();
         hand = Image::LoadPNM(core_folder_path + "resources/hand.pam");
@@ -75,21 +77,21 @@ public:
         credits = Image::LoadPNM(core_folder_path + "resources/credits.pnm");
         winner_background = Image::LoadPNM(core_folder_path + "resources/winner_background.pnm");
 
-        bird_frames.push_back({0, 0, 17, 12});
-        bird_frames.push_back({17, 0, 17, 12});
-        bird_frames.push_back({34, 0, 17, 12});
-        bird_frames.push_back({51, 0, 17, 12});
+        bird_frames.emplace_back(0, 0, 17, 12);
+        bird_frames.emplace_back(17, 0, 17, 12);
+        bird_frames.emplace_back(34, 0, 17, 12);
+        bird_frames.emplace_back(51, 0, 17, 12);
 
-        numbers_frames.push_back({0,   0, 14, 20});
-        numbers_frames.push_back({14,  0, 10, 20});
-        numbers_frames.push_back({24,  0, 14, 20});
-        numbers_frames.push_back({38,  0, 14, 20});
-        numbers_frames.push_back({52,  0, 14, 20});
-        numbers_frames.push_back({66,  0, 14, 20});
-        numbers_frames.push_back({80,  0, 14, 20});
-        numbers_frames.push_back({94,  0, 14, 20});
-        numbers_frames.push_back({108, 0, 14, 20});
-        numbers_frames.push_back({122, 0, 14, 20});
+        numbers_frames.emplace_back(0,   0, 14, 20);
+        numbers_frames.emplace_back(14,  0, 10, 20);
+        numbers_frames.emplace_back(24,  0, 14, 20);
+        numbers_frames.emplace_back(38,  0, 14, 20);
+        numbers_frames.emplace_back(52,  0, 14, 20);
+        numbers_frames.emplace_back(66,  0, 14, 20);
+        numbers_frames.emplace_back(80,  0, 14, 20);
+        numbers_frames.emplace_back(94,  0, 14, 20);
+        numbers_frames.emplace_back(108, 0, 14, 20);
+        numbers_frames.emplace_back(122, 0, 14, 20);
 
         snd_hit = Audio::LoadWav(core_folder_path + "resources/audio/hit.wav");
         snd_score = Audio::LoadWav(core_folder_path + "resources/audio/point.wav");

@@ -4,12 +4,12 @@
 #include <fstream>
 #include <iostream>
 
-class Settings {
+class SaveData {
 public:
     int highscore = 0;
     std::string filename = "superflappybirds_highscore.dat";
 
-    explicit Settings(std::string config_folder_path);
+    explicit SaveData(std::string config_folder_path);
     void Serialize();
     void Deserialize();
 };

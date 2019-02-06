@@ -5,9 +5,9 @@
 Menu::Menu(Texture *texture_title, Texture *texture_credits, Texture *texture_start_1_player,
            Texture *texture_start_2_player, Texture *texture_start_3_player, Texture *texture_start_4_player,
            Texture *texture_start_5_player, Texture *texture_start_6_player, Texture *texture_start_7_player,
-           Texture *texture_start_8_player, Texture *texture_arrow_left, Texture *texture_arrow_right,
-           Texture *texture_hand, Texture *texture_winner_background, Texture *texture_numbers,
-           std::vector<Rect> numbers_frames, unsigned int max_players) {
+           Texture *texture_start_8_player, Texture *texture_start_single_player, Texture *texture_arrow_left,
+           Texture *texture_arrow_right, Texture *texture_hand, Texture *texture_winner_background,
+           Texture *texture_numbers, std::vector<Rect> numbers_frames, unsigned int max_players) {
     index = 0;
     index_start = 0;
     this->max_players = max_players;
@@ -15,7 +15,7 @@ Menu::Menu(Texture *texture_title, Texture *texture_credits, Texture *texture_st
     title = texture_title;
     credits = texture_credits;
     hand = texture_hand;
-    start_buttons = {texture_start_1_player, texture_start_2_player, texture_start_3_player, texture_start_4_player,
+    start_buttons = {texture_start_single_player, texture_start_1_player, texture_start_2_player, texture_start_3_player, texture_start_4_player,
                      texture_start_5_player, texture_start_6_player, texture_start_7_player, texture_start_8_player};
     arrow_left = texture_arrow_left;
     arrow_right = texture_arrow_right;
@@ -152,7 +152,7 @@ void Menu::Render(Renderer *renderer) {
     }
     renderer->Render(hand, &hand_rect);
     for (int i = 0; i < start_button_rects.size(); ++i)
-        renderer->Render(start_buttons[index_start + i], &start_button_rects[i]);
+        renderer->Render(start_buttons[index_start + i + (max_players == 1 ? 0 : 1)], &start_button_rects[i]);
     if (index_start != 0)
         renderer->Render(arrow_left, &arrow_left_rect);
     if (index_start != max_players - start_button_rects.size())

@@ -10,7 +10,7 @@
 #include "bird.hpp"
 #include "input.hpp"
 #include "menu.hpp"
-#include "settings.hpp"
+#include "save_data.hpp"
 #include "engine/audio_mixer.hpp"
 
 enum GameState { InGame, InPostGameMenu, InMenu };
@@ -37,7 +37,7 @@ private:
     std::mt19937 rng;
     GameState state;
     Menu* menu;
-    Settings* settings;
+    SaveData* save_data;
     double distance_travelled = 0;
     Assets* assets;
     std::vector<uint32_t> framebuffer;

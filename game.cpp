@@ -16,9 +16,9 @@ Game::Game(unsigned int screen_width, unsigned int screen_height, std::string co
 
     assets = new Assets(std::move(core_folder_path));
 
-    menu = new Menu(assets->title, assets->credits, assets->start_1_player, assets->start_2_player, assets->start_3_player, assets->start_4_player, assets->start_5_player, assets->start_6_player, assets->start_7_player, assets->start_8_player, assets->arrow_left, assets->arrow_right, assets->hand, assets->winner_background, assets->numbers, assets->numbers_frames, max_players);
-    settings = new Settings(std::move(config_folder_path));
-    settings->Deserialize();
+    menu = new Menu(assets->title, assets->credits, assets->start_1_player, assets->start_2_player, assets->start_3_player, assets->start_4_player, assets->start_5_player, assets->start_6_player, assets->start_7_player, assets->start_8_player, assets->start_single_player, assets->arrow_left, assets->arrow_right, assets->hand, assets->winner_background, assets->numbers, assets->numbers_frames, max_players);
+    save_data = new SaveData(std::move(config_folder_path));
+    save_data->Deserialize();
 
     screen = new Renderer(screen_width, screen_height);
 }
@@ -233,12 +233,12 @@ void Game::PostGameMenu() {
     }
 
     // Update highscore
-    if (highest_score > settings->highscore) {
-        settings->highscore = highest_score;
-        settings->Serialize();
+    if (highest_score > save_data->highscore) {
+        save_data->highscore = highest_score;
+        save_data->Serialize();
     }
 
-    menu->ShowScore(highest_score, settings->highscore, textures, rects);
+    menu->ShowScore(highest_score, save_data->highscore, textures, rects);
     std::cout << "Game over, entering post game score screen." << std::endl;
 }
 

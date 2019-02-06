@@ -28,7 +28,7 @@ add_library(${PROJECT_NAME} SHARED
         input.hpp
         auxillary.hpp
         menu.cpp menu.hpp
-        settings.cpp settings.hpp
+        save_data.cpp save_data.hpp
         ${ENGINE_SOURCE})
 
 target_link_libraries(${PROJECT_NAME})

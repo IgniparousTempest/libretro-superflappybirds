@@ -11,9 +11,13 @@
 
 rp_module_id="lr-superflappybirds"
 rp_module_desc="Super Flappy Birds - Multiplayer Flappy Bird Clone"
-rp_module_help="Checkout the wiki on my github page."
+rp_module_help="https://github.com/IgniparousTempest/libretro-superflappybirds/wiki"
 rp_module_licence="GPL3 https://raw.githubusercontent.com/IgniparousTempest/libretro-superflappybirds/master/LICENSE"
 rp_module_section="exp"
+
+function depends_lr-superflappybirds() {
+    getDepends cmake
+}
 
 function sources_lr-superflappybirds() {
     gitPullOrClone "$md_build" https://github.com/IgniparousTempest/libretro-superflappybirds.git
@@ -29,9 +33,10 @@ function install_lr-superflappybirds() {
     md_ret_files=(
         'superflappybirds_libretro.so'
         'resources'
+        'LICENSE'
+        'README.md'
     )
 }
-
 
 function configure_lr-superflappybirds() {
     setConfigRoot "ports"

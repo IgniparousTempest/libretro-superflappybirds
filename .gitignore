@@ -36,4 +36,4 @@
 cmake-build-debug/
 
 # Game Files
-settings.txt
+superflappybirds_highscore.dat
