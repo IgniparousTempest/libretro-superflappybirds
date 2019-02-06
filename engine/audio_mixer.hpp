@@ -3,11 +3,12 @@
 
 
 #include <cstddef>
+#include <deque>
 #include "sound.hpp"
 
 class AudioMixer {
 public:
-    std::vector<int16_t> buffer;
+    std::deque<std::vector<int16_t>> streams;
 
     /// Starts playing a sound.
     /// \param sound The sound to play.
@@ -24,6 +25,17 @@ public:
 
 private:
     bool enabled = true;
+
+    /// Result = augend + addend. If overflow or underflow occurs, then it clips to either LONG_MIN or LONG_MAX.
+    /// \param augend The number to add to.
+    /// \param addend The number you adding to the augend.
+    /// \return A clipped form of the summation.
+    int64_t CombineStreamSamples(int64_t augend, int64_t addend);
+
+    /// Clamps a long sample to a short sample. I.e. ensures signal is in range [SHRT_MIN, SHRT_MAX].
+    /// \param signal The signal to clamp.
+    /// \return The clamped input.
+    int16_t ClampSample(int64_t signal);
 };
 
 

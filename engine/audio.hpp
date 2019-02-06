@@ -56,6 +56,7 @@ public:
 private:
     /// Prints a description of the Wav file.
     /// \param wav The wav file to describe.
+    /// \param data If true it dumps all the wav sound data too.
     static void ExplainWavFile(WavFile wav, bool data = false);
 };
 
