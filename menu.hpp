@@ -20,8 +20,10 @@ public:
 
     void Right();
 
-    /// \return The number of players for the next game.
-    int Select();
+    /// Performs a select action on the menu and might return the number of players for the next game.
+    /// \param number_of_players The number of players for the next game. The value is not altered if the next game can't be started.
+    /// \return True if a new game should be started, false otherwise.
+    bool Select(int *number_of_players);
 
     /// Changes from showing the main menu to showing the score screen.
     /// \param score The score for the winner.
@@ -32,6 +34,8 @@ public:
     /// \throw runtime_error If there are more winners provided than the function can handle.
     void ShowScore(int score, int highscore, std::vector<Texture *> texture_bird, std::vector<Rect *> frame_rect);
 
+    void Update(double delta_time);
+
     void Render(Renderer *renderer);
 
 private:
@@ -39,6 +43,7 @@ private:
     int index_start;
     unsigned int max_players;
     bool showTitle = true;
+    double timer_can_use_menu = 0;
     Texture *title;
     Texture *credits;
     std::vector<Texture *> bird;
@@ -62,6 +67,8 @@ private:
     std::vector<std::pair<Rect, Rect>> best_score_rects;
 
     void SetHandPosition(int index);
+
+    bool CanUseMenu();
 };
 
 

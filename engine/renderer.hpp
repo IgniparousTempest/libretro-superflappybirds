@@ -34,7 +34,7 @@ public:
         }
     }
 
-    /// Renders the whole image of to the screen at the position and size defined in the rect.
+    /// Renders the whole image to the screen at the position and size defined in the rect.
     /// \param image The image to draw to the screen.
     /// \param dest The position and size to draw the image at.
     void Render(Texture* image, Rect* dest);
@@ -51,6 +51,21 @@ public:
     /// \param dest The position and size to draw the image at.
     /// \param angle The angle in degrees to rotate the image.
     void Render(Texture* image, Rect* src, Rect* dest, double angle);
+
+    /// Renders the whole image to the screen at the position and size defined in the rect.
+    /// The image's alpha is ignored and the specified opacity is used instead.
+    /// \param image The image to draw to the screen.
+    /// \param dest The position and size to draw the image at.
+    /// \param opacity The opacity to draw the image at, should be between 0 and 1.
+    void RenderForceAlpha(Texture* image, Rect* dest, double opacity);
+
+private:
+    /// Draws the addend pixel over the augend pixel with the specified transparency.
+    /// \param augend The base pixel.
+    /// \param addend The top pixel.
+    /// \param opacity The opacity to draw the top pixel with.
+    /// \return The result of the pixel addition.
+    uint32_t OverlayPixels(uint32_t augend, uint32_t addend, double opacity);
 };
 
 

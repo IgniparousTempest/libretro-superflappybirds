@@ -14,7 +14,7 @@ Game::Game(unsigned int screen_width, unsigned int screen_height, std::string co
     framebuffer.resize(screen_width * screen_height);
     rng.seed(std::random_device()());
 
-    assets = new Assets(std::move(core_folder_path));
+    assets = new Assets(core_folder_path);
 
     menu = new Menu(assets->title, assets->credits, assets->start_1_player, assets->start_2_player, assets->start_3_player, assets->start_4_player, assets->start_5_player, assets->start_6_player, assets->start_7_player, assets->start_8_player, assets->start_single_player, assets->arrow_left, assets->arrow_right, assets->hand, assets->winner_background, assets->numbers, assets->numbers_frames, max_players);
     save_data = new SaveData(std::move(config_folder_path));
@@ -107,6 +107,9 @@ void Game::GameLoop(double delta_time, std::vector<Input> controller_inputs) {
     if (state == InGame || state == InMenu)
         distance_travelled += scroll_speed;// * delta_time;
 
+    if (state == InPostGameMenu || state == InMenu)
+        menu->Update(delta_time);
+
     if (state == InGame && all_birds_dead()) {
         PostGameMenu();
     }
@@ -142,8 +145,11 @@ void Game::GameLoop(double delta_time, std::vector<Input> controller_inputs) {
                 menu->Left();
             if (controller_inputs[i].right_pressed)
                 menu->Right();
-            if (controller_inputs[i].flap_pressed)
-                NewGame(menu->Select());
+            if (controller_inputs[i].flap_pressed) {
+                int players;
+                if (menu->Select(&players))
+                    NewGame(players);
+            }
         }
     }
 }

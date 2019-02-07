@@ -62,6 +62,8 @@ Menu::Menu(Texture *texture_title, Texture *texture_credits, Texture *texture_st
 }
 
 void Menu::Left() {
+    if (!CanUseMenu())
+        return;
     if (--index < 0)
         index = 0;
     if (index < index_start)
@@ -70,6 +72,8 @@ void Menu::Left() {
 }
 
 void Menu::Right() {
+    if (!CanUseMenu())
+        return;
     if (++index >= max_players)
         index = max_players - 1;
     if (index >= index_start + 4)
@@ -77,11 +81,18 @@ void Menu::Right() {
     SetHandPosition(index);
 }
 
-int Menu::Select() {
-    return index + 1;
+bool Menu::Select(int *number_of_players) {
+    if (!CanUseMenu())
+        return false;
+    else {
+        *number_of_players = index + 1;
+        return true;
+    }
 }
 
 void Menu::ShowScore(int score, int highscore, std::vector<Texture *> texture_bird, std::vector<Rect *> frame_rect) {
+    timer_can_use_menu = 0.3;
+
     if (texture_bird.size() != frame_rect.size())
         throw std::runtime_error("The textures and frame rects should be the same size. Instead got texture_bird: "
         + std::to_string(texture_bird.size()) + " and frame_rect: " + std::to_string(frame_rect.size()) + ".");
@@ -137,6 +148,11 @@ void Menu::ShowScore(int score, int highscore, std::vector<Texture *> texture_bi
         throw std::runtime_error("There were too many winners to add to the screen, improve this function.");
 }
 
+void Menu::Update(double delta_time) {
+    if (!CanUseMenu())
+        timer_can_use_menu -= delta_time;
+}
+
 void Menu::Render(Renderer *renderer) {
     if (showTitle) {
         renderer->Render(title, &title_rect);
@@ -150,7 +166,10 @@ void Menu::Render(Renderer *renderer) {
         for (auto rect_pair : best_score_rects)
             renderer->Render(numbers, &rect_pair.first, &rect_pair.second);
     }
-    renderer->Render(hand, &hand_rect);
+    if (CanUseMenu())
+        renderer->Render(hand, &hand_rect);
+    else
+        renderer->RenderForceAlpha(hand, &hand_rect, 0.5);
     for (int i = 0; i < start_button_rects.size(); ++i)
         renderer->Render(start_buttons[index_start + i + (max_players == 1 ? 0 : 1)], &start_button_rects[i]);
     if (index_start != 0)
@@ -162,4 +181,8 @@ void Menu::Render(Renderer *renderer) {
 void Menu::SetHandPosition(int index) {
     Rect *button_rect = &start_button_rects[index - index_start];
     hand_rect.x = button_rect->x + button_rect->w / 2 - hand_rect.w / 2;
+}
+
+bool Menu::CanUseMenu() {
+    return timer_can_use_menu < 0;
 }
