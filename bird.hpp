@@ -12,6 +12,7 @@ public:
     int x;
     int y;
     int score = 0;
+    int wins = 0;
     Texture* texture;
     std::vector<Rect> animation_frames;
     Bird(int x, int y, int floor_height, Texture* texture, std::vector<Rect> frames);

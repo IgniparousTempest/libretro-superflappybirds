@@ -24,6 +24,7 @@ public:
     Texture* bird8;
     Texture* numbers;
     Texture* score_background;
+    Texture* score_wins_background;
     Texture* start_1_player;
     Texture* start_2_player;
     Texture* start_3_player;
@@ -61,6 +62,7 @@ public:
         bird8 = Image::LoadPNM(core_folder_path + "resources/bird8.pam");
         numbers = Image::LoadPNM(core_folder_path + "resources/numbers.pam");
         score_background = Image::LoadPNM(core_folder_path + "resources/score_background.pnm");
+        score_wins_background = Image::LoadPNM(core_folder_path + "resources/score_background_multiplayer.pnm");
         start_1_player = Image::LoadPNM(core_folder_path + "resources/start_1_player.pnm");
         start_2_player = Image::LoadPNM(core_folder_path + "resources/start_2_player.pnm");
         start_3_player = Image::LoadPNM(core_folder_path + "resources/start_3_player.pnm");

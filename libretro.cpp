@@ -28,10 +28,10 @@ static double delta_time;
 
 struct EnvVariables {
     unsigned int max_players;
+    bool show_wins;
 };
 
 static EnvVariables get_env_variables() {
-    unsigned int default_max_players = 4;
     EnvVariables vars{};
     retro_variable var = { "sfb_max_players" };
     if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
@@ -39,8 +39,17 @@ static EnvVariables get_env_variables() {
         vars.max_players = std::stoul(var.value);
         std::cout << "Config states the max players should be: " << vars.max_players << std::endl;
     } else {
-        std::cout << "Config does not have a max players value, defaulting to: " << default_max_players << std::endl;
-        vars.max_players = default_max_players;
+        vars.max_players = 4;
+        std::cout << "Config does not have a max players value, defaulting to: " << vars.max_players << std::endl;
+    }
+    var = { "sfb_show_wins" };
+    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+    {
+        vars.show_wins = std::strcmp(var.value, "on") == 0;
+        std::cout << "Config states the 'show wins' should be: " << vars.show_wins << std::endl;
+    } else {
+        vars.show_wins = true;
+        std::cout << "Config does not have a 'show wins' value, defaulting to: " << vars.show_wins << std::endl;
     }
 
     return vars;
@@ -86,9 +95,9 @@ bool retro_load_game(const struct retro_game_info *info)
     struct retro_audio_callback cb = { audio_callback, audio_set_state };
     use_audio_cb = environ_cb(RETRO_ENVIRONMENT_SET_AUDIO_CALLBACK, &cb);
 
-   auto env_variables = get_env_variables();
+    auto env_variables = get_env_variables();
     input = {{}, {}, {}, {}, {}, {}, {}, {}};
-    game = std::make_unique<Game>(FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT, core_path, system_dir, env_variables.max_players);
+    game = std::make_unique<Game>(FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT, core_path, system_dir, env_variables.max_players, env_variables.show_wins);
     return true;
 }
 
@@ -177,6 +186,7 @@ void retro_set_environment(retro_environment_t cb)
     // TODO: Sets the default value to 4, this is very hackish, but there doesn't seem to be a better way.
     retro_variable vars[] = {
             { "sfb_max_players", "Maximum number of players allowed (Requires restart); 4|2|3|1|5|6|7|8" },
+            { "sfb_show_wins", "Shows wins in multiplayer game (Requires restart); on|off" },
             { nullptr, nullptr },
     };
     cb(RETRO_ENVIRONMENT_SET_VARIABLES, vars);

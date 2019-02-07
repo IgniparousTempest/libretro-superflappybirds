@@ -5,14 +5,15 @@
 #include "auxillary.hpp"
 
 const char *Game::game_name = "Super Flappy Birds";
-const char *Game::game_version = "0.9.2";
+const char *Game::game_version = "0.9.3";
 
-Game::Game(unsigned int screen_width, unsigned int screen_height, std::string core_folder_path, std::string config_folder_path, unsigned int max_players) {
+Game::Game(unsigned int screen_width, unsigned int screen_height, std::string core_folder_path, std::string config_folder_path, unsigned int max_players, bool show_wins) {
     state = InMenu;
     this->screen_width = screen_width;
     this->screen_height = screen_height;
     framebuffer.resize(screen_width * screen_height);
     rng.seed(std::random_device()());
+    this->show_wins = show_wins;
 
     assets = new Assets(core_folder_path);
 
@@ -70,10 +71,27 @@ void Game::DrawGround(Renderer *renderer) {
     }
 }
 
-void Game::draw_score(Renderer* renderer, int x, int y, int score, Texture* bird, Rect* bird_frame) {
+void Game::draw_score(Renderer* renderer, int x, int y, int score) {
+    // Draw score
+    auto rects = Auxillary::getNumberRects(score, &assets->numbers_frames, x, y, 1);
+    auto x_offset = (rects.back().second.x - rects.front().second.x + rects.back().second.w) / 2;
+    for (auto &rect : rects)
+        rect.second.x -= x_offset;
+    for (auto &rect : rects)
+        renderer->Render(assets->numbers, &rect.first, &rect.second);
+}
+
+void Game::draw_score(Renderer* renderer, int x, int y, int score, Texture* bird, Rect* bird_frame, int wins) {
+    Texture *background;
+    // Choose background with or without score
+    if (wins >= 0)
+        background = assets->score_wins_background;
+    else
+        background = assets->score_background;
+
     // Draw background
-    Rect dest_rect = {x, y, assets->score_background->w, assets->score_background->h};
-    renderer->Render(assets->score_background, &dest_rect);
+    Rect dest_rect = {x, y, background->w, background->h};
+    renderer->Render(background, &dest_rect);
 
     // Draw player's bird
     dest_rect = {x + 11, y + 14, bird_frame->w, bird_frame->h};
@@ -83,24 +101,31 @@ void Game::draw_score(Renderer* renderer, int x, int y, int score, Texture* bird
     auto rects = Auxillary::getNumberRects(score, &assets->numbers_frames, x + 35, y + 10, 1);
     for (auto &rect : rects)
         renderer->Render(assets->numbers, &rect.first, &rect.second);
+
+    // Draw wins
+    if (wins >= 0) {
+        rects = Auxillary::getNumberRects(wins, &assets->numbers_frames, x + 35, y + 32, 1, 0.5f);
+        for (auto &rect : rects)
+            renderer->Render(assets->numbers, &rect.first, &rect.second);
+    }
 }
 
 void Game::DrawScores(Renderer *renderer) {
-    draw_score(renderer, 0, 0, birds[0]->score, birds[0]->texture, &birds[0]->animation_frames[2]);
-    if (birds.size() >= 2)
-        draw_score(renderer, screen_width / 3 - assets->score_background->w / 2, 0, birds[1]->score, birds[1]->texture, &birds[1]->animation_frames[2]);
-    if (birds.size() >= 3)
-        draw_score(renderer, 2 * screen_width / 3 - assets->score_background->w / 2, 0, birds[2]->score, birds[2]->texture, &birds[2]->animation_frames[2]);
-    if (birds.size() >= 4)
-        draw_score(renderer, screen_width - assets->score_background->w, 0, birds[3]->score, birds[3]->texture, &birds[3]->animation_frames[2]);
-    if (birds.size() >= 5)
-        draw_score(renderer, 0, screen_height - assets->score_background->h, birds[4]->score, birds[4]->texture, &birds[4]->animation_frames[2]);
-    if (birds.size() >= 6)
-        draw_score(renderer, screen_width / 3 - assets->score_background->w / 2, screen_height - assets->score_background->h, birds[5]->score, birds[5]->texture, &birds[5]->animation_frames[2]);
-    if (birds.size() >= 7)
-        draw_score(renderer, 2 * screen_width / 3 - assets->score_background->w / 2, screen_height - assets->score_background->h, birds[6]->score, birds[6]->texture, &birds[6]->animation_frames[2]);
-    if (birds.size() >= 8)
-        draw_score(renderer, screen_width - assets->score_background->w, screen_height - assets->score_background->h, birds[7]->score, birds[7]->texture, &birds[7]->animation_frames[2]);
+    if (birds.size() == 1) {
+        draw_score(renderer, screen_width / 2, 20, birds[0]->score);
+    } else {
+        int back_w = assets->score_wins_background->w;
+        int back_h = assets->score_wins_background->h;
+        std::vector<unsigned int> xs = {0, screen_width / 3 - back_w / 2, 2 * screen_width / 3 - back_w / 2, screen_width - back_w};
+        Bird *bird;
+        int wins = -1;
+        for (int i = 0; i < birds.size(); ++i) {
+            bird = birds[i];
+            if (show_wins)
+                wins = bird->wins;
+            draw_score(renderer, xs[i % 4], i >= 4 ? screen_height - back_h : 0, bird->score, bird->texture, &bird->animation_frames[0], wins);
+        }
+    }
 }
 
 void Game::GameLoop(double delta_time, std::vector<Input> controller_inputs) {
@@ -196,14 +221,20 @@ bool Game::all_birds_dead() {
 void Game::NewGame(int num_players) {
     state = InGame;
     std::cout << "Starting a new game with " << num_players << " players." << std::endl;
-    for (auto bird : birds)
+    std::vector<int> wins;
+    for (auto bird : birds) {
+        wins.push_back(bird->wins);
         delete bird;
+    }
     birds = {};
     std::vector<Texture*> textures = {assets->bird, assets->bird2, assets->bird3, assets->bird4, assets->bird5, assets->bird6, assets->bird7, assets->bird8};
     int floor_height = screen_height - assets->ground->h;
     for (int i = 0; i < num_players; ++i) {
         int x_offset = -20 * (num_players / 2 + 1) + 20 * (num_players - i);
         birds.push_back(new Bird(screen_width / 2 + x_offset, screen_height / 2, floor_height, textures[i], assets->bird_frames));
+        // Set the bird's number of wins
+        if (num_players == wins.size())
+            birds.back()->wins = wins[i];
     }
 
     distance_travelled = 0;
@@ -225,6 +256,7 @@ void Game::PostGameMenu() {
         if (bird->score == highest_score) {
             textures.push_back(bird->texture);
             rects.push_back(&bird->animation_frames[2]);
+            bird->wins += 1;
         }
     }
 
