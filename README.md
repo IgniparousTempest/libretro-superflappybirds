@@ -11,15 +11,12 @@ Copy the script `lr-superflappybirds.sh` to `/home/pi/RetroPie-Setup/scriptmodul
 
 ### Step by step:
 
-    cd ~/RetroPie-Setup/scriptmodules/libretrocores/
-    wget https://raw.githubusercontent.com/IgniparousTempest/libretro-superflappybirds/master/lr-superflappybirds.sh
-    cd ~/RetroPie-Setup/
-    sudo ./retropie_setup.sh
-
-1. Select `P  Manage packages`
-2. Select `exp     Manage experimental packages`
-3. Select `lr-superflappybirds`
-4. Select `S  Install from source`
+1. Open the `RetroPie` Menu
+2. Select `RetroPie Setup`
+3. Select `P  Manage packages`
+4. Select `exp     Manage experimental packages`
+5. Select `lr-superflappybirds`
+6. Select `S  Install from source`
 
 Restart EmulationStation and you should see the game under the ports menu.
 
