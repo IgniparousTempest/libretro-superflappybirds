@@ -123,7 +123,7 @@ void Game::DrawScores(Renderer *renderer) {
             bird = birds[i];
             if (show_wins)
                 wins = bird->wins;
-            draw_score(renderer, xs[i % 4], i >= 4 ? screen_height - back_h : 0, bird->score, bird->texture, &bird->animation_frames[0], wins);
+            draw_score(renderer, xs[i % 4], i >= 4 ? screen_height - back_h : 0, bird->score, bird->animation->texture, &bird->animation->frames[0], wins);
         }
     }
 }
@@ -220,7 +220,7 @@ bool Game::all_birds_dead() {
 
 void Game::NewGame(int num_players) {
     state = InGame;
-    std::cout << "Starting a new game with " << num_players << " players." << std::endl;
+    std::cout << "Setting up a new game with " << num_players << " players." << std::endl;
     std::vector<int> wins;
     for (auto bird : birds) {
         wins.push_back(bird->wins);
@@ -239,6 +239,7 @@ void Game::NewGame(int num_players) {
 
     distance_travelled = 0;
     pipes = {};
+    std::cout << "Starting game." << std::endl;
 }
 
 void Game::PostGameMenu() {
@@ -254,8 +255,8 @@ void Game::PostGameMenu() {
     std::vector<Rect *> rects;
     for (auto bird : birds) {
         if (bird->score == highest_score) {
-            textures.push_back(bird->texture);
-            rects.push_back(&bird->animation_frames[2]);
+            textures.push_back(bird->animation->texture);
+            rects.push_back(&bird->animation->frames[0]);
             bird->wins += 1;
         }
     }

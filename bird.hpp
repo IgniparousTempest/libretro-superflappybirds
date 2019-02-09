@@ -3,6 +3,7 @@
 
 
 #include "assets.hpp"
+#include "engine/animation.hpp"
 #include "engine/renderer.hpp"
 
 enum BirdState { Gliding, Alive, Dead };
@@ -13,9 +14,9 @@ public:
     int y;
     int score = 0;
     int wins = 0;
-    Texture* texture;
-    std::vector<Rect> animation_frames;
+    Animation* animation;
     Bird(int x, int y, int floor_height, Texture* texture, std::vector<Rect> frames);
+    ~Bird();
     void Update(double delta_time, double distance_travelled);
     void Flap();
     void Kill(double distance_travelled);
@@ -32,9 +33,7 @@ private:
     const double FLAP_SPEED = -3.5;
     const double GRAVITY = 0.25;
     const double TERMINAL_VELOCITY = 5;
-    unsigned int frames = 0;
-    const int frames_in_animation = 4;
-    const int frames_per_animation_frame = 3;
+    const int FRAMES_PER_ANIMATION_FRAME = 3;
 };
 
 
