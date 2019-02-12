@@ -3,6 +3,7 @@
 SaveData::SaveData(std::string config_folder_path) {
     filename = config_folder_path + filename;
 }
+
 void SaveData::Serialize() {
     std::ofstream out_file (filename);
     if (out_file.fail())

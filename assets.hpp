@@ -40,12 +40,16 @@ public:
     Texture* title;
     Texture* credits;
     Texture* winner_background;
+    Texture* font_highscore;
+    Texture* highscore_frame;
+    Texture* highscore_cursor;
 
     Sound* snd_hit;
     Sound* snd_score;
 
     std::vector<Rect> bird_frames;
     std::vector<Rect> numbers_frames;
+    std::vector<Rect> font_highscore_frames;
 
     explicit Assets(const std::string &core_folder_path) {
         buildings = Image::LoadPNM(core_folder_path + "resources/buildings.pnm");
@@ -78,6 +82,9 @@ public:
         title = Image::LoadPNM(core_folder_path + "resources/title.pam");
         credits = Image::LoadPNM(core_folder_path + "resources/credits.pnm");
         winner_background = Image::LoadPNM(core_folder_path + "resources/winner_background.pnm");
+        font_highscore = Image::LoadPNM(core_folder_path + "resources/font_highscore.pam");
+        highscore_frame = Image::LoadPNM(core_folder_path + "resources/highscore_frame.pam");
+        highscore_cursor = Image::LoadPNM(core_folder_path + "resources/highscore_cursor.pam");
 
         bird_frames.emplace_back(0, 0, 17, 12);
         bird_frames.emplace_back(17, 0, 17, 12);
@@ -97,6 +104,63 @@ public:
 
         snd_hit = Audio::LoadWav(core_folder_path + "resources/audio/hit.wav");
         snd_score = Audio::LoadWav(core_folder_path + "resources/audio/point.wav");
+    }
+
+    Rect GetFontSrcRect(char letter) {
+        switch (letter) {
+            case 'A': return {0, 0, 4, 6};
+            case 'B': return {5, 0, 4, 6};
+            case 'C': return {10, 0, 3, 6};
+            case 'D': return {14, 0, 4, 6};
+            case 'E': return {19, 0, 3, 6};
+            case 'F': return {23, 0, 3, 6};
+            case 'G': return {27, 0, 4, 6};
+            case 'H': return {32, 0, 4, 6};
+            case 'I': return {37, 0, 3, 6};
+            case 'J': return {41, 0, 3, 6};
+            case 'K': return {45, 0, 4, 6};
+            case 'L': return {50, 0, 3, 6};
+            case 'M': return {54, 0, 5, 6};
+            case 'N': return {60, 0, 4, 6};
+            case 'O': return {65, 0, 4, 6};
+            case 'P': return {70, 0, 4, 6};
+            case 'Q': return {75, 0, 4, 6};
+            case 'R': return {80, 0, 4, 6};
+            case 'S': return {85, 0, 4, 6};
+            case 'T': return {90, 0, 3, 6};
+            case 'U': return {94, 0, 4, 6};
+            case 'V': return {99, 0, 3, 6};
+            case 'W': return {103, 0, 5, 6};
+            case 'X': return {109, 0, 3, 6};
+            case 'Y': return {113, 0, 3, 6};
+            case 'Z': return {117, 0, 4, 6};
+            case '0': return {122, 0, 4, 6};
+            case '1': return {127, 0, 3, 6};
+            case '2': return {131, 0, 4, 6};
+            case '3': return {136, 0, 4, 6};
+            case '4': return {141, 0, 4, 6};
+            case '5': return {146, 0, 4, 6};
+            case '6': return {151, 0, 4, 6};
+            case '7': return {156, 0, 4, 6};
+            case '8': return {161, 0, 4, 6};
+            case '9': return {166, 0, 4, 6};
+            case ' ': return {171, 0, 4, 6};
+            case '_': return {176, 0, 4, 6};
+            case ':': return {181, 0, 1, 6};
+            case '.': return {183, 0, 1, 6};
+            case '\b': return {185, 0, 11, 12};
+            case '\n': return {197, 0, 12, 12};
+            default:
+                throw std::runtime_error("Unknown letter '" + std::to_string(letter) + "'");
+        }
+    }
+
+    std::vector<Rect> GetFontSrcRect(const std::string &text) {
+        std::vector<Rect> rects;
+        for (char i : text) {
+            rects.push_back(GetFontSrcRect(i));
+        }
+        return rects;
     }
 };
 

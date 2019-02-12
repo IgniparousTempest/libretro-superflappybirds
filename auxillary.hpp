@@ -49,6 +49,21 @@ public:
         }
         return positions;
     }
+
+    static std::vector<std::pair<Rect, Rect>> getFontRects(const std::vector<Rect> &src_rects, int x, int y, int pixels_between_characters, float scale = 1) {
+        int x_offset = 0;
+        std::vector<std::pair<Rect, Rect>> positions;
+        for (auto &src_rect : src_rects) {
+            Rect dest_rect;
+            dest_rect.x = x + x_offset;
+            dest_rect.y = y;
+            dest_rect.w = (int)(src_rect.w * scale);
+            dest_rect.h = (int)(src_rect.h * scale);
+            positions.emplace_back(src_rect, dest_rect);
+            x_offset += dest_rect.w + pixels_between_characters;
+        }
+        return positions;
+    }
 };
 
 #endif //LR_SUPERFLAPPYBIRDS_AUXILLARY_H

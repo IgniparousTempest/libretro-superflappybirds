@@ -29,6 +29,9 @@ add_library(${PROJECT_NAME} SHARED
         auxillary.hpp
         menu.cpp menu.hpp
         save_data.cpp save_data.hpp
+        highscore_sub_window.hpp
+        contexts/context.hpp
+        contexts/context_highscore_input.hpp contexts/context_highscore_input.cpp
         ${ENGINE_SOURCE})
 
 target_link_libraries(${PROJECT_NAME})
