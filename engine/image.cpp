@@ -34,15 +34,18 @@ Image::ParseBinary(std::basic_istream<char, std::char_traits<char>> &file, int w
     assert(channels == 3 || channels == 4);
     auto image = new uint32_t[width * height];
     unsigned int r, g, b, a = 255;
-    std::vector<unsigned char> buffer(std::istreambuf_iterator<char>(file), {});
-    for (int i = 0; i < buffer.size(); i += channels) {
-        r = buffer[i];
-        g = buffer[i + 1];
-        b = buffer[i + 2];
+    int data_size = width * height * channels;
+    auto *data = new unsigned char[data_size];
+    file.read((char*)data, data_size);
+    for (int i = 0; i < data_size; i += channels) {
+        r = data[i];
+        g = data[i + 1];
+        b = data[i + 2];
         if (channels == 4)
-            a = buffer[i + 3];
+            a = data[i + 3];
         image[i / channels] = b | g << 8 | r << 16 | a << 24;
     }
+    delete[] data;
 
     return image;
 }
