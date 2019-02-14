@@ -4,12 +4,16 @@
 #include "assets.hpp"
 #include "engine/renderer.hpp"
 #include "auxillary.hpp"
+#include "engine/animation.hpp"
+#include "bird.hpp"
 
 class HighScoreSubWindow {
 public:
-    HighScoreSubWindow(int x, int y, Assets *assets, int player_number, Texture *bird, std::vector<Rect> bird_frames, int score) : assets(assets), x(x), y(y) {
-        animation = new Animation(bird, std::move(bird_frames), Bird::FRAMES_PER_ANIMATION_FRAME);
+    HighScoreSubWindow(int x, int y, Assets *assets, int player_number, Texture *bird, std::vector<Rect> bird_frames, int score) : assets(assets), x(x), y(y), score(score) {
+        std::cout << "assets HighScoreSubWindow: " << assets << std::endl;
+        animation = new Animation(bird, bird_frames, Bird::FRAMES_PER_ANIMATION_FRAME);
         highscore_frame = assets->highscore_frame;
+        player_name = "";
         font = assets->font_highscore;
         cursor = assets->highscore_cursor;
         auto player_number_src_rects = assets->GetFontSrcRect("PLAYER " + std::to_string(player_number));
@@ -43,10 +47,11 @@ public:
     }
 
     ~HighScoreSubWindow() {
-        delete position;
-        delete cursor_location;
-        delete animation;
-        delete bird_dest_rect;
+        //TODO: I can't delete these, why?
+//        delete position;
+//        delete cursor_location;
+//        delete animation;
+//        delete bird_dest_rect;
     }
 
     void Render(Renderer *renderer) {
@@ -61,7 +66,8 @@ public:
             renderer->Render(font, &rect.first, &rect.second);
         for (auto &rect : keyboard_rects)
             renderer->Render(font, &rect.first, &rect.second);
-        renderer->Render(cursor, cursor_location);
+        if (!finished)
+            renderer->Render(cursor, cursor_location);
         renderer->Render(animation->texture, animation->CurrentFrame(), bird_dest_rect);
     }
 
@@ -96,14 +102,29 @@ public:
             if (!player_name.empty())
                 player_name.pop_back();
         }
-        else if (c == '\n')
-            c;
+        else if (c == '\n') {
+            finished = true;
+            animation->Pause();
+        }
         else if (player_name.size() < 8)
             player_name += c;
         UpdatePlayerName();
     }
 
+    bool IsFinished() {
+        return finished;
+    }
+
+    std::string Name() {
+        return player_name;
+    }
+
+    int Score() {
+        return score;
+    }
+
 private:
+    bool finished = false;
     int x;
     int y;
     Assets *assets;
@@ -121,6 +142,7 @@ private:
     std::vector<std::pair<Rect, Rect>> score_rects;
     std::vector<std::pair<Rect, Rect>> keyboard_rects;
     int cursor_index = 0;
+    int score;
 
     void UpdateCursor() {
         auto current_letter = &keyboard_rects[cursor_index].second;

@@ -43,6 +43,7 @@ public:
     Texture* font_highscore;
     Texture* highscore_frame;
     Texture* highscore_cursor;
+    Texture* button_new_high_Score;
 
     Sound* snd_hit;
     Sound* snd_score;
@@ -85,6 +86,7 @@ public:
         font_highscore = Image::LoadPNM(core_folder_path + "resources/font_highscore.pam");
         highscore_frame = Image::LoadPNM(core_folder_path + "resources/highscore_frame.pam");
         highscore_cursor = Image::LoadPNM(core_folder_path + "resources/highscore_cursor.pam");
+        button_new_high_Score = Image::LoadPNM(core_folder_path + "resources/button_new_high_Score.pnm");
 
         bird_frames.emplace_back(0, 0, 17, 12);
         bird_frames.emplace_back(17, 0, 17, 12);

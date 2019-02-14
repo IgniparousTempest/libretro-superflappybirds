@@ -50,6 +50,13 @@ public:
         return positions;
     }
 
+    ///
+    /// \param src_rects
+    /// \param x
+    /// \param y
+    /// \param pixels_between_characters
+    /// \param scale
+    /// \return
     static std::vector<std::pair<Rect, Rect>> getFontRects(const std::vector<Rect> &src_rects, int x, int y, int pixels_between_characters, float scale = 1) {
         int x_offset = 0;
         std::vector<std::pair<Rect, Rect>> positions;

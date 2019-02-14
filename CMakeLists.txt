@@ -32,6 +32,8 @@ add_library(${PROJECT_NAME} SHARED
         highscore_sub_window.hpp
         contexts/context.hpp
         contexts/context_highscore_input.hpp contexts/context_highscore_input.cpp
+        contexts/context_main.hpp contexts/context_main.cpp
+        contexts/context_high_score_view.hpp contexts/context_high_score_view.cpp
         ${ENGINE_SOURCE})
 
 target_link_libraries(${PROJECT_NAME})

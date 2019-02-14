@@ -5,10 +5,12 @@
 #include "context.hpp"
 #include "../assets.hpp"
 #include "../save_data.hpp"
+#include "../highscore_sub_window.hpp"
 
 class ContextHighScoreInput : public Context {
 public:
-    ContextHighScoreInput(Game *game, Assets *assets, SaveData *saveData, std::vector<int> scores,
+    /// This context allows players to enter their name when they achieve a high score.
+    ContextHighScoreInput(GameManager *game, Assets *assets, SaveData *saveData, std::vector<int> scores,
             std::vector<Texture*> player_textures, std::vector<int> player_numbers);
 
     void Update(double delta_time, std::vector<Input> controller_inputs) override;
