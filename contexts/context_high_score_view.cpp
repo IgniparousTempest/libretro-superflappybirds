@@ -24,10 +24,10 @@ save_data(save_data), assets(assets) {
         src_rects = assets->GetFontSrcRect("NO. " + std::to_string(i + 1));
         scores_rank_rects.push_back(Auxillary::getFontRects(src_rects, rank_x, 60 + (i + 1) * 25, 3, 3));
 
-        src_rects = assets->GetFontSrcRect(std::to_string(save_data->top_scores[i].second));
+        src_rects = assets->GetFontSrcRect(std::to_string(save_data->top_scores[i].score));
         scores_score_rects.push_back(Auxillary::getFontRects(src_rects, score_x, 60 + (i + 1) * 25, 3, 3));
 
-        src_rects = assets->GetFontSrcRect(save_data->top_scores[i].first);
+        src_rects = assets->GetFontSrcRect(save_data->top_scores[i].name);
         scores_names_rects.push_back(Auxillary::getFontRects(src_rects, name_x, 60 + (i + 1) * 25, 3, 3));
     }
 }

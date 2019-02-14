@@ -13,7 +13,7 @@ void SaveData::Serialize() {
     else
         std::cerr << "Writing save data to: " << filename << std::endl;
     for (auto &top_score : top_scores)
-        out_file << top_score.first << "," << top_score.second << std::endl;
+        out_file << top_score.score << "," << top_score.name << "," << top_score.time.time_since_epoch().count() << std::endl;
 }
 
 void SaveData::Deserialize() {
@@ -27,24 +27,32 @@ void SaveData::Deserialize() {
         {
             std::stringstream linestream(line);
             getline(linestream, value, ',');
+            score = std::stoi(value);
+            getline(linestream, value, ',');
             name = value;
             getline(linestream, value, ',');
-            score = std::stoi(value);
-            AddNewScore(name, score);
+            std::chrono::time_point<std::chrono::system_clock> time(std::chrono::seconds(std::stoll(value)));
+            AddNewScore(name, score, &time);
         }
     }
 }
 
-bool SaveData::AddNewScore(std::string name, int score) {
+bool SaveData::AddNewScore(std::string name, int score, std::chrono::time_point<std::chrono::system_clock> *time) {
     // Don't add score if the list is full and the new score is too low.
-    if (top_scores.size() >= MAX_SCORES && score <= top_scores.back().second)
+    if (top_scores.size() >= MAX_SCORES && score <= top_scores.back().score)
         return false;
-
-    top_scores.emplace_back(name, score);
+    if (time == nullptr) {
+        auto now = std::chrono::system_clock::now();
+        auto time_in_seconds = std::chrono::seconds (now.time_since_epoch().count());
+        auto time_now = std::chrono::time_point<std::chrono::system_clock>(time_in_seconds);
+        top_scores.emplace_back(name, score, time_now);
+    }
+    else
+        top_scores.emplace_back(name, score, *time);
 
     // Re-order the scores
     std::sort(top_scores.begin(), top_scores.end(), [](auto &left, auto &right) {
-        return left.second > right.second;
+        return left.score > right.score;
     });
 
     while (top_scores.size() > MAX_SCORES)
@@ -64,5 +72,5 @@ int SaveData::DoesPlayerQualifyForHighScoreTable(const std::vector<int> &scores)
 }
 
 int SaveData::HighScore() {
-    return top_scores.empty() ? 0 : top_scores.front().second;
+    return top_scores.empty() ? 0 : top_scores.front().score;
 }

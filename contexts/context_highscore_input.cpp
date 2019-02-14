@@ -1,17 +1,13 @@
 #include "context_highscore_input.hpp"
 
-ContextHighScoreInput::ContextHighScoreInput(GameManager *game, Assets *assets, SaveData *saveData, std::vector<int> scores,
-        std::vector<Texture*> player_textures, std::vector<int> player_numbers) : Context(game), saveData(saveData) {
-    assert(scores.size() == player_numbers.size() && scores.size() == player_textures.size());
+ContextHighScoreInput::ContextHighScoreInput(GameManager *game, Assets *assets, SaveData *saveData,
+        std::vector<Bird*> player_birds, std::vector<int> player_numbers) : Context(game), saveData(saveData) {
+    assert(player_birds.size() == player_numbers.size());
 
-    std::cout << "scores " << scores.size() << std::endl;
-    std::cout << "player_numbers " << player_numbers.size() << std::endl;
-    std::cout << "player_textures " << player_textures.size() << std::endl;
-    std::cout << "assets ConHigInput: " << assets << std::endl;
     for (int player_number : player_numbers)
         player_indexes.push_back(player_number - 1);
 
-    size_t high_score_count = scores.size();
+    size_t high_score_count = player_birds.size();
     if (high_score_count > 4) {
         std::cout << "Trimmed number of high scorers from " << high_score_count << " to 4." << std::endl;
         high_score_count = 4;
@@ -21,7 +17,7 @@ ContextHighScoreInput::ContextHighScoreInput(GameManager *game, Assets *assets, 
     for (int i = 0; i < high_score_count; ++i) {
         x = (gameManager->ScreenWidth() / 2) * (i % 2);
         y = (gameManager->ScreenHeight() / 2) * (i / 2);
-        highScoreWindows.emplace_back(x, y, assets, player_numbers[i], player_textures[i], assets->bird_frames, scores[i]);
+        highScoreWindows.emplace_back(x, y, assets, player_numbers[i], player_birds[i], assets->bird_frames);
     }
 }
 
@@ -51,6 +47,7 @@ void ContextHighScoreInput::Update(double delta_time, std::vector<Input> control
         for (auto &highScoreWindow : highScoreWindows) {
             if (highScoreWindow.Name() != "") {
                 std::cout << "Adding a new high score to table, name=\"" << highScoreWindow.Name() << "\", score=" << highScoreWindow.Score() << std::endl;
+                highScoreWindow.GetBird()->name = highScoreWindow.Name();
                 saveData->AddNewScore(highScoreWindow.Name(), highScoreWindow.Score());
             } else
                 std::cout << "The player entered a blank name, they don't deserve to be added to the high score table." << std::endl;

@@ -14,6 +14,7 @@ public:
     int y;
     int score = 0;
     int wins = 0;
+    std::string name = "";
     Animation* animation;
     static const int FRAMES_PER_ANIMATION_FRAME = 3;
     Bird(int x, int y, int floor_height, Texture* texture, std::vector<Rect> frames);

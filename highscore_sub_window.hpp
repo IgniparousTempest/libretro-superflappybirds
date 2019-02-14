@@ -9,11 +9,11 @@
 
 class HighScoreSubWindow {
 public:
-    HighScoreSubWindow(int x, int y, Assets *assets, int player_number, Texture *bird, std::vector<Rect> bird_frames, int score) : assets(assets), x(x), y(y), score(score) {
+    HighScoreSubWindow(int x, int y, Assets *assets, int player_number, Bird *bird, const std::vector<Rect> &bird_frames) : assets(assets), x(x), y(y), bird(bird), score(bird->score) {
         std::cout << "assets HighScoreSubWindow: " << assets << std::endl;
-        animation = new Animation(bird, bird_frames, Bird::FRAMES_PER_ANIMATION_FRAME);
+        animation = new Animation(bird->animation->texture, bird_frames, Bird::FRAMES_PER_ANIMATION_FRAME);
         highscore_frame = assets->highscore_frame;
-        player_name = "";
+        player_name = bird->name;
         font = assets->font_highscore;
         cursor = assets->highscore_cursor;
         auto player_number_src_rects = assets->GetFontSrcRect("PLAYER " + std::to_string(player_number));
@@ -39,7 +39,7 @@ public:
             i++;
         }
 
-        bird_dest_rect = new Rect(x + 226, y + 29, animation->CurrentFrame()->w * 2, bird->h * 2);
+        bird_dest_rect = new Rect(x + 226, y + 29, animation->CurrentFrame()->w * 2, animation->CurrentFrame()->h * 2);
         position = new Rect(x + 3, y + 3, highscore_frame->w, highscore_frame->h);
         cursor_location = new Rect();
         UpdateCursor();
@@ -123,11 +123,16 @@ public:
         return score;
     }
 
+    Bird *GetBird() {
+        return bird;
+    }
+
 private:
     bool finished = false;
     int x;
     int y;
     Assets *assets;
+    Bird *bird;
     Rect *position;
     Texture *highscore_frame;
     Rect* bird_dest_rect;

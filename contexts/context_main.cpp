@@ -228,8 +228,10 @@ void ContextMain::NewGame(int num_players) {
     state = InGame;
     std::cout << "Setting up a new game with " << num_players << " players." << std::endl;
     std::vector<int> wins;
+    std::vector<std::string> names;
     for (auto bird : birds) {
         wins.push_back(bird->wins);
+        names.push_back(bird->name);
         delete bird;
     }
     birds = {};
@@ -239,8 +241,10 @@ void ContextMain::NewGame(int num_players) {
         int x_offset = -20 * (num_players / 2 + 1) + 20 * (num_players - i);
         birds.push_back(new Bird(screen_width / 2 + x_offset, screen_height / 2, floor_height, textures[i], assets->bird_frames));
         // Set the bird's number of wins
-        if (num_players == wins.size())
+        if (num_players == wins.size()) {
             birds.back()->wins = wins[i];
+            birds.back()->name = names[i];
+        }
     }
 
     distance_travelled = 0;
@@ -268,27 +272,26 @@ void ContextMain::PostGameMenu() {
     }
 
     // Check if any players broke into the high score table
-    std::vector<std::tuple<int, Texture*, int>> player_tuple;
+    std::vector<std::tuple<Bird*, int>> player_tuple;
     for (int i = 0; i < birds.size(); ++i)
-        player_tuple.emplace_back(birds[i]->score, birds[i]->animation->texture, i + 1);
+        player_tuple.emplace_back(birds[i], i + 1);
     std::sort(player_tuple.begin(), player_tuple.end(), [](auto &left, auto &right) {
-        return std::get<0>(left) < std::get<0>(right);
+        return std::get<0>(left)->score < std::get<0>(right)->score;
     });
     std::vector<int> scores;
-    std::vector<Texture*> player_textures;
+    std::vector<Bird*> player_birds;
     std::vector<int> player_numbers;
     for (auto &item : player_tuple) {
-        scores.push_back(std::get<0>(item));
-        player_textures.push_back(std::get<1>(item));
-        player_numbers.push_back(std::get<2>(item));
+        scores.push_back(std::get<0>(item)->score);
+        player_birds.push_back(std::get<0>(item));
+        player_numbers.push_back(std::get<1>(item));
     }
     int high_scorers = save_data->DoesPlayerQualifyForHighScoreTable(scores);
     if (high_scorers > 0) {
-        scores.resize(high_scorers);
-        player_textures.resize(high_scorers);
+        player_birds.resize(high_scorers);
         player_numbers.resize(high_scorers);
         menu->ShowNewHighScoreButton();
-        contextHighScoreInput = new ContextHighScoreInput(gameManager, assets, save_data, scores, player_textures, player_numbers);
+        contextHighScoreInput = new ContextHighScoreInput(gameManager, assets, save_data, player_birds, player_numbers);
     }
 
     menu->ShowScore(highest_score, save_data->HighScore(), textures, rects);
