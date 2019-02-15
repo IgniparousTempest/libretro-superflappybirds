@@ -22,6 +22,8 @@ private:
     SaveData *saveData;
     std::vector<HighScoreSubWindow> highScoreWindows;
     std::vector<int> player_indexes;
+    int completed_windows = 0;
+    std::vector<bool> displayed_windows;
 };
 
 

@@ -10,7 +10,6 @@ ContextMain::ContextMain(GameManager *game_manager, AudioMixer *mixer, unsigned 
     this->screen_height = screen_height;
     rng.seed(std::random_device()());
     this->show_wins = show_wins;
-    std::cout << "assets ConMain: " << assets << std::endl;
 
     menu = new Menu(assets->title, assets->credits, assets->start_1_player, assets->start_2_player, assets->start_3_player, assets->start_4_player, assets->start_5_player, assets->start_6_player, assets->start_7_player, assets->start_8_player, assets->start_single_player, assets->button_new_high_Score, assets->arrow_left, assets->arrow_right, assets->hand, assets->winner_background, assets->numbers, assets->numbers_frames, max_players);
 }
@@ -255,43 +254,45 @@ void ContextMain::NewGame(int num_players) {
 void ContextMain::PostGameMenu() {
     state = InPostGameMenu;
 
-    // Get winners
-    int highest_score = 0;
-    for (auto bird : birds) {
-        if (bird->score > highest_score)
-            highest_score = bird->score;
-    }
-    std::vector<Texture *> textures;
-    std::vector<Rect *> rects;
-    for (auto bird : birds) {
-        if (bird->score == highest_score) {
-            textures.push_back(bird->animation->texture);
-            rects.push_back(&bird->animation->frames[0]);
-            bird->wins += 1;
-        }
-    }
-
     // Check if any players broke into the high score table
-    std::vector<std::tuple<Bird*, int>> player_tuple;
+    std::vector<std::pair<Bird*, int>> player_tuple;
     for (int i = 0; i < birds.size(); ++i)
         player_tuple.emplace_back(birds[i], i + 1);
     std::sort(player_tuple.begin(), player_tuple.end(), [](auto &left, auto &right) {
-        return std::get<0>(left)->score < std::get<0>(right)->score;
+        return left.first->score > right.first->score;
     });
+
     std::vector<int> scores;
+    for (auto &item : player_tuple)
+        scores.push_back(item.first->score);
+
+    int high_scorers = save_data->DoesPlayerQualifyForHighScoreTable(scores);
     std::vector<Bird*> player_birds;
     std::vector<int> player_numbers;
-    for (auto &item : player_tuple) {
-        scores.push_back(std::get<0>(item)->score);
-        player_birds.push_back(std::get<0>(item));
-        player_numbers.push_back(std::get<1>(item));
-    }
-    int high_scorers = save_data->DoesPlayerQualifyForHighScoreTable(scores);
     if (high_scorers > 0) {
-        player_birds.resize(high_scorers);
-        player_numbers.resize(high_scorers);
+        // put players in player order, not in score order.
+        for (int i = 0; i < birds.size(); ++i) {
+            for (int j = 0; j < high_scorers; ++j) {
+                if (i + 1 == player_tuple[j].second) {
+                    player_birds.push_back(player_tuple[j].first);
+                    player_numbers.push_back(i + 1);
+                }
+            }
+        }
         menu->ShowNewHighScoreButton();
         contextHighScoreInput = new ContextHighScoreInput(gameManager, assets, save_data, player_birds, player_numbers);
+    }
+
+    // Get winners, i.e. the player or players who got the top score
+    int highest_score = player_tuple[0].first->score;
+    std::vector<Texture *> textures;
+    std::vector<Rect *> rects;
+    for (auto bird : player_tuple) {
+        if (bird.first->score == highest_score) {
+            textures.push_back(bird.first->animation->texture);
+            rects.push_back(&bird.first->animation->frames[0]);
+            bird.first->wins += 1;
+        }
     }
 
     menu->ShowScore(highest_score, save_data->HighScore(), textures, rects);

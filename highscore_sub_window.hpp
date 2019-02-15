@@ -9,41 +9,16 @@
 
 class HighScoreSubWindow {
 public:
-    HighScoreSubWindow(int x, int y, Assets *assets, int player_number, Bird *bird, const std::vector<Rect> &bird_frames) : assets(assets), x(x), y(y), bird(bird), score(bird->score) {
-        std::cout << "assets HighScoreSubWindow: " << assets << std::endl;
+    HighScoreSubWindow(int x, int y, Assets *assets, int player_number, Bird *bird, const std::vector<Rect> &bird_frames) : assets(assets), x(x), y(y), player_number(player_number), bird(bird), score(bird->score) {
         animation = new Animation(bird->animation->texture, bird_frames, Bird::FRAMES_PER_ANIMATION_FRAME);
         highscore_frame = assets->highscore_frame;
         player_name = bird->name;
         font = assets->font_highscore;
         cursor = assets->highscore_cursor;
-        auto player_number_src_rects = assets->GetFontSrcRect("PLAYER " + std::to_string(player_number));
-        player_number_rects = Auxillary::getFontRects(player_number_src_rects, x + 95, y + 32, 3, 3);
-        auto score_src_rects = assets->GetFontSrcRect("SCORE: " + std::to_string(score));
-        score_rects = Auxillary::getFontRects(score_src_rects, x + 29, y + 142, 2, 2);
         characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ_\b\n";
-        auto keyboard_src_rects = assets->GetFontSrcRect(characters);
 
-        int i = 0;
-        int scale;
-        for (auto &src_rect : keyboard_src_rects) {
-            if (characters[i] == '\b' || characters[i] == '\n')
-                scale = 1;
-            else
-                scale = 2;
-            Rect dest;
-            dest.x = x + 31 + (i % 10) * 28;
-            dest.y = y + 62 + (i / 10) * 25;
-            dest.w = src_rect.w * scale;
-            dest.h = src_rect.h * scale;
-            keyboard_rects.emplace_back(src_rect, dest);
-            i++;
-        }
-
-        bird_dest_rect = new Rect(x + 226, y + 29, animation->CurrentFrame()->w * 2, animation->CurrentFrame()->h * 2);
-        position = new Rect(x + 3, y + 3, highscore_frame->w, highscore_frame->h);
         cursor_location = new Rect();
-        UpdateCursor();
-        UpdatePlayerName();
+        SetPosition({x, y});
     }
 
     ~HighScoreSubWindow() {
@@ -69,6 +44,46 @@ public:
         if (!finished)
             renderer->Render(cursor, cursor_location);
         renderer->Render(animation->texture, animation->CurrentFrame(), bird_dest_rect);
+    }
+
+    void SetPosition(Pos pos) {
+        x = pos.x;
+        y = pos.y;
+
+        auto player_number_src_rects = assets->GetFontSrcRect("PLAYER " + std::to_string(player_number));
+        player_number_rects = Auxillary::getFontRects(player_number_src_rects, x + 95, y + 32, 3, 3);
+        auto score_src_rects = assets->GetFontSrcRect("SCORE: " + std::to_string(score));
+        score_rects = Auxillary::getFontRects(score_src_rects, x + 29, y + 142, 2, 2);
+        auto keyboard_src_rects = assets->GetFontSrcRect(characters);
+
+        int i = 0;
+        int scale;
+        for (auto &src_rect : keyboard_src_rects) {
+            if (characters[i] == '\b' || characters[i] == '\n')
+                scale = 1;
+            else
+                scale = 2;
+            Rect dest;
+            dest.x = x + 31 + (i % 10) * 28;
+            dest.y = y + 62 + (i / 10) * 25;
+            dest.w = src_rect.w * scale;
+            dest.h = src_rect.h * scale;
+            keyboard_rects.emplace_back(src_rect, dest);
+            i++;
+        }
+
+        if (bird_dest_rect != nullptr)
+            delete bird_dest_rect;
+        if (position != nullptr)
+            delete position;
+        bird_dest_rect = new Rect(x + 226, y + 29, animation->CurrentFrame()->w * 2, animation->CurrentFrame()->h * 2);
+        position = new Rect(x + 3, y + 3, highscore_frame->w, highscore_frame->h);
+        UpdateCursor();
+        UpdatePlayerName();
+    }
+
+    Pos GetPosition() {
+        return Pos(x, y);
     }
 
     void Up() {
@@ -111,6 +126,12 @@ public:
         UpdatePlayerName();
     }
 
+    void Backspace() {
+        if (!player_name.empty())
+            player_name.pop_back();
+        UpdatePlayerName();
+    }
+
     bool IsFinished() {
         return finished;
     }
@@ -132,10 +153,11 @@ private:
     int x;
     int y;
     Assets *assets;
+    int player_number;
     Bird *bird;
-    Rect *position;
+    Rect *position = nullptr;
     Texture *highscore_frame;
-    Rect* bird_dest_rect;
+    Rect* bird_dest_rect = nullptr;
     Animation* animation;
     Texture *cursor;
     Rect *cursor_location;

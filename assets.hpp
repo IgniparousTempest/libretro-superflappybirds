@@ -109,6 +109,8 @@ public:
     }
 
     Rect GetFontSrcRect(char letter) {
+        std::locale locale;
+        letter = std::toupper(letter, locale);
         switch (letter) {
             case 'A': return {0, 0, 4, 6};
             case 'B': return {5, 0, 4, 6};
