@@ -6,7 +6,7 @@
 #include "contexts/context_high_score_view.hpp"
 
 const char *GameManager::game_name = "Super Flappy Birds";
-const char *GameManager::game_version = "0.9.3";
+const char *GameManager::game_version = "0.9.4";
 
 GameManager::GameManager(unsigned int screen_width, unsigned int screen_height, std::string core_folder_path, std::string config_folder_path, unsigned int max_players, bool show_wins) {
     this->screen_width = screen_width;

@@ -11,12 +11,6 @@ ContextHighScoreInput::ContextHighScoreInput(GameManager *game, Assets *assets, 
     for (int i = 0; i < player_birds.size(); ++i)
         std::cout << "Player " << player_numbers[i] << " with " << player_birds[i]->score << " points." << std::endl;
 
-//    size_t high_score_count = player_birds.size();
-//    if (high_score_count > 4) {
-//        std::cerr << "Trimmed number of high scorers from " << high_score_count << " to 4." << std::endl;
-//        high_score_count = 4;
-//    }
-
     int x, y;
     for (int i = 0; i < player_numbers.size(); ++i) {
         x = (gameManager->ScreenWidth() / 2) * (i % 2);
@@ -30,7 +24,7 @@ void ContextHighScoreInput::Update(double delta_time, std::vector<Input> control
     Input* input;
     for (int i = 0; i < player_indexes.size(); ++i) {
         if (!displayed_windows[i] || highScoreWindows[i].IsFinished())
-            break;
+            continue;
         input = &controller_inputs[player_indexes[i]];
         if (input->up_pressed)
             highScoreWindows[i].Up();
