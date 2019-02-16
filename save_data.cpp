@@ -66,7 +66,7 @@ int SaveData::DoesPlayerQualifyForHighScoreTable(const std::vector<int> &scores)
     data.top_scores = this->top_scores;
     for (int i = 0; i < scores.size(); ++i) {
         if (!data.AddNewScore("", scores[i]))
-            return i + 1;
+            return i;
     }
     return static_cast<int>(scores.size());
 }
