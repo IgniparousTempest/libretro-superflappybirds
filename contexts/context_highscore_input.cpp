@@ -1,7 +1,7 @@
 #include "context_highscore_input.hpp"
 
 ContextHighScoreInput::ContextHighScoreInput(GameManager *game, Assets *assets, SaveData *saveData,
-        std::vector<Bird*> player_birds, std::vector<int> player_numbers) : Context(game), saveData(saveData) {
+        std::vector<Bird*> player_birds, std::vector<int> player_numbers) : Context(game, "High Score Input"), saveData(saveData) {
     assert(player_birds.size() == player_numbers.size());
 
     for (int player_number : player_numbers)

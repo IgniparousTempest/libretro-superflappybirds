@@ -4,7 +4,7 @@
 
 ContextMain::ContextMain(GameManager *game_manager, AudioMixer *mixer, unsigned int screen_width, unsigned int screen_height,
                          Assets *assets, SaveData *save_data, unsigned int max_players,
-                         bool show_wins) : Context(game_manager), assets(assets), save_data(save_data), mixer(mixer) {
+                         bool show_wins) : Context(game_manager, "Main"), assets(assets), save_data(save_data), mixer(mixer) {
     state = InMenu;
     this->screen_width = screen_width;
     this->screen_height = screen_height;

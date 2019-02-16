@@ -34,7 +34,7 @@ uint32_t* GameManager::GetFrameBuffer() {
 }
 
 void GameManager::PushNewContext(Context *context) {
-    std::cout << "Changing context to: " << context->Name() << "." << std::endl;
+    std::cout << "Changing context to: \"" << context->Name() << "\"." << std::endl;
     contexts.push(context);
 }
 

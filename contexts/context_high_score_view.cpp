@@ -1,7 +1,7 @@
 #include "context_high_score_view.hpp"
 #include "../auxillary.hpp"
 
-ContextHighScoreView::ContextHighScoreView(GameManager *game, Assets *assets, SaveData *save_data) : Context(game),
+ContextHighScoreView::ContextHighScoreView(GameManager *game, Assets *assets, SaveData *save_data) : Context(game, "View High Scores"),
 save_data(save_data), assets(assets) {
     font = assets->font_highscore;
     title = assets->title;
