@@ -97,6 +97,7 @@ bool retro_load_game(const struct retro_game_info *info)
 
     auto env_variables = get_env_variables();
     input = {{}, {}, {}, {}, {}, {}, {}, {}};
+    std::cout << "Setting up a maximum of " << input.size() << " controllers." << std::endl;
     game = std::make_unique<GameManager>(FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT, core_path, system_dir, env_variables.max_players, env_variables.show_wins);
     return true;
 }
@@ -211,7 +212,6 @@ void retro_init(void)
         log_cb = log.log;
     else
         log_cb = nullptr;
-    std::cout << "Setting up a maximum of " << input.size() << " controllers." << std::endl;
     std::cout << "Max threads available for this system: " << omp_get_max_threads() << std::endl;
     if (log_cb)
         log_cb(RETRO_LOG_INFO, "SuperFlappyBird: ", "Max threads available for this system: %d.\n", omp_get_max_threads());

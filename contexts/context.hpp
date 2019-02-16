@@ -10,9 +10,7 @@ class GameManager;
 
 class Context {
 public:
-    explicit Context(GameManager *game) {
-        gameManager = game;
-    }
+    explicit Context(GameManager *game, std::string context_name) : gameManager(game), context_name(context_name) {}
 
     virtual ~Context() {}
 
@@ -20,8 +18,13 @@ public:
 
     virtual void Render(Renderer *renderer) = 0;
 
+    std::string Name() {
+        return context_name;
+    }
+
 protected:
     GameManager *gameManager;
+    std::string context_name;
 };
 
 #endif //SUPERFLAPPYBIRDS_LIBRETRO_CONTEXT_HPP
