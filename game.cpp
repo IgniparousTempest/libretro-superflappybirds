@@ -39,6 +39,7 @@ void GameManager::PushNewContext(Context *context) {
 }
 
 void GameManager::EndCurrentContext() {
+    std::cout << "Ending current context." << std::endl;
     delete contexts.top();
     contexts.pop();
 }
