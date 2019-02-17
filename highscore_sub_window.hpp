@@ -55,6 +55,7 @@ public:
         auto score_src_rects = assets->GetFontSrcRect("SCORE: " + std::to_string(score));
         score_rects = Auxillary::getFontRects(score_src_rects, x + 29, y + 142, 2, 2);
         auto keyboard_src_rects = assets->GetFontSrcRect(characters);
+        keyboard_rects = {};
 
         int i = 0;
         int scale;
@@ -72,10 +73,9 @@ public:
             i++;
         }
 
-        if (bird_dest_rect != nullptr)
-            delete bird_dest_rect;
-        if (position != nullptr)
-            delete position;
+
+        delete bird_dest_rect;
+        delete position;
         bird_dest_rect = new Rect(x + 226, y + 29, animation->CurrentFrame()->w * 2, animation->CurrentFrame()->h * 2);
         position = new Rect(x + 3, y + 3, highscore_frame->w, highscore_frame->h);
         UpdateCursor();
@@ -83,7 +83,7 @@ public:
     }
 
     Pos GetPosition() {
-        return Pos(x, y);
+        return {x, y};
     }
 
     void Up() {
