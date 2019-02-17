@@ -11,12 +11,20 @@ ContextHighScoreInput::ContextHighScoreInput(GameManager *game, Assets *assets, 
     for (int i = 0; i < player_birds.size(); ++i)
         std::cout << "Player " << player_numbers[i] << " with " << player_birds[i]->score << " points." << std::endl;
 
+    highScoreWindows.reserve(player_numbers.size());
     int x, y;
-    for (int i = 0; i < player_numbers.size(); ++i) {
-        x = (gameManager->ScreenWidth() / 2) * (i % 2);
-        y = (gameManager->ScreenHeight() / 2) * (i / 2);
-        highScoreWindows.emplace_back(x, y, assets, player_numbers[i], player_birds[i], assets->bird_frames);
-        displayed_windows.emplace_back(i < 4);
+    if (player_numbers.size() > 1) {
+        for (int i = 0; i < player_numbers.size(); ++i) {
+            x = (gameManager->ScreenWidth() / 2) * (i % 2);
+            y = (gameManager->ScreenHeight() / 2) * (i / 2);
+            highScoreWindows.emplace_back(x, y, assets, player_numbers[i], player_birds[i], assets->bird_frames);
+            displayed_windows.emplace_back(i < 4);
+        }
+    } else {
+        x = gameManager->ScreenWidth() / 2 - assets->highscore_frame->w / 2;
+        y = gameManager->ScreenHeight() / 2 - assets->highscore_frame->h / 2;
+        highScoreWindows.emplace_back(x, y, assets, player_numbers[0], player_birds[0], assets->bird_frames);
+        displayed_windows.emplace_back(true);
     }
 }
 
