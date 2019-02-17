@@ -4,14 +4,21 @@
 ContextHighScoreView::ContextHighScoreView(GameManager *game, Assets *assets, SaveData *save_data) : Context(game, "View High Scores"),
 save_data(save_data), assets(assets) {
     font = assets->font_highscore;
-    title = assets->title;
-    title_dest_rect = {(int)gameManager->ScreenWidth() / 2 - title->w / 2, 0, title->w, title->h};
 
-    auto player_number_src_rects = assets->GetFontSrcRect("THE FLAPPIEST BIRDS OF ALL TIME...");
-    subtitle_rects = Auxillary::getFontRects(player_number_src_rects, 0, 20, 3, 4);
-    int width = subtitle_rects.back().second.x + subtitle_rects.back().second.w;
-    for (auto &high_score_rect : subtitle_rects)
+    auto title_src_rects = assets->GetFontSrcRect("THE FLAPPIEST BIRDS OF ALL TIME...");
+    title_rects = Auxillary::getFontRects(title_src_rects, 0, 20, 3, 4);
+    int width = title_rects.back().second.x + title_rects.back().second.w;
+    for (auto &high_score_rect : title_rects)
         high_score_rect.second.x += (gameManager->ScreenWidth() - width) / 2;
+
+    auto quit_message_src_rects = assets->GetFontSrcRect("PRESS \"FLAP\" BUTTON TO QUIT.");
+    quit_message = Auxillary::getFontRects(quit_message_src_rects, 0, 0, 2, 2);
+    width = quit_message.back().second.x + quit_message.back().second.w;
+    int height = quit_message.back().second.h;
+    for (auto &high_score_rect : quit_message) {
+        high_score_rect.second.x += (gameManager->ScreenWidth() - width) / 2;
+        high_score_rect.second.y += gameManager->ScreenHeight() - height - 2;
+    }
 
     int rank_x = 160, score_x = 270, name_x = 380;
     auto src_rects = assets->GetFontSrcRect("RANK");
@@ -47,9 +54,7 @@ void ContextHighScoreView::Render(Renderer *renderer) {
     // Draw Sky
     renderer->Clear(Renderer::rgb(115, 183, 196));
 
-//    renderer->Render(title, &title_dest_rect);
-
-    for (auto &rect : subtitle_rects)
+    for (auto &rect : title_rects)
         renderer->Render(font, &rect.first, &rect.second);
 
     for (auto &score : scores_rank_rects)
@@ -61,4 +66,7 @@ void ContextHighScoreView::Render(Renderer *renderer) {
     for (auto &score : scores_names_rects)
         for (auto &rect : score)
             renderer->Render(font, &rect.first, &rect.second);
+
+    for (auto &rect : quit_message)
+        renderer->Render(font, &rect.first, &rect.second);
 }

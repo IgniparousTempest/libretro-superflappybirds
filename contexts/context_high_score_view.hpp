@@ -16,14 +16,13 @@ public:
 private:
     Assets *assets;
     SaveData *save_data;
-    Rect title_dest_rect;
-    std::vector<std::pair<Rect, Rect>> subtitle_rects;
+    std::vector<std::pair<Rect, Rect>> title_rects;
+    std::vector<std::pair<Rect, Rect>> quit_message;
     std::vector<std::vector<std::pair<Rect, Rect>>> scores_rank_rects;
     std::vector<std::vector<std::pair<Rect, Rect>>> scores_score_rects;
     std::vector<std::vector<std::pair<Rect, Rect>>> scores_names_rects;
     Texture *font;
-    Texture *title;
-    double alive_timer = 5;
+    double alive_timer = 15;
 };
 
 

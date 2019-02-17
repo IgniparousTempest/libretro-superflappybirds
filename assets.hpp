@@ -154,6 +154,7 @@ public:
             case '.': return {183, 0, 1, 6};
             case '\b': return {185, 0, 11, 12};
             case '\n': return {197, 0, 12, 12};
+            case '"': return {0, 6, 3, 6};
             default:
                 throw std::runtime_error("Unknown letter '" + std::to_string(letter) + "'");
         }
