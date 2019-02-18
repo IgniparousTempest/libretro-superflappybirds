@@ -7,14 +7,19 @@
 #include "engine/rect.hpp"
 #include "engine/renderer.hpp"
 
+enum MenuResponse {
+    MENU_RESPONSE_SHOW_HIGH_SCORE_INPUT = -100
+};
+
 class Menu {
 public:
     Menu(Texture *texture_title, Texture *texture_credits, Texture *texture_start_1_player,
          Texture *texture_start_2_player, Texture *texture_start_3_player, Texture *texture_start_4_player,
          Texture *texture_start_5_player, Texture *texture_start_6_player, Texture *texture_start_7_player,
-         Texture *texture_start_8_player, Texture *texture_start_single_player, Texture *texture_arrow_left,
-         Texture *texture_arrow_right, Texture *texture_hand, Texture *texture_winner_background,
-         Texture *texture_numbers, std::vector<Rect> numbers_frames, unsigned int max_players);
+         Texture *texture_start_8_player, Texture *texture_start_single_player, Texture *new_highscore,
+         Texture *texture_arrow_left, Texture *texture_arrow_right, Texture *texture_hand,
+         Texture *texture_winner_background, Texture *texture_numbers, std::vector<Rect> numbers_frames,
+         unsigned int max_players);
 
     void Left();
 
@@ -34,6 +39,10 @@ public:
     /// \throw runtime_error If there are more winners provided than the function can handle.
     void ShowScore(int score, int highscore, std::vector<Texture *> texture_bird, std::vector<Rect *> frame_rect);
 
+    void HideNewHighScoreButton();
+
+    void ShowNewHighScoreButton();
+
     void Update(double delta_time);
 
     void Render(Renderer *renderer);
@@ -49,6 +58,9 @@ private:
     std::vector<Texture *> bird;
     Texture *hand;
     std::vector<Texture *> start_buttons;
+    Rect button_new_highscore_rect;
+    bool is_new_high_score = false;
+    Texture *button_new_highscore;
     Texture *arrow_left;
     Texture *arrow_right;
     Texture *winner_background;

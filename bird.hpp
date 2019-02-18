@@ -14,7 +14,9 @@ public:
     int y;
     int score = 0;
     int wins = 0;
+    std::string name = "";
     Animation* animation;
+    static const int FRAMES_PER_ANIMATION_FRAME = 3;
     Bird(int x, int y, int floor_height, Texture* texture, std::vector<Rect> frames);
     ~Bird();
     void Update(double delta_time, double distance_travelled);
@@ -33,7 +35,6 @@ private:
     const double FLAP_SPEED = -3.5;
     const double GRAVITY = 0.25;
     const double TERMINAL_VELOCITY = 5;
-    const int FRAMES_PER_ANIMATION_FRAME = 3;
 };
 
 

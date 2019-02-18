@@ -5,9 +5,10 @@
 Menu::Menu(Texture *texture_title, Texture *texture_credits, Texture *texture_start_1_player,
            Texture *texture_start_2_player, Texture *texture_start_3_player, Texture *texture_start_4_player,
            Texture *texture_start_5_player, Texture *texture_start_6_player, Texture *texture_start_7_player,
-           Texture *texture_start_8_player, Texture *texture_start_single_player, Texture *texture_arrow_left,
-           Texture *texture_arrow_right, Texture *texture_hand, Texture *texture_winner_background,
-           Texture *texture_numbers, std::vector<Rect> numbers_frames, unsigned int max_players) {
+           Texture *texture_start_8_player, Texture *texture_start_single_player, Texture *new_highscore,
+           Texture *texture_arrow_left, Texture *texture_arrow_right, Texture *texture_hand,
+           Texture *texture_winner_background, Texture *texture_numbers, std::vector<Rect> numbers_frames,
+           unsigned int max_players) {
     index = 0;
     index_start = 0;
     this->max_players = max_players;
@@ -15,8 +16,10 @@ Menu::Menu(Texture *texture_title, Texture *texture_credits, Texture *texture_st
     title = texture_title;
     credits = texture_credits;
     hand = texture_hand;
-    start_buttons = {texture_start_single_player, texture_start_1_player, texture_start_2_player, texture_start_3_player, texture_start_4_player,
-                     texture_start_5_player, texture_start_6_player, texture_start_7_player, texture_start_8_player};
+    button_new_highscore = new_highscore;
+    start_buttons = {texture_start_single_player, texture_start_1_player, texture_start_2_player,
+                     texture_start_3_player, texture_start_4_player, texture_start_5_player, texture_start_6_player,
+                     texture_start_7_player, texture_start_8_player};
     arrow_left = texture_arrow_left;
     arrow_right = texture_arrow_right;
     winner_background = texture_winner_background;
@@ -26,6 +29,7 @@ Menu::Menu(Texture *texture_title, Texture *texture_credits, Texture *texture_st
     title_rect = {154, 63, title->w, title->h};
     credits_rect = {266, 324, credits->w, credits->h};
     hand_rect = {0, 198, hand->w, hand->h};
+    button_new_highscore_rect = {260, 230, button_new_highscore->w, button_new_highscore->h};
     switch (max_players) {
         case 1:
             start_button_rects = {
@@ -61,8 +65,20 @@ Menu::Menu(Texture *texture_title, Texture *texture_credits, Texture *texture_st
     SetHandPosition(0);
 }
 
+void Menu::HideNewHighScoreButton() {
+    is_new_high_score = false;
+    SetHandPosition(index);
+}
+
+void Menu::ShowNewHighScoreButton() {
+    is_new_high_score = true;
+    hand_rect.x = button_new_highscore_rect.x + button_new_highscore_rect.w / 2 - hand_rect.w / 2;
+}
+
 void Menu::Left() {
     if (!CanUseMenu())
+        return;
+    else if (is_new_high_score)
         return;
     if (--index < 0)
         index = 0;
@@ -74,6 +90,8 @@ void Menu::Left() {
 void Menu::Right() {
     if (!CanUseMenu())
         return;
+    else if (is_new_high_score)
+        return;
     if (++index >= max_players)
         index = max_players - 1;
     if (index >= index_start + 4)
@@ -84,6 +102,11 @@ void Menu::Right() {
 bool Menu::Select(int *number_of_players) {
     if (!CanUseMenu())
         return false;
+    else if (is_new_high_score) {
+        *number_of_players = MENU_RESPONSE_SHOW_HIGH_SCORE_INPUT;
+        HideNewHighScoreButton();
+        return false;
+    }
     else {
         *number_of_players = index + 1;
         return true;
@@ -154,6 +177,14 @@ void Menu::Update(double delta_time) {
 }
 
 void Menu::Render(Renderer *renderer) {
+    if (CanUseMenu())
+        renderer->Render(hand, &hand_rect);
+    else
+        renderer->RenderForceAlpha(hand, &hand_rect, 0.5);
+    if (is_new_high_score) {
+        renderer->Render(button_new_highscore, &button_new_highscore_rect);
+        return;
+    }
     if (showTitle) {
         renderer->Render(title, &title_rect);
         renderer->Render(credits, &credits_rect);
@@ -166,10 +197,6 @@ void Menu::Render(Renderer *renderer) {
         for (auto rect_pair : best_score_rects)
             renderer->Render(numbers, &rect_pair.first, &rect_pair.second);
     }
-    if (CanUseMenu())
-        renderer->Render(hand, &hand_rect);
-    else
-        renderer->RenderForceAlpha(hand, &hand_rect, 0.5);
     for (int i = 0; i < start_button_rects.size(); ++i)
         renderer->Render(start_buttons[index_start + i + (max_players == 1 ? 0 : 1)], &start_button_rects[i]);
     if (index_start != 0)
