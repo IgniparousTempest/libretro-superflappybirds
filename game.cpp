@@ -4,6 +4,7 @@
 #include "auxillary.hpp"
 #include "contexts/context_main.hpp"
 #include "contexts/context_high_score_view.hpp"
+#include "contexts/context_load_old_save_file.hpp"
 
 const char *GameManager::game_name = "Super Flappy Birds";
 const char *GameManager::game_version = "0.9.4";
@@ -15,13 +16,15 @@ GameManager::GameManager(unsigned int screen_width, unsigned int screen_height, 
 
     assets = new Assets(core_folder_path);
 
-    save_data = new SaveData(std::move(config_folder_path));
+    save_data = new SaveData(config_folder_path);
     save_data->Deserialize();
 
     screen = new Renderer(screen_width, screen_height);
 
     auto context_main = new ContextMain(this, &mixer, screen_width, screen_height, assets, save_data, max_players, show_wins);
     contexts.push(context_main);
+
+    contexts.push(new ContextLoadOldSaveFile(this, assets, save_data, config_folder_path + "superflappybirds_highscore.dat"));
 }
 
 void GameManager::GameLoop(double delta_time, std::vector<Input> controller_inputs) {

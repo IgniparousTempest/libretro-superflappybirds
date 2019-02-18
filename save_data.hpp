@@ -39,6 +39,8 @@ public:
     /// \return The number of players that would be added to the high score table.
     int DoesPlayerQualifyForHighScoreTable(const std::vector<int> &scores);
 
+    bool DoesPlayerQualifyForHighScoreTable(int score);
+
     /// Gets the highest score in the game so far.
     /// \return The highest score
     int HighScore();

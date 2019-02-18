@@ -71,6 +71,10 @@ int SaveData::DoesPlayerQualifyForHighScoreTable(const std::vector<int> &scores)
     return static_cast<int>(scores.size());
 }
 
+bool SaveData::DoesPlayerQualifyForHighScoreTable(int score) {
+    return !(top_scores.size() >= MAX_SCORES && score <= top_scores.back().score);
+}
+
 int SaveData::HighScore() {
     return top_scores.empty() ? 0 : top_scores.front().score;
 }

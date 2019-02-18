@@ -34,6 +34,7 @@ add_library(${PROJECT_NAME} SHARED
         contexts/context_highscore_input.hpp contexts/context_highscore_input.cpp
         contexts/context_main.hpp contexts/context_main.cpp
         contexts/context_high_score_view.hpp contexts/context_high_score_view.cpp
+        contexts/context_load_old_save_file.cpp contexts/context_load_old_save_file.hpp
         ${ENGINE_SOURCE})
 
 target_link_libraries(${PROJECT_NAME})
