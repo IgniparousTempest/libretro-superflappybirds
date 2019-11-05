@@ -1,0 +1,26 @@
+INCLUDES   :=  \
+    $(CORE_DIR)/  \
+    $(CORE_DIR)/engine
+
+INCFLAGS   := $(foreach dir,$(INCLUDES), -I$(dir))
+
+SRC_CORE	:=\
+    $(CORE_DIR)/libretro.cpp \
+    $(CORE_DIR)/game.cpp \
+    $(CORE_DIR)/pipe_pair.cpp \
+    $(CORE_DIR)/bird.cpp \
+    $(CORE_DIR)/menu.cpp \
+    $(CORE_DIR)/save_data.cpp \
+    $(CORE_DIR)/contexts/context_highscore_input.cpp \
+    $(CORE_DIR)/contexts/context_main.cpp \
+    $(CORE_DIR)/contexts/context_high_score_view.cpp \
+    $(CORE_DIR)/contexts/context_load_old_save_file.cpp
+
+SRC_ENGINE_CXX = \
+	${CORE_DIR}/engine
+	
+DIRS_SRC_ENGINE_CXX  := $(foreach dir,$(SRC_ENGINE_CXX), $(wildcard $(dir)/*.cpp))
+
+SOURCES_CXX	:=\
+	$(SRC_CORE) \
+	$(DIRS_SRC_ENGINE_CXX)

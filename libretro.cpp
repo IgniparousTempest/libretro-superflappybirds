@@ -2,6 +2,7 @@
 #include "game.hpp"
 #include <cstring>
 #include <memory>
+#include <thread>
 
 static const unsigned FRAMEBUFFER_WIDTH = 640;
 static const unsigned FRAMEBUFFER_HEIGHT = 360;
@@ -212,9 +213,9 @@ void retro_init(void)
         log_cb = log.log;
     else
         log_cb = nullptr;
-    std::cout << "Max threads available for this system: " << omp_get_max_threads() << std::endl;
+    std::cout << "Max threads available for this system: " << std::thread::hardware_concurrency() << std::endl;
     if (log_cb)
-        log_cb(RETRO_LOG_INFO, "SuperFlappyBird: ", "Max threads available for this system: %d.\n", omp_get_max_threads());
+        log_cb(RETRO_LOG_INFO, "SuperFlappyBird: ", "Max threads available for this system: %d.\n", std::thread::hardware_concurrency());
 }
 
 void retro_get_system_info(struct retro_system_info *info)
