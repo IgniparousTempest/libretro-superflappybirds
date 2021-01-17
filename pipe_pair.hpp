@@ -1,7 +1,7 @@
 #ifndef LR_SUPERFLAPPYBIRD_PIPE_H
 #define LR_SUPERFLAPPYBIRD_PIPE_H
 
-
+#include <stdexcept>
 #include <utility>
 #include "assets.hpp"
 #include "engine/renderer.hpp"
