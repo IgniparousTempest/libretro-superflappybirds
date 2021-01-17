@@ -1,7 +1,7 @@
 #ifndef LR_SUPERFLAPPYBIRDS_MENU_H
 #define LR_SUPERFLAPPYBIRDS_MENU_H
 
-
+#include <stdexcept>
 #include <vector>
 #include "engine/texture.hpp"
 #include "engine/rect.hpp"
