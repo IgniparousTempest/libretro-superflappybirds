@@ -1,6 +1,7 @@
 #ifndef LR_SUPERFLAPPYBIRDS_IMAGE_HPP
 #define LR_SUPERFLAPPYBIRDS_IMAGE_HPP
 
+#include <stdexcept>
 #include <cstdint>
 #include <string>
 #include <fstream>
