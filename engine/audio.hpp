@@ -1,6 +1,7 @@
 #ifndef LR_SUPERFLAPPYBIRDS_AUDIO_HPP
 #define LR_SUPERFLAPPYBIRDS_AUDIO_HPP
 
+#include <stdexcept>
 #include <cstdint>
 #include <string>
 #include "sound.hpp"

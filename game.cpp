@@ -1,3 +1,4 @@
+#include <stdexcept>
 #include <utility>
 #include <algorithm>
 #include "game.hpp"

@@ -1,7 +1,7 @@
 #ifndef LR_SUPERFLAPPYBIRD_BIRD_H
 #define LR_SUPERFLAPPYBIRD_BIRD_H
 
-
+#include <stdexcept>
 #include "assets.hpp"
 #include "engine/animation.hpp"
 #include "engine/renderer.hpp"
