@@ -1,0 +1,131 @@
+name: Build
+
+on:
+  push:
+  pull_request:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  linux:
+    name: ${{ matrix.display_name }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: linux_x86_64
+            display_name: "Linux x86_64"
+            artifact_name: superflappybirds_libretro.so
+            cc: gcc
+            cxx: g++
+            extra_flags: ""
+            apt_packages: "libomp-dev"
+          - target: linux_aarch64
+            display_name: "Linux aarch64 (Raspberry Pi 3/4/5/Zero 2)"
+            artifact_name: superflappybirds_libretro.so
+            cc: aarch64-linux-gnu-gcc
+            cxx: aarch64-linux-gnu-g++
+            extra_flags: ""
+            apt_packages: "g++-aarch64-linux-gnu"
+          - target: linux_armhf
+            display_name: "Linux armhf (Raspberry Pi 2/3/4 32-bit)"
+            artifact_name: superflappybirds_libretro.so
+            cc: arm-linux-gnueabihf-gcc
+            cxx: arm-linux-gnueabihf-g++
+            extra_flags: ""
+            apt_packages: "g++-arm-linux-gnueabihf"
+          - target: linux_armv6
+            display_name: "Linux armv6 (Raspberry Pi 1 / Zero)"
+            artifact_name: superflappybirds_libretro.so
+            cc: arm-linux-gnueabihf-gcc
+            cxx: arm-linux-gnueabihf-g++
+            extra_flags: "-marm -march=armv6 -mfpu=vfp -mfloat-abi=hard"
+            apt_packages: "g++-arm-linux-gnueabihf"
+          - target: windows_x86_64
+            display_name: "Windows x86_64"
+            artifact_name: superflappybirds_libretro.dll
+            cc: x86_64-w64-mingw32-gcc
+            cxx: x86_64-w64-mingw32-g++
+            extra_flags: ""
+            apt_packages: "g++-mingw-w64-x86-64"
+            make_platform: "win"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install toolchain
+        if: matrix.apt_packages != ''
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ${{ matrix.apt_packages }}
+
+      - name: Build
+        run: |
+          make -j"$(nproc)" \
+            ${{ matrix.make_platform && format('platform={0}', matrix.make_platform) || '' }} \
+            CC="${{ matrix.cc }}" \
+            CXX="${{ matrix.cxx }}" \
+            CFLAGS="${{ matrix.extra_flags }}" \
+            CXXFLAGS="${{ matrix.extra_flags }}"
+
+      - name: Verify binary
+        run: file ${{ matrix.artifact_name }}
+
+      - name: Package bundle
+        run: |
+          BUNDLE="superflappybirds_libretro_${{ matrix.target }}"
+          mkdir -p "$BUNDLE"
+          cp ${{ matrix.artifact_name }} "$BUNDLE/"
+          cp -r resources "$BUNDLE/"
+          cp LICENSE README.md "$BUNDLE/"
+          zip -r "${BUNDLE}.zip" "$BUNDLE"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: superflappybirds_libretro_${{ matrix.target }}
+          path: superflappybirds_libretro_${{ matrix.target }}.zip
+
+      - name: Attach to release
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: superflappybirds_libretro_${{ matrix.target }}.zip
+
+  macos:
+    name: macOS Apple Silicon
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install libomp
+        run: brew install libomp
+
+      - name: Build
+        run: |
+          make -j"$(sysctl -n hw.ncpu)" platform=osx ARCHFLAGS="-arch arm64"
+
+      - name: Verify binary
+        run: file superflappybirds_libretro.dylib
+
+      - name: Package bundle
+        run: |
+          BUNDLE="superflappybirds_libretro_macos_arm64"
+          mkdir -p "$BUNDLE"
+          cp superflappybirds_libretro.dylib "$BUNDLE/"
+          cp -r resources "$BUNDLE/"
+          cp LICENSE README.md "$BUNDLE/"
+          zip -r "${BUNDLE}.zip" "$BUNDLE"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: superflappybirds_libretro_macos_arm64
+          path: superflappybirds_libretro_macos_arm64.zip
+
+      - name: Attach to release
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: superflappybirds_libretro_macos_arm64.zip

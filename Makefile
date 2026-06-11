@@ -53,8 +53,9 @@ endif
 
 ifeq ($(platform), osx)
 ifndef ($(NOUNIVERSAL))
+   CFLAGS += $(ARCHFLAGS)
    CXXFLAGS += $(ARCHFLAGS)
-   LFLAGS += $(ARCHFLAGS)
+   LDFLAGS += $(ARCHFLAGS)
 endif
 endif
 
@@ -116,6 +117,23 @@ endif
 
 LDFLAGS += $(LIBM)
 
+# OpenMP. Apple clang requires -Xpreprocessor and Homebrew libomp; gcc/MinGW
+# accept -fopenmp directly and ship libgomp.
+ifeq ($(platform), osx)
+   LIBOMP_PREFIX ?= $(shell brew --prefix libomp 2>/dev/null)
+   ifeq ($(LIBOMP_PREFIX),)
+      $(error libomp not found. Install with: brew install libomp)
+   endif
+   OMP_CXXFLAGS := -Xpreprocessor -fopenmp -I$(LIBOMP_PREFIX)/include
+   OMP_LDFLAGS  := -L$(LIBOMP_PREFIX)/lib -lomp
+else
+   OMP_CXXFLAGS := -fopenmp
+   OMP_LDFLAGS  := -fopenmp
+endif
+CFLAGS   += $(OMP_CXXFLAGS)
+CXXFLAGS += $(OMP_CXXFLAGS)
+LDFLAGS  += $(OMP_LDFLAGS)
+
 ifeq ($(DEBUG), 1)
    CFLAGS += -O0 -g -DDEBUG
    CXXFLAGS += -O0 -g -DDEBUG
@@ -148,7 +166,7 @@ endif
 
 %.o: %.cpp
 	@$(if $(Q), $(shell echo echo CXX $<),)
-	$(Q)$(CXX) $(CFLAGS) $(fpic) -c -o $@ $<
+	$(Q)$(CXX) $(CXXFLAGS) $(fpic) -c -o $@ $<
 
 clean:
 	rm -f $(OBJECTS) $(TARGET)
