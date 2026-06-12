@@ -5,8 +5,8 @@
 #include <cstdint>
 #include <cassert>
 #include <cmath>
+#include <algorithm>
 #include "rect.hpp"
-#include "omp.h"
 #include "texture.hpp"
 
 class Renderer {
@@ -26,12 +26,7 @@ public:
     /// Fill the screen with the specified colour.
     /// \param colour The colour to fill the screen with.
     void Clear(uint32_t colour) {
-#pragma omp parallel for
-        for (int x = 0; x <width; ++x) {
-            for (int y = 0; y < height; ++y) {
-                framebuffer[y * width + x] = colour;
-            }
-        }
+        std::fill_n(framebuffer, width * height, colour);
     }
 
     /// Renders the whole image to the screen at the position and size defined in the rect.
