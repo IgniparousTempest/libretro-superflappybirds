@@ -21,7 +21,7 @@ jobs:
             cc: gcc
             cxx: g++
             extra_flags: ""
-            apt_packages: "libomp-dev"
+            apt_packages: ""
           - target: linux_aarch64
             display_name: "Linux aarch64 (Raspberry Pi 3/4/5/Zero 2)"
             artifact_name: superflappybirds_libretro.so
@@ -98,9 +98,6 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Install libomp
-        run: brew install libomp
 
       - name: Build
         run: |

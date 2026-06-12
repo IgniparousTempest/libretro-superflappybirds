@@ -31,10 +31,11 @@ public:
 
     Texture* FlipHorizontally() {
         auto tex = new uint32_t[w * h];
-        for (int x = 0; x < w; ++x) {
-#pragma omp parallel for
-            for (int y = 0; y < h; ++y) {
-                tex[(h - y - 1) * w + x] = image[y * w + x];
+        for (int y = 0; y < h; ++y) {
+            const uint32_t* in = image + y * w;
+            uint32_t* out = tex + (h - y - 1) * w;
+            for (int x = 0; x < w; ++x) {
+                out[x] = in[x];
             }
         }
         return new Texture(tex, w, h);
@@ -42,10 +43,11 @@ public:
 
     Texture* FlipVertical() {
         auto tex = new uint32_t[w * h];
-        for (int x = 0; x < w; ++x) {
-#pragma omp parallel for
-            for (int y = 0; y < h; ++y) {
-                tex[y * w + (w - x - 1)] = image[y * w + x];
+        for (int y = 0; y < h; ++y) {
+            const uint32_t* in = image + y * w;
+            uint32_t* out = tex + y * w;
+            for (int x = 0; x < w; ++x) {
+                out[w - x - 1] = in[x];
             }
         }
         return new Texture(tex, w, h);
