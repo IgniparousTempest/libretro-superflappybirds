@@ -5,6 +5,11 @@ A multiplayer Flappy Bird clone designed for the libretro framework. This game r
 ![](.readme/screenshot_gameplay.png)
 ![](.readme/screenshot_game_over.png)
 
+## Artwork
+
+Original cover art, box artwork, logo and icon for use on any platform are
+available in [`.artwork`](.artwork/README.md).
+
 ## Adding to RetroPie
 
 Copy the script `lr-superflappybirds.sh` to `/home/pi/RetroPie-Setup/scriptmodules/libretrocores/lr-superflappybirds.sh` and run it from the `./retropie_setup` menu.
