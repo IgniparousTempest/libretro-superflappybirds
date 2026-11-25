@@ -120,13 +120,18 @@ Texture *Image::LoadPNM(const std::string &file_path) {
         std::string line;
         if (std::getline(infile, line))
         {
+            // Parse the image first, then construct the texture.
+            // NOTE: argument evaluation order in a single new-expression is
+            // unspecified, so the width/height must be read after parsing.
+            uint32_t *pixels;
             // File format, aka magic number
             if (line == "P3" || line == "P6")
-                return new Texture(ParsePPM(infile, line, &width, &height), width, height);
-            if (line == "P7")
-                return new Texture(ParsePAM(infile, &width, &height), width, height);
+                pixels = ParsePPM(infile, line, &width, &height);
+            else if (line == "P7")
+                pixels = ParsePAM(infile, &width, &height);
             else
                 throw std::runtime_error("Unknown magic number: " + line);
+            return new Texture(pixels, width, height);
         }
         throw std::runtime_error("Unknown Error");
     }
